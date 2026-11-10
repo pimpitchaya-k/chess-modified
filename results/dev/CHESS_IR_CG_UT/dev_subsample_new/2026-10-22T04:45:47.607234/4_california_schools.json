@@ -1,0 +1,395 @@
+[
+    {
+        "tool_name": "extract_keywords",
+        "keywords": [
+            "phone numbers",
+            "direct charter-funded schools",
+            "opened after 2000/1/1",
+            "Charter School (Y/N)",
+            "1"
+        ],
+        "status": "success",
+        "execution_time": 6.6
+    },
+    {
+        "tool_name": "retrieve_entity",
+        "similar_columns": {
+            "schools": [
+                "Phone",
+                "School",
+                "Charter"
+            ],
+            "frpm": [
+                "Charter School (Y/N)"
+            ]
+        },
+        "schema_with_examples": {
+            "schools": {
+                "School": [
+                    "Epic Charter School",
+                    "Inspire Charter School"
+                ],
+                "FundingType": [
+                    "Directly funded"
+                ],
+                "City": [
+                    "Charter Oak"
+                ],
+                "MailCity": [
+                    "Charter Oak"
+                ],
+                "Ext": [
+                    "10"
+                ],
+                "GSserved": [
+                    "10"
+                ]
+            },
+            "frpm": {
+                "School Name": [
+                    "Charter School of San Diego",
+                    "Charter School of San Diego",
+                    "Epic Charter",
+                    "TEAM Charter"
+                ],
+                "Charter Funding Type": [
+                    "Directly funded"
+                ]
+            },
+            "satscores": {
+                "sname": [
+                    "Charter School of San Diego",
+                    "Charter School of San Diego"
+                ]
+            }
+        },
+        "status": "success",
+        "execution_time": 221.6
+    },
+    {
+        "tool_name": "retrieve_context",
+        "schema_with_descriptions": {
+            "schools": {
+                "charternum": {
+                    "column_name": "",
+                    "column_description": "The charter school number,",
+                    "value_description": "4-digit number assigned to a charter school."
+                },
+                "charter": {
+                    "column_name": "",
+                    "column_description": "This field identifies a charter school.",
+                    "value_description": "The field is coded as follows:  \u00b7\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0 1 = The school is a charter  \u00b7\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0 0 = The school is not a charter"
+                },
+                "fundingtype": {
+                    "column_name": "",
+                    "column_description": "Indicates the charter school funding type",
+                    "value_description": "Values are as follows:  \u00b7\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0 Not in CS (California School) funding model  \u00b7\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0 Locally funded  \u00b7\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0 Directly funded"
+                }
+            },
+            "frpm": {
+                "charter school number": {
+                    "column_name": "",
+                    "column_description": "Charter School Number",
+                    "value_description": ""
+                },
+                "charter school (y/n)": {
+                    "column_name": "",
+                    "column_description": "Charter School (Y/N)",
+                    "value_description": "0: N; 1: Y"
+                }
+            }
+        },
+        "status": "success",
+        "execution_time": 84.9
+    },
+    {
+        "tool_name": "generate_candidate",
+        "node_type": "generate_candidate",
+        "generation_based_candidates": [
+            {
+                "template_name": "generate_candidate_one",
+                "candidates": [
+                    " SELECT T2.Phone FROM schools AS T2 INNER JOIN frpm AS T1 ON T2.CDSCode = T1.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T2.OpenDate > '2000-01-01' AND T2.FundingType = 'Directly funded'; ",
+                    " SELECT T1.Phone FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.FundingType = 'Directly funded' AND T2.`Charter School (Y/N)` = 1 AND T1.OpenDate > '2000-01-01' ",
+                    " SELECT T3.Phone  FROM frpm AS T1  INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode  WHERE T1.`Charter School (Y/N)` = 1  AND T1.`Charter Funding Type` = 'Directly funded'  AND T2.OpenDate > '2000-01-01'; ",
+                    " SELECT T1.Phone FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.Charter Funding Type = 'Directly funded' AND T1.OpenDate > '2000-01-01' ",
+                    " SELECT `T1`.`Phone` FROM `schools` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T2`.`Charter School (Y/N)` = 1 AND `T1`.`FundingType` = 'Directly funded' AND `T1`.`OpenDate` > '2000-01-01' ",
+                    " SELECT T1.Phone FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T2.`Charter Funding Type` = 'Directly funded' AND T1.OpenDate > '2000-01-01' ",
+                    " SELECT T2.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T1.`Charter Funding Type` = 'Directly funded' AND T2.OpenDate > '2000-01-01' ",
+                    " SELECT T1.Phone  FROM schools AS T1  INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode  WHERE T2.`Charter School (Y/N)` = 1  AND T1.OpenDate > '2000-01-01'  AND T1.FundingType = 'Directly funded'; ",
+                    " SELECT T1.Phone FROM schools AS T1 JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter Funding Type` = 'Directly funded' AND T2.`Charter School (Y/N)` = 1 AND T1.OpenDate > '2000-01-01'; ",
+                    " SELECT T2.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.Charter Funding Type = 'Directly funded' AND T2.OpenDate > '2000-01-01' AND T1.Charter School (Y/N) = 1 "
+                ]
+            },
+            {
+                "template_name": "generate_candidate_two",
+                "candidates": [
+                    " SELECT T1.Phone FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.OpenDate > '2000-01-01' AND T1.FundingType = 'Directly funded' ",
+                    " SELECT DISTINCT T3.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T2.OpenDate > '2000-01-01' ",
+                    " SELECT T1.Phone FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.FundingType = 'Directly funded' AND T1.OpenDate > '2000-01-01' ",
+                    " SELECT T1.Phone FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T2.`Charter Funding Type` = 'Directly funded' AND T1.OpenDate > '2000-01-01' ",
+                    " SELECT T1.Phone  FROM schools AS T1  INNER JOIN frpm AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T2.`Charter School (Y/N)` = 1  AND T2.`Charter Funding Type` = 'Directly funded'  AND T1.OpenDate > '2000-01-01' ",
+                    " SELECT T3.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T3 ON T2.CDSCode = T3.cds WHERE T1.`Charter School (Y/N)` = 1 AND T2.OpenDate > '2000-01-01' AND T2.FundingType = 'Directly funded' ",
+                    " SELECT T1.Phone FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.OpenDate > '2000-01-01' AND T1.FundingType = 'Directly funded' ",
+                    " SELECT T2.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T2.FundingType = 'Directly funded' AND T2.OpenDate > '2000-01-01' ",
+                    " SELECT T3.Phone  FROM frpm AS T1  INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode  WHERE T1.`Charter School (Y/N)` = 1  AND T2.FundingType = 'Directly funded'  AND T2.StatusType = 'Active'  AND T2.OpenDate > '2000-01-01'; ",
+                    " SELECT T2.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T2.FundingType = 'Directly funded' AND T2.OpenDate > '2000-01-01' "
+                ]
+            }
+        ],
+        "candidates": [
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T2.Phone FROM schools AS T2 INNER JOIN frpm AS T1 ON T2.CDSCode = T1.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T2.OpenDate > '2000-01-01' AND T2.FundingType = 'Directly funded'; ",
+                "plan": "**Question:** Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n**Evidence:** Charter schools refers to `Charter School (Y/N)` = 1 in the `frpm`.\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n    * **Analysis:** The question asks for the `Phone` numbers from the `schools` table. We need to filter the schools based on two criteria: they are charter schools and were opened after 2000/1/1. Additionally, the funding type must be \"Directly funded\".\n    * **Pseudo SQL:** SELECT `T2`.`Phone` FROM `schools` AS `T2` WHERE <charter school> AND <opened after 2000/1/1> AND <directly funded>\n\n    * **Sub-question 1:** charter school\n        * **Analysis:** This filter can be applied by checking the `Charter School (Y/N)` column in the `frpm` table, which indicates whether a school is a charter school.\n        * **Pseudo SQL:** `T1`.`Charter School (Y/N)` = 1\n\n    * **Sub-question 2:** opened after 2000/1/1\n        * **Analysis:** This filter can be applied by comparing the `OpenDate` column in the `schools` table against the date '2000/1/1'.\n        * **Pseudo SQL:** `T2`.`OpenDate` > '2000-01-01'\n\n    * **Sub-question 3:** directly funded\n        * **Analysis:** This filter can be applied by checking the `FundingType` column in the `schools` table, which indicates the type of funding.\n        * **Pseudo SQL:** `T2`.`FundingType` = 'Directly funded'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (charter school):**\n    * **SQL:** `T1`.`Charter School (Y/N)` = 1\n\n* **Sub-question 2 (opened after 2000/1/1):**\n    * **SQL:** `T2`.`OpenDate` > '2000-01-01'\n\n* **Sub-question 3 (directly funded):**\n    * **SQL:** `T2`.`FundingType` = 'Directly funded'\n\n* **Main Question (phone numbers):**\n    * **SQL:** SELECT `T2`.`Phone` FROM `schools` AS `T2` INNER JOIN `frpm` AS `T1` ON `T2`.`CDSCode` = `T1`.`CDSCode` WHERE `T1`.`Charter School (Y/N)` = 1 AND `T2`.`OpenDate` > '2000-01-01' AND `T2`.`FundingType` = 'Directly funded'\n\n**3. Simplification and Optimization:**\n\n* The final SQL query from step 2 is already quite efficient. We are using `INNER JOIN` to combine `schools` and `frpm` based on the relationship between them, and the `WHERE` clause clearly defines our filtering criteria.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T1.Phone FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.FundingType = 'Directly funded' AND T2.`Charter School (Y/N)` = 1 AND T1.OpenDate > '2000-01-01' ",
+                "plan": "**Question:** Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n**Evidence:** Charter schools refers to `Charter School (Y/N)` = 1 in the `frpm`.\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n    * **Analysis:** The question is asking for the `phone` numbers of schools that are both charter schools and directly funded. Additionally, the schools must have been opened after 2000/1/1. We need to join the `schools` table with the `frpm` table to get the funding type and the charter status, and then filter based on the conditions.\n    * **Pseudo SQL:** SELECT `T1`.`Phone` FROM `schools` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE <directly funded> AND <charter school> AND <opened after 2000/1/1>\n\n    * **Sub-question 1:** directly funded\n        * **Analysis:** Directly funded schools have a `FundingType` of 'Directly funded'.\n        * **Pseudo SQL:** `T1`.`FundingType` = 'Directly funded'\n\n    * **Sub-question 2:** charter school\n        * **Analysis:** Charter schools are identified by `Charter School (Y/N)` = 1 in the `frpm` table.\n        * **Pseudo SQL:** `T2`.`Charter School (Y/N)` = 1\n\n    * **Sub-question 3:** opened after 2000/1/1\n        * **Analysis:** We need to filter the `schools` table based on the `OpenDate` column to ensure the school was opened after 2000/1/1.\n        * **Pseudo SQL:** `T1`.`OpenDate` > '2000-01-01'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (directly funded):**\n    * **SQL:** `T1`.`FundingType` = 'Directly funded'\n\n* **Sub-question 2 (charter school):**\n    * **SQL:** `T2`.`Charter School (Y/N)` = 1\n\n* **Sub-question 3 (opened after 2000/1/1):**\n    * **SQL:** `T1`.`OpenDate` > '2000-01-01'\n\n* **Main Question (list phone numbers):**\n    * **SQL:** SELECT `T1`.`Phone` FROM `schools` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T1`.`FundingType` = 'Directly funded' AND `T2`.`Charter School (Y/N)` = 1 AND `T1`.`OpenDate` > '2000-01-01'\n\n**3. Simplification and Optimization:**\n\n* The SQL query from step 2 is already quite efficient. It uses `INNER JOIN` to combine the necessary tables and applies the required filters directly.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T3.Phone  FROM frpm AS T1  INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode  WHERE T1.`Charter School (Y/N)` = 1  AND T1.`Charter Funding Type` = 'Directly funded'  AND T2.OpenDate > '2000-01-01'; ",
+                "plan": "**Question:** Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n**Evidence:** Charter schools refers to `Charter School (Y/N)` = 1 in the frpm\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n    * **Analysis:** The question asks for the `phone` numbers of schools that meet two criteria: they are direct charter-funded schools and they are opened after 2000/1/1. We need to join the `frpm` and `schools` tables to get the relevant information.\n    * **Pseudo SQL:** SELECT `T3`.`Phone` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE <direct charter-funded schools> AND <opened after 2000/1/1>\n\n    * **Sub-question 1:** direct charter-funded schools\n        * **Analysis:** We need to filter the `frpm` table to get the schools that are direct charter-funded. This means `Charter School (Y/N)` = 1 and `Charter Funding Type` = 'Directly funded'.\n        * **Pseudo SQL:** `T1`.`Charter School (Y/N)` = 1 AND `T1`.`Charter Funding Type` = 'Directly funded'\n\n    * **Sub-question 2:** opened after 2000/1/1\n        * **Analysis:** We need to filter the `schools` table to get the schools that are opened after 2000/1/1. This means `OpenDate` > '2000-01-01'.\n        * **Pseudo SQL:** `T2`.`OpenDate` > '2000-01-01'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (direct charter-funded schools):**\n    * **SQL:** `T1`.`Charter School (Y/N)` = 1 AND `T1`.`Charter Funding Type` = 'Directly funded'\n\n* **Sub-question 2 (opened after 2000/1/1):**\n    * **SQL:** `T2`.`OpenDate` > '2000-01-01'\n\n* **Main Question (list phone numbers):**\n    * **SQL:** SELECT `T3`.`Phone` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T1`.`Charter School (Y/N)` = 1 AND `T1`.`Charter Funding Type` = 'Directly funded' AND `T2`.`OpenDate` > '2000-01-01'\n\n**3. Simplification and Optimization:**\n\n* The SQL query from step 2 is already quite efficient. We're using `INNER JOIN` to combine the necessary tables and applying the appropriate filters.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T1.Phone FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.Charter Funding Type = 'Directly funded' AND T1.OpenDate > '2000-01-01' ",
+                "plan": "**Question:** Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n**Evidence:** Charter schools refers to `Charter School (Y/N)` = 1 in the frpm\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n    * **Analysis:** We need to retrieve the `Phone` numbers from the `schools` table. The schools must be direct charter-funded, which means `Charter Funding Type` = 'Directly funded' in the `frpm` table. Additionally, the schools must have been opened after 2000/1/1, which we can filter using the `OpenDate` column in the `schools` table.\n    * **Pseudo SQL:** SELECT `T1`.`Phone` FROM `schools` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE <direct charter-funded> AND <opened after 2000/1/1>\n\n    * **Sub-question 1:** direct charter-funded\n        * **Analysis:** We need to filter the `frpm` table for rows where `Charter Funding Type` = 'Directly funded'.\n        * **Pseudo SQL:** `T2`.`Charter Funding Type` = 'Directly funded'\n\n    * **Sub-question 2:** opened after 2000/1/1\n        * **Analysis:** We need to filter the `schools` table for rows where `OpenDate` > '2000-01-01'.\n        * **Pseudo SQL:** `T1`.`OpenDate` > '2000-01-01'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (direct charter-funded):**\n    * **SQL:** `T2`.`Charter Funding Type` = 'Directly funded'\n\n* **Sub-question 2 (opened after 2000/1/1):**\n    * **SQL:** `T1`.`OpenDate` > '2000-01-01'\n\n* **Main Question (phone numbers):**\n    * **SQL:** SELECT `T1`.`Phone` FROM `schools` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T2`.`Charter Funding Type` = 'Directly funded' AND `T1`.`OpenDate` > '2000-01-01'\n\n**3. Simplification and Optimization:**\n\n* The SQL query in step 2 is already quite efficient. We are using `INNER JOIN` to combine `schools` and `frpm` based on the `CDSCode` column, and applying the necessary filters in the `WHERE` clause.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT `T1`.`Phone` FROM `schools` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T2`.`Charter School (Y/N)` = 1 AND `T1`.`FundingType` = 'Directly funded' AND `T1`.`OpenDate` > '2000-01-01' ",
+                "plan": "**Question:** Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n**Evidence:** Charter schools refers to `Charter School (Y/N)` = 1 in the frpm\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n    * **Analysis:** The question is asking for the `Phone` numbers of schools that meet two criteria: they are charter schools and they are funded directly. Additionally, the schools must have been opened after 2000/1/1. These criteria can be found in the `frpm` and `schools` tables.\n    * **Pseudo SQL:** SELECT `T1`.`Phone` FROM `schools` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE <charter school> AND <directly funded> AND <opened after 2000/1/1>\n\n    * **Sub-question 1:** charter school\n        * **Analysis:** This filter is based on the `Charter School (Y/N)` column in the `frpm` table.\n        * **Pseudo SQL:** `T2`.`Charter School (Y/N)` = 1\n\n    * **Sub-question 2:** directly funded\n        * **Analysis:** This filter is based on the `FundingType` column in the `schools` table.\n        * **Pseudo SQL:** `T1`.`FundingType` = 'Directly funded'\n\n    * **Sub-question 3:** opened after 2000/1/1\n        * **Analysis:** This filter is based on the `OpenDate` column in the `schools` table.\n        * **Pseudo SQL:** `T1`.`OpenDate` > '2000-01-01'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (charter school):**\n    * **SQL:** `T2`.`Charter School (Y/N)` = 1\n\n* **Sub-question 2 (directly funded):**\n    * **SQL:** `T1`.`FundingType` = 'Directly funded'\n\n* **Sub-question 3 (opened after 2000/1/1):**\n    * **SQL:** `T1`.`OpenDate` > '2000-01-01'\n\n* **Main Question (phone numbers):**\n    * **SQL:** SELECT `T1`.`Phone` FROM `schools` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T2`.`Charter School (Y/N)` = 1 AND `T1`.`FundingType` = 'Directly funded' AND `T1`.`OpenDate` > '2000-01-01'\n\n**3. Simplification and Optimization:**\n\n* The SQL query from step 2 is already quite efficient. It uses `INNER JOIN` to combine the relevant tables and applies the necessary filters in the `WHERE` clause.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T1.Phone FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T2.`Charter Funding Type` = 'Directly funded' AND T1.OpenDate > '2000-01-01' ",
+                "plan": "**Question:** Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n**Evidence:** Charter schools refers to `Charter School (Y/N)` = 1 in the frpm\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n    * **Analysis:** We need to find the `Phone` numbers of schools that meet two criteria: they are charter schools and they are directly funded. Additionally, the schools must have been opened after 2000/1/1. These criteria span across the `frpm` and `schools` tables.\n    * **Pseudo SQL:** SELECT `T1`.`Phone` FROM `schools` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE <charter school> AND <directly funded> AND <opened after 2000/1/1>\n\n    * **Sub-question 1:** charter school\n        * **Analysis:** This is a simple filter on the `frpm` table using the `Charter School (Y/N)` column.\n        * **Pseudo SQL:** `T2`.`Charter School (Y/N)` = 1\n\n    * **Sub-question 2:** directly funded\n        * **Analysis:** This is a filter on the `frpm` table using the `Charter Funding Type` column.\n        * **Pseudo SQL:** `T2`.`Charter Funding Type` = 'Directly funded'\n\n    * **Sub-question 3:** opened after 2000/1/1\n        * **Analysis:** This is a filter on the `schools` table using the `OpenDate` column.\n        * **Pseudo SQL:** `T1`.`OpenDate` > '2000-01-01'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (charter school):**\n    * **SQL:** `T2`.`Charter School (Y/N)` = 1\n\n* **Sub-question 2 (directly funded):**\n    * **SQL:** `T2`.`Charter Funding Type` = 'Directly funded'\n\n* **Sub-question 3 (opened after 2000/1/1):**\n    * **SQL:** `T1`.`OpenDate` > '2000-01-01'\n\n* **Main Question (phone numbers):**\n    * **SQL:** SELECT `T1`.`Phone` FROM `schools` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T2`.`Charter School (Y/N)` = 1 AND `T2`.`Charter Funding Type` = 'Directly funded' AND `T1`.`OpenDate` > '2000-01-01'\n\n**3. Simplification and Optimization:**\n\n* The query in step 2 is already quite optimized. We are using `INNER JOIN` to combine `schools` and `frpm` based on the relationship between them, and applying the necessary filters directly in the `WHERE` clause.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T2.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T1.`Charter Funding Type` = 'Directly funded' AND T2.OpenDate > '2000-01-01' ",
+                "plan": "**Question:** Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n**Evidence:** Charter schools refers to `Charter School (Y/N)` = 1 in the frpm\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n    * **Analysis:** The question is asking for the `Phone` numbers of schools that meet two criteria: they are direct charter-funded and opened after 2000/1/1. We need to join the `frpm` and `schools` tables on `CDSCode` to get the `Phone` numbers and filter based on the given conditions.\n    * **Pseudo SQL:** SELECT `T2`.`Phone` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE <direct charter-funded> AND <opened after 2000/1/1>\n\n    * **Sub-question 1:** direct charter-funded\n        * **Analysis:** This means the school is a charter school and its funding type is \"Directly funded\". We can filter this using the `Charter School (Y/N)` and `FundingType` columns in the `frpm` table.\n        * **Pseudo SQL:** `T1`.`Charter School (Y/N)` = 1 AND `T1`.`Charter Funding Type` = 'Directly funded'\n\n    * **Sub-question 2:** opened after 2000/1/1\n        * **Analysis:** This involves checking the `OpenDate` column in the `schools` table to see if it is after 2000/1/1.\n        * **Pseudo SQL:** `T2`.`OpenDate` > '2000-01-01'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (direct charter-funded):**\n    * **SQL:** `T1`.`Charter School (Y/N)` = 1 AND `T1`.`Charter Funding Type` = 'Directly funded'\n\n* **Sub-question 2 (opened after 2000/1/1):**\n    * **SQL:** `T2`.`OpenDate` > '2000-01-01'\n\n* **Main Question (phone numbers):**\n    * **SQL:** SELECT `T2`.`Phone` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T1`.`Charter School (Y/N)` = 1 AND `T1`.`Charter Funding Type` = 'Directly funded' AND `T2`.`OpenDate` > '2000-01-01'\n\n**3. Simplification and Optimization:**\n\n* The final SQL query is already well-structured and does not require further optimization.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T1.Phone  FROM schools AS T1  INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode  WHERE T2.`Charter School (Y/N)` = 1  AND T1.OpenDate > '2000-01-01'  AND T1.FundingType = 'Directly funded'; ",
+                "plan": "**Question:** Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n**Evidence:** Charter schools refers to `Charter School (Y/N)` = 1 in the frpm\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n    * **Analysis:** The question asks for the `Phone` numbers from the `schools` table. We need to filter the schools based on two conditions: being a charter school and having been opened after 2000/1/1. Additionally, we need to ensure the school is direct charter-funded, which means checking the `FundingType` column in the `schools` table.\n    * **Pseudo SQL:** SELECT `T1`.`Phone` FROM `schools` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE <charter school> AND <opened after 2000/1/1> AND <direct charter-funded>\n\n    * **Sub-question 1:** charter school\n        * **Analysis:** This is a simple filter on the `frpm` table using the `Charter School (Y/N)` column.\n        * **Pseudo SQL:** `T2`.`Charter School (Y/N)` = 1\n\n    * **Sub-question 2:** opened after 2000/1/1\n        * **Analysis:** This is a filter on the `schools` table using the `OpenDate` column.\n        * **Pseudo SQL:** `T1`.`OpenDate` > '2000-01-01'\n\n    * **Sub-question 3:** direct charter-funded\n        * **Analysis:** This is a filter on the `schools` table using the `FundingType` column.\n        * **Pseudo SQL:** `T1`.`FundingType` = 'Directly funded'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (charter school):**\n    * **SQL:** `T2`.`Charter School (Y/N)` = 1\n\n* **Sub-question 2 (opened after 2000/1/1):**\n    * **SQL:** `T1`.`OpenDate` > '2000-01-01'\n\n* **Sub-question 3 (direct charter-funded):**\n    * **SQL:** `T1`.`FundingType` = 'Directly funded'\n\n* **Main Question (phone numbers):**\n    * **SQL:** SELECT `T1`.`Phone` FROM `schools` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T2`.`Charter School (Y/N)` = 1 AND `T1`.`OpenDate` > '2000-01-01' AND `T1`.`FundingType` = 'Directly funded'\n\n**3. Simplification and Optimization:**\n\n* The final SQL query from step 2 is already quite efficient. We've joined the necessary tables and applied all the required filters.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T1.Phone FROM schools AS T1 JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter Funding Type` = 'Directly funded' AND T2.`Charter School (Y/N)` = 1 AND T1.OpenDate > '2000-01-01'; ",
+                "plan": "**Question:** Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n**Evidence:** Charter schools refers to `Charter School (Y/N)` = 1 in the `frpm`.\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n    * **Analysis:** The question asks for the `Phone` numbers from the `schools` table. We need to filter the schools based on two criteria: they must be direct charter-funded schools and they must have been opened after 2000/1/1.\n    * **Pseudo SQL:** SELECT `Phone` FROM `schools` WHERE <direct charter-funded school> AND <opened after 2000/1/1>\n\n    * **Sub-question 1:** direct charter-funded school\n        * **Analysis:** We need to join the `schools` table with the `frpm` table to filter based on `Charter Funding Type` = 'Directly funded'. The `frpm` table contains the `Charter Funding Type` column, and we need to filter by `Charter School (Y/N)` = 1.\n        * **Pseudo SQL:** `T1.CDSCode` IN (SELECT `T2.CDSCode` FROM `frpm` AS `T2` WHERE `T2.`Charter Funding Type` = 'Directly funded' AND `T2.`Charter School (Y/N)` = 1)\n\n    * **Sub-question 2:** opened after 2000/1/1\n        * **Analysis:** This involves filtering the `schools` table based on the `OpenDate` column using the `>` operator.\n        * **Pseudo SQL:** `T1.OpenDate` > '2000-01-01'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (direct charter-funded school):**\n    * **SQL:** `T1.CDSCode` IN (SELECT `T2.CDSCode` FROM `frpm` AS `T2` WHERE `T2.`Charter Funding Type` = 'Directly funded' AND `T2.`Charter School (Y/N)` = 1)\n\n* **Sub-question 2 (opened after 2000/1/1):**\n    * **SQL:** `T1.OpenDate` > '2000-01-01'\n\n* **Main Question (phone numbers):**\n    * **SQL:** SELECT `Phone` FROM `schools` AS `T1` WHERE `T1.CDSCode` IN (SELECT `T2.CDSCode` FROM `frpm` AS `T2` WHERE `T2.`Charter Funding Type` = 'Directly funded' AND `T2.`Charter School (Y/N)` = 1) AND `T1.OpenDate` > '2000-01-01'\n\n**3. Simplification and Optimization:**\n\n* The nested query can be combined into a single `JOIN` operation to improve readability and performance.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T2.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.Charter Funding Type = 'Directly funded' AND T2.OpenDate > '2000-01-01' AND T1.Charter School (Y/N) = 1 ",
+                "plan": "**Question:** Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n**Evidence:** Charter schools refers to `Charter School (Y/N)` = 1 in the frpm\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n    * **Analysis:** The question asks for the `phone` numbers of schools that meet two criteria: being direct charter-funded and opened after 2000/1/1. We need to join the `frpm` and `schools` tables based on `CDSCode` to get the relevant information.\n    * **Pseudo SQL:** SELECT `T2`.`Phone` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE <direct charter-funded> AND <opened after 2000/1/1>\n\n    * **Sub-question 1:** direct charter-funded\n        * **Analysis:** This condition is based on the `Charter Funding Type` column in the `frpm` table, which should be 'Directly funded'.\n        * **Pseudo SQL:** `T1`.`Charter Funding Type` = 'Directly funded'\n\n    * **Sub-question 2:** opened after 2000/1/1\n        * **Analysis:** This condition is based on the `OpenDate` column in the `schools` table, which should be greater than '2000-01-01'.\n        * **Pseudo SQL:** `T2`.`OpenDate` > '2000-01-01'\n\n    * **Sub-question 3:** Charter schools\n        * **Analysis:** This condition is based on the `Charter School (Y/N)` column in the `frpm` table, which should be 1.\n        * **Pseudo SQL:** `T1`.`Charter School (Y/N)` = 1\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (direct charter-funded):**\n    * **SQL:** `T1`.`Charter Funding Type` = 'Directly funded'\n\n* **Sub-question 2 (opened after 2000/1/1):**\n    * **SQL:** `T2`.`OpenDate` > '2000-01-01'\n\n* **Sub-question 3 (Charter schools):**\n    * **SQL:** `T1`.`Charter School (Y/N)` = 1\n\n* **Main Question (list phone numbers):**\n    * **SQL:** SELECT `T2`.`Phone` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T1`.`Charter Funding Type` = 'Directly funded' AND `T2`.`OpenDate` > '2000-01-01' AND `T1`.`Charter School (Y/N)` = 1\n\n**3. Simplification and Optimization:**\n\n* The final SQL query from step 2 is already quite efficient. It uses `INNER JOIN` to combine the tables based on `CDSCode` and applies the necessary filters in the `WHERE` clause.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T1.Phone FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.OpenDate > '2000-01-01' AND T1.FundingType = 'Directly funded' ",
+                "plan": "**Question**: Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n**Evidence**: Charter schools refers to `Charter School (Y/N)` = 1 in the frpm\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment for query execution by initializing variables and temporary storage.\n2. Open required tables: Access the schools and frpm tables to retrieve relevant data.\n\n** Filter and Identify Relevant Schools: **\n1. Scan the frpm table: Start reading rows from the frpm table.\n2. Filter by Charter School (Y/N) = 1: Select only those rows where `Charter School (Y/N)` equals 1, indicating that the school is a charter school.\n3. Join with schools table: Match each charter school with its corresponding entry in the schools table based on the CDSCode.\n\n** Filter by Opening Date: **\n1. Extract the OpenDate: For each matched school, retrieve the OpenDate from the schools table.\n2. Filter by OpenDate > '2000-01-01': Select only those schools where the OpenDate is after January 1, 2000.\n\n** Filter by Funding Type: **\n1. Extract the FundingType: For each remaining school, retrieve the FundingType from the schools table.\n2. Filter by FundingType = 'Directly funded': Select only those schools where the FundingType is 'Directly funded'.\n\n** Retrieve Phone Numbers: **\n1. Extract the Phone: For each school that meets all the criteria, retrieve the Phone number from the schools table.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the list of phone numbers for presentation.\n2. Output the final result: Deliver the list of phone numbers as the query result.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT DISTINCT T3.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T2.OpenDate > '2000-01-01' ",
+                "plan": "**Question**: Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n**Evidence**: Charter schools refers to `Charter School (Y/N)` = 1 in the frpm\n\n** Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the frpm and schools tables to access relevant data.\n\n** Filter and Identify Relevant Schools: **\n1. Scan the frpm table: Start reading rows from the frpm table.\n2. Filter by Charter School (Y/N): Select only those rows where `Charter School (Y/N)` = 1, indicating that the school is a charter school.\n3. Join with schools table: Match each charter school to the corresponding school by joining on CDSCode.\n4. Filter by opening date: Ensure that the school was opened after 2000/1/1 by checking the OpenDate column in the schools table.\n\n** Retrieve Phone Numbers: **\n1. Extract phone numbers: From the matched schools, retrieve the Phone column.\n2. Ensure distinct phone numbers: Use `DISTINCT` to ensure that each phone number is listed only once.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final list of phone numbers for presentation.\n2. Output the final result: Deliver the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T1.Phone FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.FundingType = 'Directly funded' AND T1.OpenDate > '2000-01-01' ",
+                "plan": "**Question**: Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n**Evidence**: Charter schools refers to `Charter School (Y/N)` = 1 in the frpm\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the schools and frpm tables to access relevant data.\n\n** Filter and Identify Relevant Schools: **\n1. Scan the frpm table: Start reading rows from the frpm table.\n2. Filter by Charter School (Y/N): Select only those rows where `Charter School (Y/N)` = 1, indicating that the school is a charter school.\n3. Join with schools table: Match each row in frpm with the corresponding school in the schools table using the CDSCode foreign key.\n4. Filter by Funding Type: Ensure that the school is directly funded by checking the `FundingType` column in the schools table for the value 'Directly funded'.\n5. Filter by Open Date: Select only those schools that were opened after 2000/1/1 by comparing the `OpenDate` column in the schools table.\n\n** Extract Phone Numbers: **\n1. Extract phone numbers: From the filtered rows, retrieve the `Phone` column from the schools table.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the list of phone numbers for presentation.\n2. Output the final result: Deliver the list of phone numbers as the query result, indicating the phone numbers of the direct charter-funded schools opened after 2000/1/1.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T1.Phone FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T2.`Charter Funding Type` = 'Directly funded' AND T1.OpenDate > '2000-01-01' ",
+                "plan": "**Question:** Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n**Evidence:** Charter schools refers to `Charter School (Y/N)` = 1 in the frpm\n\n**Query Plan:**\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the schools and frpm tables to access relevant data.\n\n** Identify Direct Charter-Funded Schools: **\n1. Scan the frpm table: Start reading rows from the frpm table.\n2. Filter by Charter School (Y/N): Select only those rows where `Charter School (Y/N)` = 1, indicating the school is a charter.\n3. Filter by Charter Funding Type: Ensure the `Charter Funding Type` is 'Directly funded'.\n4. Join with schools table: Match each charter school to its corresponding record in the schools table using the CDSCode field.\n\n** Filter by Open Date: **\n1. Extract the open date: Use the `OpenDate` column from the schools table to determine when the school was opened.\n2. Filter by open date after 2000/1/1: Select only those schools where `OpenDate` > '2000-01-01'.\n\n** Select Phone Numbers: **\n1. Extract the phone numbers: From the filtered schools records, retrieve the `Phone` column.\n2. Prepare the result: Format the phone numbers for presentation.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final list of phone numbers for presentation.\n2. Output the final result: Deliver the phone numbers as the query result, indicating the phone numbers of the direct charter-funded schools opened after 2000/1/1.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T1.Phone  FROM schools AS T1  INNER JOIN frpm AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T2.`Charter School (Y/N)` = 1  AND T2.`Charter Funding Type` = 'Directly funded'  AND T1.OpenDate > '2000-01-01' ",
+                "plan": "**Question:** Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n**Evidence:** Charter schools refers to `Charter School (Y/N)` = 1 in the frpm\n\n**Query Plan:**\n\n**Preparation Steps:**\n1. Initialize the process: Set up the environment and prepare for query execution.\n2. Open required tables: Open the `schools` and `frpm` tables to access relevant data.\n\n**Identify Direct Charter-Funded Schools:**\n1. Join `schools` and `frpm` tables: Merge records where `schools.CDSCode` matches `frpm.CDSCode` to associate school details with funding information.\n2. Filter by Charter School (Y/N): Select only those rows where `frpm.Charter School (Y/N)` equals 1, indicating that the school is a charter school.\n3. Filter by Charter Funding Type: Ensure that the `frpm.Charter Funding Type` is \"Directly funded\", as per the requirement for direct charter funding.\n4. Filter by Open Date: Include only those schools where `schools.OpenDate` is after 2000/1/1.\n\n**Select Phone Numbers:**\n1. Extract phone numbers: From the filtered results, retrieve the `Phone` column from the `schools` table.\n\n**Finalize and Deliver the Result:**\n1. Prepare the result for output: Format the final list of phone numbers for presentation.\n2. Output the final result: Deliver the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T3.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T3 ON T2.CDSCode = T3.cds WHERE T1.`Charter School (Y/N)` = 1 AND T2.OpenDate > '2000-01-01' AND T2.FundingType = 'Directly funded' ",
+                "plan": "**Question**: Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n**Evidence**: Charter schools refers to `Charter School (Y/N)` = 1 in the frpm\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the frpm, schools, and satscores tables to access relevant data.\n\n** Filter and Identify Relevant Schools: **\n1. Scan the frpm table: Start reading rows from the frpm table.\n2. Filter by Charter School (Y/N): Select only those rows where `Charter School (Y/N)` = 1, indicating the school is a charter school.\n3. Join with schools table: Match each charter school to its details in the schools table based on CDSCode.\n4. Filter by opening date: Ensure the school was opened after 2000/1/1 by checking the OpenDate column in the schools table.\n5. Filter by funding type: Ensure the school is directly funded by checking the FundingType column in the schools table.\n\n** Retrieve Phone Numbers: **\n1. Extract phone numbers: From the matched rows, retrieve the phone numbers from the schools table.\n2. Prepare the result: Format the retrieved phone numbers for presentation, ensuring clarity and correctness.\n\n** Finalize and Deliver the Result: **\n1. Compile the final result: Organize the extracted phone numbers into a coherent and understandable output.\n2. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n3. Output the final result: Deliver the list of phone numbers as the query result.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T1.Phone FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.OpenDate > '2000-01-01' AND T1.FundingType = 'Directly funded' ",
+                "plan": "**Question:** Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n**Evidence:** Charter schools refers to `Charter School (Y/N)` = 1 in the frpm.\n\n**Query Plan:**\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the schools, frpm tables to access relevant data.\n\n** Identify Relevant Schools: **\n1. Scan the frpm table: Start reading rows from the frpm table to filter out charter schools.\n2. Filter by Charter School (Y/N) = 1: Select only those rows where the `Charter School (Y/N)` field is 1, indicating a charter school.\n3. Join with schools table: Match each charter school with its corresponding entry in the schools table based on the CDSCode foreign key.\n\n** Filter by Opening Date: **\n1. Extract the OpenDate: For each matched school, retrieve the OpenDate from the schools table.\n2. Filter by OpenDate > '2000-01-01': Select only those schools where the OpenDate is after January 1, 2000.\n\n** Filter by Funding Type: **\n1. Extract the FundingType: For each remaining school, retrieve the FundingType from the schools table.\n2. Filter by FundingType = 'Directly funded': Select only those schools where the FundingType is 'Directly funded'.\n\n** Retrieve Phone Numbers: **\n1. Extract the Phone: For each school that meets all the criteria, retrieve the Phone number from the schools table.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the list of phone numbers for presentation.\n2. Output the final result: Deliver the phone numbers of the direct charter-funded schools opened after 2000/1/1.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T2.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T2.FundingType = 'Directly funded' AND T2.OpenDate > '2000-01-01' ",
+                "plan": "**Question**: Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n**Evidence**: Charter schools refers to `Charter School (Y/N)` = 1 in the frpm\n\n** Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the frpm, schools, and satscores tables to access relevant data.\n\n** Identify Direct Charter-Funded Schools: **\n1. Scan the frpm table: Start reading rows from the frpm table.\n2. Filter by Charter School (Y/N) = 1: Select only those rows where `Charter School (Y/N)` is 1, indicating the school is a charter school.\n3. Join with schools table: Match each charter school to its details in the schools table using the CDSCode field.\n4. Filter by Funding Type: Ensure that the `FundingType` in the schools table is 'Directly funded', indicating direct charter funding.\n\n** Filter by Opening Date: **\n1. Extract the OpenDate from the schools table: Use the OpenDate column to check the opening date of each school.\n2. Filter by OpenDate > '2000-01-01': Select only those schools that were opened after January 1, 2000.\n\n** Retrieve Phone Numbers: **\n1. Join with schools table again: Since we are interested in the phone numbers, join the filtered results back with the schools table.\n2. Extract the Phone column: Retrieve the phone numbers for the matching schools.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final list of phone numbers for presentation.\n2. Output the final result: Deliver the phone numbers of the direct charter-funded schools that were opened after 2000/1/1.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T3.Phone  FROM frpm AS T1  INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode  WHERE T1.`Charter School (Y/N)` = 1  AND T2.FundingType = 'Directly funded'  AND T2.StatusType = 'Active'  AND T2.OpenDate > '2000-01-01'; ",
+                "plan": "**Question:** Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n**Evidence:** Charter schools refers to `Charter School (Y/N)` = 1 in the frpm\n\n**Query Plan:**\n\n**Preparation Steps:**\n1. Initialize the process: Set up the environment for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the `frpm`, `schools`, and `satscores` tables to access relevant data.\n\n**Identify Direct Charter-Funded Schools:**\n1. Scan the `frpm` table: Retrieve records from the `frpm` table to identify charter schools.\n2. Filter by `Charter School (Y/N)` = 1: Select only those records where `Charter School (Y/N)` equals 1, indicating the school is a charter.\n3. Join with `schools` table: Use the `CDSCode` foreign key to join the `frpm` table with the `schools` table to get additional details about the schools.\n4. Filter by `FundingType` = 'Directly funded': Ensure that the charter school is directly funded by checking the `FundingType` column in the `schools` table.\n5. Filter by `StatusType` = 'Active': Ensure that the school is currently active by checking the `StatusType` column in the `schools` table.\n\n**Filter by Opening Date:**\n1. Extract the `OpenDate` column: Retrieve the `OpenDate` from the `schools` table.\n2. Filter by `OpenDate` > '2000-01-01': Select only those schools that were opened after January 1, 2000.\n\n**Retrieve Phone Numbers:**\n1. Extract the `Phone` column: Retrieve the `Phone` column from the `schools` table for the filtered records.\n\n**Finalize and Deliver the Result:**\n1. Prepare the result for output: Format the final list of phone numbers for presentation.\n2. Output the final result: Deliver the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T2.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T2.FundingType = 'Directly funded' AND T2.OpenDate > '2000-01-01' ",
+                "plan": "**Question**: Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n**Evidence**: Charter schools refers to `Charter School (Y/N)` = 1 in the frpm\n\n** Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the frpm, schools, and satscores tables to access relevant data.\n\n** Filter and Identify Relevant Schools: **\n1. Scan the frpm table: Start reading rows from the frpm table.\n2. Filter by Charter School (Y/N): Select only those rows where `Charter School (Y/N)` is 1, indicating the school is a charter school.\n3. Join with schools table: Match each charter school in frpm to the corresponding school in the schools table using the CDSCode foreign key.\n4. Filter by Funding Type: Ensure that the charter school is directly funded by checking the `FundingType` column in the schools table for the value 'Directly funded'.\n5. Filter by Open Date: Ensure that the school was opened after 2000/1/1 by checking the `OpenDate` column in the schools table.\n\n** Extract Phone Numbers: **\n1. Extract phone numbers: From the matched schools, retrieve the `Phone` column which contains the phone numbers of the schools.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final list of phone numbers for presentation.\n2. Output the final result: Deliver the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            }
+        ],
+        "status": "success",
+        "execution_time": 1577.0
+    },
+    {
+        "tool_name": "revise",
+        "original_SQL_id": "generate_candidate",
+        "refined_SQL_id": "revise_1",
+        "candidates": [
+            {
+                "refined_query": " SELECT T2.Phone FROM schools AS T2 INNER JOIN frpm AS T1 ON T2.CDSCode = T1.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T2.OpenDate > '2000-01-01' AND T2.FundingType = 'Directly funded'; "
+            },
+            {
+                "refined_query": " SELECT T1.Phone FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.FundingType = 'Directly funded' AND T2.`Charter School (Y/N)` = 1 AND T1.OpenDate > '2000-01-01' "
+            },
+            {
+                "refined_query": " SELECT T2.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T1.`Charter Funding Type` = 'Directly funded' AND T2.OpenDate > '2000-01-01' "
+            },
+            {
+                "refined_query": " SELECT T1.Phone FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter Funding Type` = 'Directly funded' AND T1.Charter = 1 AND T1.OpenDate > '2000-01-01' "
+            },
+            {
+                "refined_query": " SELECT `T1`.`Phone` FROM `schools` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T2`.`Charter School (Y/N)` = 1 AND `T1`.`FundingType` = 'Directly funded' AND `T1`.`OpenDate` > '2000-01-01' "
+            },
+            {
+                "refined_query": " SELECT T1.Phone FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T2.`Charter Funding Type` = 'Directly funded' AND T1.OpenDate > '2000-01-01' "
+            },
+            {
+                "refined_query": " SELECT T2.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T1.`Charter Funding Type` = 'Directly funded' AND T2.OpenDate > '2000-01-01' "
+            },
+            {
+                "refined_query": " SELECT T1.Phone  FROM schools AS T1  INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode  WHERE T2.`Charter School (Y/N)` = 1  AND T1.OpenDate > '2000-01-01'  AND T1.FundingType = 'Directly funded'; "
+            },
+            {
+                "refined_query": " SELECT T1.Phone FROM schools AS T1 JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter Funding Type` = 'Directly funded' AND T2.`Charter School (Y/N)` = 1 AND T1.OpenDate > '2000-01-01'; "
+            },
+            {
+                "refined_query": " SELECT T2.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter Funding Type` = 'Directly funded' AND T2.OpenDate > '2000-01-01' AND T1.`Charter School (Y/N)` = 1 "
+            },
+            {
+                "refined_query": " SELECT T1.Phone FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.OpenDate > '2000-01-01' AND T1.FundingType = 'Directly funded' "
+            },
+            {
+                "refined_query": " SELECT DISTINCT T2.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T2.OpenDate > '2000-01-01' "
+            },
+            {
+                "refined_query": " SELECT T1.Phone FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.FundingType = 'Directly funded' AND T1.OpenDate > '2000-01-01' "
+            },
+            {
+                "refined_query": " SELECT T1.Phone FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T2.`Charter Funding Type` = 'Directly funded' AND T1.OpenDate > '2000-01-01' "
+            },
+            {
+                "refined_query": " SELECT T1.Phone  FROM schools AS T1  INNER JOIN frpm AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T2.`Charter School (Y/N)` = 1  AND T2.`Charter Funding Type` = 'Directly funded'  AND T1.OpenDate > '2000-01-01' "
+            },
+            {
+                "refined_query": " SELECT T2.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T3 ON T2.CDSCode = T3.cds WHERE T1.`Charter School (Y/N)` = 1 AND T2.OpenDate > '2000-01-01' AND T2.FundingType = 'Directly funded' "
+            },
+            {
+                "refined_query": " SELECT T1.Phone FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.OpenDate > '2000-01-01' AND T1.FundingType = 'Directly funded' "
+            },
+            {
+                "refined_query": " SELECT T2.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T2.FundingType = 'Directly funded' AND T2.OpenDate > '2000-01-01' "
+            },
+            {
+                "refined_query": " SELECT T2.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T2.StatusType = 'Active' AND T2.OpenDate > '2000-01-01' "
+            },
+            {
+                "refined_query": " SELECT T2.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T2.FundingType = 'Directly funded' AND T2.OpenDate > '2000-01-01' "
+            }
+        ],
+        "status": "success",
+        "execution_time": 680.8
+    },
+    {
+        "tool_name": "generate_unit_test",
+        "unit_tests": {
+            "unit_test_generation": [
+                "The answer SQL query should use `T1.FundingType = \"Directly funded\"` or `T2.FundingType = \"Directly funded\"` to filter for direct charter-funded schools.",
+                "The answer SQL query should not use `T1.Charter Funding Type = \"Directly funded\"` or `T2.Charter Funding Type = \"Directly funded\"`.",
+                "The answer SQL query should not include an additional table join to `satscores`.",
+                "The answer SQL query should include the condition `T2.OpenDate > \"2000-01-01\"`.",
+                "The answer SQL query should not include the condition `T2.StatusType = \"Active\"`.",
+                "The answer SQL query should not use `SELECT DISTINCT` unless explicitly required by the problem statement.",
+                "Only the best answer from the set of candidates that most accurately answers the question, given the database schema and hint should pass this test."
+            ]
+        },
+        "candidates": [
+            " SELECT T2.Phone FROM schools AS T2 INNER JOIN frpm AS T1 ON T2.CDSCode = T1.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T2.OpenDate > '2000-01-01' AND T2.FundingType = 'Directly funded'; ",
+            " SELECT T1.Phone FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.FundingType = 'Directly funded' AND T2.`Charter School (Y/N)` = 1 AND T1.OpenDate > '2000-01-01' ",
+            " SELECT T2.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T1.`Charter Funding Type` = 'Directly funded' AND T2.OpenDate > '2000-01-01' ",
+            " SELECT T1.Phone FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter Funding Type` = 'Directly funded' AND T1.Charter = 1 AND T1.OpenDate > '2000-01-01' ",
+            " SELECT `T1`.`Phone` FROM `schools` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T2`.`Charter School (Y/N)` = 1 AND `T1`.`FundingType` = 'Directly funded' AND `T1`.`OpenDate` > '2000-01-01' ",
+            " SELECT T1.Phone FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T2.`Charter Funding Type` = 'Directly funded' AND T1.OpenDate > '2000-01-01' ",
+            " SELECT T2.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T1.`Charter Funding Type` = 'Directly funded' AND T2.OpenDate > '2000-01-01' ",
+            " SELECT T1.Phone  FROM schools AS T1  INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode  WHERE T2.`Charter School (Y/N)` = 1  AND T1.OpenDate > '2000-01-01'  AND T1.FundingType = 'Directly funded'; ",
+            " SELECT T1.Phone FROM schools AS T1 JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter Funding Type` = 'Directly funded' AND T2.`Charter School (Y/N)` = 1 AND T1.OpenDate > '2000-01-01'; ",
+            " SELECT T2.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter Funding Type` = 'Directly funded' AND T2.OpenDate > '2000-01-01' AND T1.`Charter School (Y/N)` = 1 ",
+            " SELECT T1.Phone FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.OpenDate > '2000-01-01' AND T1.FundingType = 'Directly funded' ",
+            " SELECT DISTINCT T2.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T2.OpenDate > '2000-01-01' ",
+            " SELECT T1.Phone FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.FundingType = 'Directly funded' AND T1.OpenDate > '2000-01-01' ",
+            " SELECT T1.Phone FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T2.`Charter Funding Type` = 'Directly funded' AND T1.OpenDate > '2000-01-01' ",
+            " SELECT T1.Phone  FROM schools AS T1  INNER JOIN frpm AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T2.`Charter School (Y/N)` = 1  AND T2.`Charter Funding Type` = 'Directly funded'  AND T1.OpenDate > '2000-01-01' ",
+            " SELECT T2.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T3 ON T2.CDSCode = T3.cds WHERE T1.`Charter School (Y/N)` = 1 AND T2.OpenDate > '2000-01-01' AND T2.FundingType = 'Directly funded' ",
+            " SELECT T1.Phone FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.OpenDate > '2000-01-01' AND T1.FundingType = 'Directly funded' ",
+            " SELECT T2.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T2.FundingType = 'Directly funded' AND T2.OpenDate > '2000-01-01' ",
+            " SELECT T2.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T2.StatusType = 'Active' AND T2.OpenDate > '2000-01-01' ",
+            " SELECT T2.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T2.FundingType = 'Directly funded' AND T2.OpenDate > '2000-01-01' "
+        ],
+        "status": "success",
+        "execution_time": 297.2
+    },
+    {
+        "tool_name": "evaluate",
+        "status": "error",
+        "error": "<class 'IndexError'>: <list index out of range>",
+        "execution_time": 208.1
+    },
+    {
+        "tool_name": "execution_accuracy",
+        "generate_candidate": {
+            "exec_res": 0,
+            "exec_err": "incorrect answer",
+            "Question": "Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.",
+            "Evidence": "Charter schools refers to `Charter School (Y/N)` = 1 in the frpm",
+            "GOLD_SQL": "SELECT T2.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter Funding Type` = 'Directly funded' AND T1.`Charter School (Y/N)` = 1 AND T2.OpenDate > '2000-01-01'",
+            "PREDICTED_SQL": " SELECT T2.Phone FROM schools AS T2 INNER JOIN frpm AS T1 ON T2.CDSCode = T1.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T2.OpenDate > '2000-01-01' AND T2.FundingType = 'Directly funded'; "
+        },
+        "revise_1": {
+            "exec_res": 0,
+            "exec_err": "incorrect answer",
+            "Question": "Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.",
+            "Evidence": "Charter schools refers to `Charter School (Y/N)` = 1 in the frpm",
+            "GOLD_SQL": "SELECT T2.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter Funding Type` = 'Directly funded' AND T1.`Charter School (Y/N)` = 1 AND T2.OpenDate > '2000-01-01'",
+            "PREDICTED_SQL": " SELECT T2.Phone FROM schools AS T2 INNER JOIN frpm AS T1 ON T2.CDSCode = T1.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T2.OpenDate > '2000-01-01' AND T2.FundingType = 'Directly funded'; "
+        },
+        "evaluate_1": {
+            "exec_res": "error",
+            "exec_err": "list index out of range",
+            "Question": "Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.",
+            "Evidence": "Charter schools refers to `Charter School (Y/N)` = 1 in the frpm",
+            "GOLD_SQL": "SELECT T2.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter Funding Type` = 'Directly funded' AND T1.`Charter School (Y/N)` = 1 AND T2.OpenDate > '2000-01-01'",
+            "PREDICTED_SQL": "--error--"
+        },
+        "final_SQL": {
+            "exec_res": "error",
+            "exec_err": "list index out of range",
+            "Question": "Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.",
+            "Evidence": "Charter schools refers to `Charter School (Y/N)` = 1 in the frpm",
+            "GOLD_SQL": "SELECT T2.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter Funding Type` = 'Directly funded' AND T1.`Charter School (Y/N)` = 1 AND T2.OpenDate > '2000-01-01'",
+            "PREDICTED_SQL": "--error--"
+        },
+        "status": "success",
+        "execution_time": 0.0
+    }
+]

@@ -1,0 +1,446 @@
+[
+    {
+        "tool_name": "extract_keywords",
+        "keywords": [
+            "unabbreviated mailing street address",
+            "school",
+            "highest FRPM count",
+            "K-12 students",
+            "FRPM"
+        ],
+        "status": "success",
+        "execution_time": 4.8
+    },
+    {
+        "tool_name": "retrieve_entity",
+        "similar_columns": {
+            "schools": [
+                "School",
+                "Street",
+                "County"
+            ]
+        },
+        "schema_with_examples": {
+            "schools": {
+                "Street": [
+                    "551 G Street"
+                ],
+                "MailStreet": [
+                    "922 B Street",
+                    "551 G Street"
+                ],
+                "AdmLName1": [
+                    "Schooler"
+                ],
+                "GSserved": [
+                    "K-12"
+                ],
+                "GSoffered": [
+                    "K-12"
+                ]
+            }
+        },
+        "status": "success",
+        "execution_time": 445.6
+    },
+    {
+        "tool_name": "retrieve_context",
+        "schema_with_descriptions": {
+            "schools": {
+                "mailstreet": {
+                    "column_name": "",
+                    "column_description": "MailStreet",
+                    "value_description": "The unabbreviated mailing address of the school, district, or administrative authority. Note: 1) Some entities (primarily closed or retired schools) may not have data in this field; 2) Many active entities have not provided a mailing street address. For your convenience we have filled the unpopulated MailStreet cells with Street data."
+                },
+                "mailstrabr": {
+                    "column_name": "mailing street address",
+                    "column_description": "",
+                    "value_description": "the abbreviated mailing street address of the school, district, or administrative authority.Note: Many active entities have not provided a mailing street address. For your convenience we have filled the unpopulated MailStrAbr cells with StreetAbr data."
+                },
+                "mailcity": {
+                    "column_name": "mailing city",
+                    "column_description": "",
+                    "value_description": "The city associated with the mailing address of the school, district, or administrative authority. Note: Many entities have not provided a mailing address city. For your convenience we have filled the unpopulated MailCity cells with City data."
+                },
+                "streetabr": {
+                    "column_name": "street address",
+                    "column_description": "The abbreviated street address of the school, district, or administrative authority\u2019s physical location.",
+                    "value_description": "The abbreviated street address of the school, district, or administrative authority\u2019s physical location. Note: Some records (primarily records of closed or retired schools) may not have data in this field."
+                },
+                "school": {
+                    "column_name": "",
+                    "column_description": "School",
+                    "value_description": ""
+                },
+                "website": {
+                    "column_name": "",
+                    "column_description": "The website address of the school, district, or administrative authority.",
+                    "value_description": "The website address of the school, district, or administrative authority."
+                },
+                "gsserved": {
+                    "column_name": "grade span served.",
+                    "column_description": "It is the lowest grade and the highest grade of student enrollment as reported in the most recent certified CALPADS Fall 1 data collection. Only K\u201312 enrollment is reported through CALPADS. This field may differ from the grade span offered.",
+                    "value_description": "1.\u00a0\u00a0\u00a0\u00a0 Only K\u201312 enrollment is reported through CALPADS  2.\u00a0\u00a0\u00a0\u00a0 Note: Special programs at independent study, alternative education, and special education schools will often exceed the typical grade span for schools of that type"
+                }
+            },
+            "frpm": {
+                "school name": {
+                    "column_name": "",
+                    "column_description": "School Name",
+                    "value_description": ""
+                },
+                "school type": {
+                    "column_name": "",
+                    "column_description": "School Type",
+                    "value_description": ""
+                },
+                "frpm count (k-12)": {
+                    "column_name": "",
+                    "column_description": "Free or Reduced Price Meal Count (K-12)",
+                    "value_description": "eligible FRPM rate = FRPM / Enrollment"
+                },
+                "free meal count (k-12)": {
+                    "column_name": "",
+                    "column_description": "Free Meal Count (K-12)",
+                    "value_description": "eligible free rate = Free Meal Count / Enrollment"
+                },
+                "enrollment (k-12)": {
+                    "column_name": "",
+                    "column_description": "Enrollment (K-12)",
+                    "value_description": "K-12: 1st grade - 12nd grade"
+                }
+            },
+            "satscores": {
+                "sname": {
+                    "column_name": "school name",
+                    "column_description": "school name",
+                    "value_description": ""
+                },
+                "numge1500": {
+                    "column_name": "Number of Test Takers Whose Total SAT Scores Are Greater or Equal to 1500",
+                    "column_description": "Number of Test Takers Whose Total SAT Scores Are Greater or Equal to 1500",
+                    "value_description": "Number of Test Takers Whose Total SAT Scores Are Greater or Equal to 1500    Excellence Rate = NumGE1500 / NumTstTakr"
+                },
+                "enroll12": {
+                    "column_name": "enrollment (1st-12nd grade)",
+                    "column_description": "enrollment (1st-12nd grade)",
+                    "value_description": ""
+                }
+            }
+        },
+        "status": "success",
+        "execution_time": 32.2
+    },
+    {
+        "tool_name": "generate_candidate",
+        "node_type": "generate_candidate",
+        "generation_based_candidates": [
+            {
+                "template_name": "generate_candidate_one",
+                "candidates": [
+                    " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) ",
+                    " SELECT T2.MailStreet  FROM frpm AS T1  INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode  WHERE T1.FRPM Count (K-12) = (SELECT MAX(FRPM Count (K-12)) FROM frpm) ",
+                    " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.FRPM Count (K-12) = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+                    " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) ",
+                    " SELECT T1.MailStreet  FROM schools AS T1  INNER JOIN frpm AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T2.CDSCode = (SELECT CDSCode FROM frpm WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm)) ",
+                    " SELECT T2.MailStreet  FROM frpm AS T1  INNER JOIN schools AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) ",
+                    " SELECT T3.MailStreet  FROM frpm AS T1  INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode  WHERE T1.FRPM_Count_K_12 = (SELECT MAX(T1.FRPM_Count_K_12) FROM frpm AS T1) ",
+                    " SELECT T3.MailStreet FROM frpm AS T1 INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode WHERE T1.FRPM Count (K-12) = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+                    " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.CDSCode = (SELECT CDSCode FROM frpm WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm)) ",
+                    " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) "
+                ]
+            },
+            {
+                "template_name": "generate_candidate_two",
+                "candidates": [
+                    " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = ( SELECT MAX(`FRPM Count (K-12)`) FROM frpm ) ",
+                    " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+                    " SELECT T3.MailStreet FROM frpm AS T1 INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode WHERE T1.FRPM Count (K-12) = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+                    " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+                    " SELECT T3.MailStreet FROM frpm AS T1 INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode WHERE T1.FRPM Count (K-12) = ( SELECT MAX(`FRPM Count (K-12)`) FROM frpm ) ",
+                    " SELECT T1.MailStreet FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`FRPM Count (K-12)` IS NOT NULL ORDER BY T2.`FRPM Count (K-12)` DESC LIMIT 1 ",
+                    " SELECT T3.MailStreet  FROM frpm AS T1  INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode  WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+                    " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+                    " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+                    " SELECT T2.MailStreet  FROM frpm AS T1  INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode  WHERE T1.FRPM_Count_K_12 = (SELECT MAX(T1.FRPM_Count_K_12) FROM frpm AS T1) "
+                ]
+            }
+        ],
+        "candidates": [
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) ",
+                "plan": "**Question:** What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?\n**Evidence:** Not explicitly provided, but inferred from the question that we need to find the `MailStreet` of the school with the maximum `FRPM Count (K-12)` from the `frpm` table.\n\n**1. Divide and Conquer:**\n\n* **Main Question:** What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?\n    * **Analysis:** The question asks for the `MailStreet` of the school with the highest `FRPM Count (K-12)`. We need to join the `frpm` and `schools` tables on `CDSCode` to get the `MailStreet` of the school with the highest `FRPM Count (K-12)`.\n    * **Pseudo SQL:** SELECT `T2`.`MailStreet` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE <highest FRPM Count (K-12)>\n\n    * **Sub-question 1:** highest FRPM Count (K-12)\n        * **Analysis:** We need to find the `CDSCode` of the school with the highest `FRPM Count (K-12)` from the `frpm` table.\n        * **Pseudo SQL:** SELECT `CDSCode` FROM `frpm` ORDER BY `FRPM Count (K-12)` DESC LIMIT 1\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (highest FRPM Count (K-12)):**\n    * **SQL:** SELECT `CDSCode` FROM `frpm` ORDER BY `FRPM Count (K-12)` DESC LIMIT 1\n\n* **Main Question (unabbreviated mailing street address):**\n    * **SQL:** SELECT `T2`.`MailStreet` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T1`.`CDSCode` = (SELECT `CDSCode` FROM `frpm` ORDER BY `FRPM Count (K-12)` DESC LIMIT 1)\n\n**3. Simplification and Optimization:**\n\n* The final SQL query is already optimized and does not require further simplification.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T2.MailStreet  FROM frpm AS T1  INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode  WHERE T1.FRPM Count (K-12) = (SELECT MAX(FRPM Count (K-12)) FROM frpm) ",
+                "plan": "**Question:** What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?\n\n**1. Divide and Conquer:**\n\n* **Main Question:** What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?\n    * **Analysis:** We need to find the `MailStreet` from the `schools` table for the school with the highest `FRPM Count (K-12)` from the `frpm` table. We will need to join these tables based on `CDSCode`.\n    * **Pseudo SQL:** SELECT `T2`.`MailStreet` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE <highest FRPM count for K-12 students>\n\n    * **Sub-question 1:** highest FRPM count for K-12 students\n        * **Analysis:** We need to find the `CDSCode` of the school with the highest `FRPM Count (K-12)` in the `frpm` table.\n        * **Pseudo SQL:** SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`)\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (highest FRPM count for K-12 students):**\n    * **SQL:** SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`)\n\n* **Main Question (unabbreviated mailing street address):**\n    * **SQL:** SELECT `T2`.`MailStreet` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T1`.`CDSCode` = (SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`))\n\n**3. Simplification and Optimization:**\n\n* The final SQL query can be simplified to ensure clarity and efficiency.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.FRPM Count (K-12) = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+                "plan": "**Question:** What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?\n\n**1. Divide and Conquer:**\n\n* **Main Question:** What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?\n    * **Analysis:** We need to find the `MailStreet` of the school with the highest `FRPM Count (K-12)`. This requires joining the `frpm` and `schools` tables based on `CDSCode`. We will filter by the maximum `FRPM Count (K-12)` value.\n    * **Pseudo SQL:** SELECT `T2`.`MailStreet` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE <highest FRPM Count (K-12)>\n\n    * **Sub-question 1:** highest FRPM Count (K-12)\n        * **Analysis:** We need to find the maximum `FRPM Count (K-12)` value in the `frpm` table.\n        * **Pseudo SQL:** SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (highest FRPM Count (K-12)):**\n    * **SQL:** SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`\n\n* **Main Question (mailing street address):**\n    * **SQL:** SELECT `T2`.`MailStreet` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T1`.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`)\n\n**3. Simplification and Optimization:**\n\n* The nested query can be directly incorporated into the main query without further optimization needed.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) ",
+                "plan": "**Question:** What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?\n\n**1. Divide and Conquer:**\n\n* **Main Question:** What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?\n    * **Analysis:** The question is asking for the `MailStreet` of the school that has the highest `FRPM Count (K-12)` value. We need to join the `frpm` and `schools` tables on `CDSCode` to get the `MailStreet` of the school.\n    * **Pseudo SQL:** SELECT `T2`.`MailStreet` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE <highest FRPM Count (K-12)>\n\n    * **Sub-question 1:** highest FRPM Count (K-12)\n        * **Analysis:** We need to find the `CDSCode` of the school with the highest `FRPM Count (K-12)` from the `frpm` table. This can be achieved by ordering the `FRPM Count (K-12)` in descending order and limiting the result to 1.\n        * **Pseudo SQL:** SELECT `CDSCode` FROM `frpm` ORDER BY `FRPM Count (K-12)` DESC LIMIT 1\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (highest FRPM Count (K-12)):**\n    * **SQL:** SELECT `CDSCode` FROM `frpm` ORDER BY `FRPM Count (K-12)` DESC LIMIT 1\n\n* **Main Question (mailing street address):**\n    * **SQL:** SELECT `T2`.`MailStreet` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T1`.`CDSCode` = (SELECT `CDSCode` FROM `frpm` ORDER BY `FRPM Count (K-12)` DESC LIMIT 1)\n\n**3. Simplification and Optimization:**\n\n* The query in step 2 is already quite optimized. We're using a subquery to find the `CDSCode` of the school with the highest `FRPM Count (K-12)` and then joining the `frpm` and `schools` tables to retrieve the `MailStreet`.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T1.MailStreet  FROM schools AS T1  INNER JOIN frpm AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T2.CDSCode = (SELECT CDSCode FROM frpm WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm)) ",
+                "plan": "**Question:** What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?\n\n**1. Divide and Conquer:**\n\n* **Main Question:** What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?\n    * **Analysis:** The question is asking for the `MailStreet` of the school with the highest `FRPM Count (K-12)` from the `frpm` table. We need to join the `schools` and `frpm` tables based on `CDSCode` to get the `MailStreet` of the school.\n    * **Pseudo SQL:** SELECT `T1`.`MailStreet` FROM `schools` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE <highest FRPM count for K-12 students>\n\n    * **Sub-question 1:** highest FRPM count for K-12 students\n        * **Analysis:** We need to find the maximum `FRPM Count (K-12)` from the `frpm` table.\n        * **Pseudo SQL:** SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`)\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (highest FRPM count for K-12 students):**\n    * **SQL:** SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`)\n\n* **Main Question (unabbreviated mailing street address):**\n    * **SQL:** SELECT `T1`.`MailStreet` FROM `schools` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T2`.`CDSCode` = (SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`))\n\n**3. Simplification and Optimization:**\n\n* The nested queries can be simplified by using a subquery to directly get the `CDSCode` of the school with the highest `FRPM Count (K-12)` and then joining it with the `schools` table to get the `MailStreet`.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T2.MailStreet  FROM frpm AS T1  INNER JOIN schools AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) ",
+                "plan": "**Question:** What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?\n\n**1. Divide and Conquer:**\n\n* **Main Question:** What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?\n    * **Analysis:** We need to find the `MailStreet` of the school with the highest `FRPM Count (K-12)`. The `frpm` table contains the `FRPM Count (K-12)` and `CDSCode`, while the `schools` table contains the `MailStreet` and `CDSCode`.\n    * **Pseudo SQL:** SELECT `T2`.`MailStreet` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE <highest FRPM count for K-12 students>\n\n    * **Sub-question 1:** highest FRPM count for K-12 students\n        * **Analysis:** We need to find the `CDSCode` of the school with the maximum `FRPM Count (K-12)` from the `frpm` table.\n        * **Pseudo SQL:** SELECT `CDSCode` FROM `frpm` ORDER BY `FRPM Count (K-12)` DESC LIMIT 1\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (highest FRPM count for K-12 students):**\n    * **SQL:** SELECT `CDSCode` FROM `frpm` ORDER BY `FRPM Count (K-12)` DESC LIMIT 1\n\n* **Main Question (mailing street address):**\n    * **SQL:** SELECT `T2`.`MailStreet` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T1`.`CDSCode` = (SELECT `CDSCode` FROM `frpm` ORDER BY `FRPM Count (K-12)` DESC LIMIT 1)\n\n**3. Simplification and Optimization:**\n\n* The nested query can be incorporated directly into the main query to improve readability and performance.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T3.MailStreet  FROM frpm AS T1  INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode  WHERE T1.FRPM_Count_K_12 = (SELECT MAX(T1.FRPM_Count_K_12) FROM frpm AS T1) ",
+                "plan": "**Question:** What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?\n\n**1. Divide and Conquer:**\n\n* **Main Question:** What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?\n    * **Analysis:** The question is asking for the `MailStreet` column from the `schools` table. We need to find the school with the highest `FRPM Count (K-12)` from the `frpm` table. We will need to join `frpm` and `schools` tables on `CDSCode` to get the `MailStreet` of the school with the highest `FRPM Count (K-12)`.\n    * **Pseudo SQL:** SELECT `T3`.`MailStreet` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T3` ON `T1`.`CDSCode` = `T3`.`CDSCode` WHERE <highest FRPM Count (K-12)>\n\n    * **Sub-question 1:** highest FRPM Count (K-12)\n        * **Analysis:** We need to find the maximum value of `FRPM Count (K-12)` from the `frpm` table.\n        * **Pseudo SQL:** SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`)\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (highest FRPM Count (K-12)):**\n    * **SQL:** SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`)\n\n* **Main Question (mailing street address):**\n    * **SQL:** SELECT `T3`.`MailStreet` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T3` ON `T1`.`CDSCode` = `T3`.`CDSCode` WHERE `T1`.`CDSCode` = (SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`))\n\n**3. Simplification and Optimization:**\n\n* The nested queries can be simplified and combined into a single query for better readability and performance.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T3.MailStreet FROM frpm AS T1 INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode WHERE T1.FRPM Count (K-12) = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+                "plan": "**Question:** What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?\n**Evidence:** None provided.\n\n**1. Divide and Conquer:**\n\n* **Main Question:** What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?\n    * **Analysis:** The question asks for the `MailStreet` of the school with the highest `FRPM Count (K-12)` value. We need to find the maximum `FRPM Count (K-12)` in the `frpm` table and then retrieve the corresponding `MailStreet` from the `schools` table.\n    * **Pseudo SQL:** SELECT `T3`.`MailStreet` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T3` ON `T1`.`CDSCode` = `T3`.`CDSCode` WHERE `T1`.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`)\n\n**2. Assembling SQL:**\n\n* **Sub-question (highest FRPM count for K-12 students):**\n    * **SQL:** SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`\n\n* **Main Question (mailing street address):**\n    * **SQL:** SELECT `T3`.`MailStreet` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T3` ON `T1`.`CDSCode` = `T3`.`CDSCode` WHERE `T1`.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`)\n\n**3. Simplification and Optimization:**\n\n* The query is already well-optimized. No further simplifications are needed.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.CDSCode = (SELECT CDSCode FROM frpm WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm)) ",
+                "plan": "**Question:** What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?\n\n**1. Divide and Conquer:**\n\n* **Main Question:** What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?\n    * **Analysis:** We need to find the `MailStreet` (unabbreviated mailing street address) of the school with the highest `FRPM Count (K-12)` value. This involves joining the `frpm` and `schools` tables based on the `CDSCode` foreign key.\n    * **Pseudo SQL:** SELECT `T2`.`MailStreet` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE <highest FRPM Count (K-12)>\n\n    * **Sub-question 1:** highest FRPM Count (K-12)\n        * **Analysis:** We need to find the maximum value of `FRPM Count (K-12)` in the `frpm` table.\n        * **Pseudo SQL:** SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`)\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (highest FRPM Count (K-12)):**\n    * **SQL:** SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`)\n\n* **Main Question (mailing street address):**\n    * **SQL:** SELECT `T2`.`MailStreet` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T1`.`CDSCode` = (SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`))\n\n**3. Simplification and Optimization:**\n\n* The nested query can be simplified by using a subquery to get the `CDSCode` of the school with the highest `FRPM Count (K-12)` and then joining it with the `schools` table to get the `MailStreet`.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) ",
+                "plan": "**Question:** What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?\n\n**1. Divide and Conquer:**\n\n* **Main Question:** What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?\n    * **Analysis:** The question requires us to find the `MailStreet` of the school with the highest `FRPM Count (K-12)` value. We need to join the `frpm` and `schools` tables based on `CDSCode` to get the `MailStreet` of the school with the highest `FRPM Count (K-12)`.\n    * **Pseudo SQL:** SELECT `T2`.`MailStreet` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE <highest FRPM Count (K-12)>\n\n    * **Sub-question 1:** highest FRPM Count (K-12)\n        * **Analysis:** We need to find the `CDSCode` of the school with the highest `FRPM Count (K-12)` from the `frpm` table.\n        * **Pseudo SQL:** SELECT `CDSCode` FROM `frpm` ORDER BY `FRPM Count (K-12)` DESC LIMIT 1\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (highest FRPM Count (K-12)):**\n    * **SQL:** SELECT `CDSCode` FROM `frpm` ORDER BY `FRPM Count (K-12)` DESC LIMIT 1\n\n* **Main Question (mailing street address):**\n    * **SQL:** SELECT `T2`.`MailStreet` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T1`.`CDSCode` = (SELECT `CDSCode` FROM `frpm` ORDER BY `FRPM Count (K-12)` DESC LIMIT 1)\n\n**3. Simplification and Optimization:**\n\n* The nested query can be directly incorporated into the main query to improve readability and performance.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = ( SELECT MAX(`FRPM Count (K-12)`) FROM frpm ) ",
+                "plan": "**Question**: What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the frpm and schools tables to access relevant data.\n\n** Identify the School with the Highest FRPM Count for K-12 Students: **\n1. Scan the frpm table: Start reading rows from the frpm table.\n2. Extract the FRPM Count (K-12): For each row, retrieve the value from the `FRPM Count (K-12)` column.\n3. Find the maximum FRPM Count (K-12): Identify the maximum value of `FRPM Count (K-12)` across all rows.\n4. Identify the corresponding CDSCode: Use the maximum FRPM Count (K-12) to find the corresponding CDSCode in the frpm table.\n\n** Retrieve the Mailing Street Address: **\n1. Join frpm and schools tables: Use the identified CDSCode to join the frpm table with the schools table on the CDSCode column.\n2. Extract the mailing street address: Retrieve the value from the `MailStreet` column in the schools table for the matched row.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final mailing street address for presentation.\n2. Output the final mailing street address: Deliver the mailing street address as the query result.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+                "plan": "**Question**: What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?\n**Evidence**: None provided, but based on the context, we infer that the highest FRPM count for K-12 students needs to be determined from the `frpm` table and then linked to the `schools` table to get the mailing street address.\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the `frpm` and `schools` tables to access relevant data.\n\n** Identify the School with the Highest FRPM Count: **\n1. Scan the `frpm` table: Start reading rows from the `frpm` table to identify the school with the highest FRPM count for K-12 students.\n2. Extract the `FRPM Count (K-12)` column: For each row, retrieve the value from the `FRPM Count (K-12)` column.\n3. Identify the maximum FRPM count: Track the maximum value of the `FRPM Count (K-12)` and the corresponding `CDSCode`.\n\n** Retrieve the Mailing Street Address: **\n1. Join the `frpm` and `schools` tables: Use the `CDSCode` to join the `frpm` table with the `schools` table.\n2. Filter by the maximum FRPM count: Select only those rows where the `FRPM Count (K-12)` equals the maximum value identified earlier.\n3. Extract the `MailStreet` column: Retrieve the `MailStreet` column from the `schools` table for the school with the highest FRPM count.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the mailing street address for presentation.\n2. Output the final result: Deliver the mailing street address as the query result.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T3.MailStreet FROM frpm AS T1 INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode WHERE T1.FRPM Count (K-12) = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+                "plan": "**Question**: What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?\n**Evidence**: Not explicitly provided, but inferred from the context that the highest FRPM count for K-12 students needs to be determined from the `frpm` table and then matched with the `schools` table to retrieve the unabbreviated mailing street address.\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment for query execution, including necessary variables and temporary storage.\n2. Open required tables: Open the `frpm` and `schools` tables to access relevant data.\n\n** Identify the School with the Highest FRPM Count for K-12 Students: **\n1. Scan the `frpm` table: Retrieve records from the `frpm` table to identify the highest FRPM count for K-12 students.\n2. Extract the FRPM Count (K-12): For each row, retrieve the value from the `FRPM Count (K-12)` column.\n3. Determine the maximum FRPM count: Identify the maximum value of the `FRPM Count (K-12)` column.\n4. Store the corresponding CDSCode: Record the CDSCode associated with the highest FRPM count.\n\n** Retrieve the Unabbreviated Mailing Street Address: **\n1. Join `frpm` and `schools` tables: Use the stored CDSCode to join the `frpm` table with the `schools` table.\n2. Extract the unabbreviated mailing street address: Retrieve the `MailStreet` column from the `schools` table for the matched record.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the unabbreviated mailing street address for presentation.\n2. Output the final result: Deliver the unabbreviated mailing street address as the query result.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+                "plan": "**Question**: What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?\n**Evidence**: None provided, but based on the context, we infer that the highest FRPM count for K-12 students can be found in the `frpm` table under the column `FRPM Count (K-12)`.\n\n** Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the `schools` and `frpm` tables to access relevant data.\n\n** Identify the School with the Highest FRPM Count: **\n1. Scan the `frpm` table: Start reading rows from the `frpm` table.\n2. Extract the FRPM Count (K-12): For each row, retrieve the value from the `FRPM Count (K-12)` column.\n3. Identify the maximum FRPM Count (K-12): Keep track of the maximum FRPM Count (K-12) and the corresponding `CDSCode`.\n\n** Retrieve the Mailing Street Address: **\n1. Join with `schools` table: Use the `CDSCode` from the `frpm` table to join with the `schools` table.\n2. Extract the `MailStreet` column: Retrieve the unabbreviated mailing street address from the `MailStreet` column of the `schools` table.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final mailing street address for presentation.\n2. Output the final result: Deliver the mailing street address of the school with the highest FRPM count for K-12 students.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T3.MailStreet FROM frpm AS T1 INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode WHERE T1.FRPM Count (K-12) = ( SELECT MAX(`FRPM Count (K-12)`) FROM frpm ) ",
+                "plan": "**Question:** What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?\n**Evidence:** None provided, but based on the context, we infer that the FRPM count for K-12 students is stored in the `frpm` table under the column `FRPM Count (K-12)`.\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the `frpm` and `schools` tables to access relevant data.\n\n** Identify the School with the Highest FRPM Count: **\n1. Scan the `frpm` table: Retrieve records from the `frpm` table to find the maximum `FRPM Count (K-12)`.\n2. Extract the CDSCode: For the record with the highest `FRPM Count (K-12)`, retrieve the corresponding `CDSCode`.\n\n** Retrieve the Mailing Street Address: **\n1. Join `frpm` and `schools`: Use the `CDSCode` to join the `frpm` table with the `schools` table to retrieve the unabbreviated mailing street address.\n2. Select the MailStreet column: From the joined result, select the `MailStreet` column which contains the unabbreviated mailing street address.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final mailing street address for presentation.\n2. Output the final result: Deliver the unabbreviated mailing street address as the query result.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T1.MailStreet FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`FRPM Count (K-12)` IS NOT NULL ORDER BY T2.`FRPM Count (K-12)` DESC LIMIT 1 ",
+                "plan": "**Question**: What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the `schools` and `frpm` tables to access relevant data.\n\n** Identify the School with the Highest FRPM Count: **\n1. Join schools and frpm tables: Merge records from `schools` and `frpm` based on the `CDSCode` foreign key.\n2. Filter by FRPM Count (K-12): Select only those records where the `FRPM Count (K-12)` column is not null.\n3. Order by FRPM Count (K-12) Descending: Sort the records by the `FRPM Count (K-12)` column in descending order to prioritize higher counts.\n4. Limit to the top record: Select only the top record to identify the school with the highest FRPM count.\n\n** Retrieve the Mailing Street Address: **\n1. Extract the mailing street address: From the selected record, retrieve the `MailStreet` column, which contains the unabbreviated mailing street address.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the mailing street address for presentation.\n2. Output the final result: Deliver the mailing street address of the school with the highest FRPM count for K-12 students.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T3.MailStreet  FROM frpm AS T1  INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode  WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+                "plan": "**Question**: What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the `frpm` and `schools` tables to access relevant data.\n\n** Identify the School with the Highest FRPM Count: **\n1. Scan the `frpm` table: Retrieve records from the `frpm` table to identify the highest `FRPM Count (K-12)`.\n2. Extract the CDSCode: For the record with the highest `FRPM Count (K-12)`, retrieve the `CDSCode`.\n\n** Retrieve the Mailing Street Address: **\n1. Join `schools` table: Use the `CDSCode` to join the `frpm` table with the `schools` table.\n2. Extract the `MailStreet`: Retrieve the `MailStreet` column from the `schools` table for the matched record.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final mailing street address for presentation.\n2. Output the final result: Deliver the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+                "plan": "**Question:** What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?\n\n**Query Plan:**\n\n**Preparation Steps:**\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the `frpm` and `schools` tables to access relevant data.\n\n**Identify the School with the Highest FRPM Count for K-12 Students:**\n1. Scan the `frpm` table: Retrieve records from the `frpm` table to identify the highest `FRPM Count (K-12)`.\n2. Extract the CDSCode: For the record with the highest `FRPM Count (K-12)`, retrieve the `CDSCode`.\n3. Join with `schools` table: Use the `CDSCode` to join the `frpm` table with the `schools` table to get the unabbreviated mailing street address (`MailStreet`).\n\n**Retrieve the Unabbreviated Mailing Street Address:**\n1. Select the `MailStreet` column: From the joined records, select the `MailStreet` column which corresponds to the school with the highest `FRPM Count (K-12)`.\n\n**Finalize and Deliver the Result:**\n1. Prepare the result for output: Format the final mailing street address for presentation.\n2. Output the final result: Deliver the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+                "plan": "**Question**: What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?\n**Evidence**: None provided, but based on the table schemas, FRPM count for K-12 students refers to `FRPM Count (K-12)` in the `frpm` table.\n\n** Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the `frpm` and `schools` tables to access relevant data.\n\n** Identify the School with the Highest FRPM Count: **\n1. Scan the `frpm` table: Retrieve records from the `frpm` table to identify the highest `FRPM Count (K-12)`.\n2. Extract the CDSCode: For the record with the highest `FRPM Count (K-12)`, retrieve the `CDSCode`.\n3. Join with `schools` table: Use the `CDSCode` to join with the `schools` table to find the corresponding school details.\n4. Retrieve the mailing street address: From the joined records, extract the `MailStreet` column which contains the unabbreviated mailing street address.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final mailing street address for presentation.\n2. Output the final result: Deliver the mailing street address as the query result.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T2.MailStreet  FROM frpm AS T1  INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode  WHERE T1.FRPM_Count_K_12 = (SELECT MAX(T1.FRPM_Count_K_12) FROM frpm AS T1) ",
+                "plan": "**Question**: What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?\n**Evidence**: The evidence provided does not give explicit mappings but implies that the highest FRPM count for K-12 students should be derived from the `frpm` table, specifically the `FRPM Count (K-12)` column.\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the `frpm` and `schools` tables to access relevant data.\n\n** Identify the School with the Highest FRPM Count for K-12 Students: **\n1. Scan the `frpm` table: Retrieve records from the `frpm` table to identify the highest `FRPM Count (K-12)`.\n2. Extract the CDSCode: For the record with the highest `FRPM Count (K-12)`, retrieve the `CDSCode`.\n3. Join with `schools` table: Use the `CDSCode` to join with the `schools` table to retrieve the unabbreviated mailing street address.\n\n** Retrieve the Mailing Street Address: **\n1. Extract the `MailStreet` column: From the joined `schools` table, retrieve the `MailStreet` column, which contains the unabbreviated mailing street address.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final mailing street address for presentation.\n2. Output the final result: Deliver the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            }
+        ],
+        "status": "success",
+        "execution_time": 2057.5
+    },
+    {
+        "tool_name": "revise",
+        "original_SQL_id": "generate_candidate",
+        "refined_SQL_id": "revise_1",
+        "candidates": [
+            {
+                "refined_query": " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) "
+            },
+            {
+                "refined_query": " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) "
+            },
+            {
+                "refined_query": " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) "
+            },
+            {
+                "refined_query": " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) "
+            },
+            {
+                "refined_query": " SELECT T1.MailStreet  FROM schools AS T1  INNER JOIN frpm AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T2.CDSCode = (SELECT CDSCode FROM frpm WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm)) "
+            },
+            {
+                "refined_query": " SELECT T2.MailStreet  FROM frpm AS T1  INNER JOIN schools AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) "
+            },
+            {
+                "refined_query": " SELECT T3.MailStreet FROM frpm AS T1 INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) "
+            },
+            {
+                "refined_query": " SELECT T3.MailStreet FROM frpm AS T1 INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) "
+            },
+            {
+                "refined_query": " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.CDSCode = (SELECT CDSCode FROM frpm WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm)) "
+            },
+            {
+                "refined_query": " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) "
+            },
+            {
+                "refined_query": " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = ( SELECT MAX(`FRPM Count (K-12)`) FROM frpm ) "
+            },
+            {
+                "refined_query": " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) "
+            },
+            {
+                "refined_query": " SELECT T3.MailStreet FROM frpm AS T1 INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) "
+            },
+            {
+                "refined_query": " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) "
+            },
+            {
+                "refined_query": " SELECT T3.MailStreet FROM frpm AS T1 INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) "
+            },
+            {
+                "refined_query": " SELECT T1.MailStreet FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`FRPM Count (K-12)` IS NOT NULL ORDER BY T2.`FRPM Count (K-12)` DESC LIMIT 1 "
+            },
+            {
+                "refined_query": " SELECT T3.MailStreet  FROM frpm AS T1  INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode  WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) "
+            },
+            {
+                "refined_query": " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) "
+            },
+            {
+                "refined_query": " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) "
+            },
+            {
+                "refined_query": " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) "
+            }
+        ],
+        "status": "success",
+        "execution_time": 297.6
+    },
+    {
+        "tool_name": "generate_unit_test",
+        "unit_tests": {
+            "unit_test_generation": []
+        },
+        "candidates": [
+            " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) ",
+            " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+            " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+            " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) ",
+            " SELECT T1.MailStreet  FROM schools AS T1  INNER JOIN frpm AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T2.CDSCode = (SELECT CDSCode FROM frpm WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm)) ",
+            " SELECT T2.MailStreet  FROM frpm AS T1  INNER JOIN schools AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) ",
+            " SELECT T3.MailStreet FROM frpm AS T1 INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+            " SELECT T3.MailStreet FROM frpm AS T1 INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+            " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.CDSCode = (SELECT CDSCode FROM frpm WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm)) ",
+            " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) ",
+            " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = ( SELECT MAX(`FRPM Count (K-12)`) FROM frpm ) ",
+            " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+            " SELECT T3.MailStreet FROM frpm AS T1 INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+            " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+            " SELECT T3.MailStreet FROM frpm AS T1 INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+            " SELECT T1.MailStreet FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`FRPM Count (K-12)` IS NOT NULL ORDER BY T2.`FRPM Count (K-12)` DESC LIMIT 1 ",
+            " SELECT T3.MailStreet  FROM frpm AS T1  INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode  WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+            " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+            " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+            " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) "
+        ],
+        "status": "success",
+        "execution_time": 0.6
+    },
+    {
+        "tool_name": "evaluate",
+        "scores": [
+            1
+        ],
+        "comparison_matrix": [
+            [
+                1
+            ]
+        ],
+        "candidates": [
+            " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) ",
+            " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+            " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+            " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) ",
+            " SELECT T1.MailStreet  FROM schools AS T1  INNER JOIN frpm AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T2.CDSCode = (SELECT CDSCode FROM frpm WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm)) ",
+            " SELECT T2.MailStreet  FROM frpm AS T1  INNER JOIN schools AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) ",
+            " SELECT T3.MailStreet FROM frpm AS T1 INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+            " SELECT T3.MailStreet FROM frpm AS T1 INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+            " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.CDSCode = (SELECT CDSCode FROM frpm WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm)) ",
+            " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) ",
+            " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = ( SELECT MAX(`FRPM Count (K-12)`) FROM frpm ) ",
+            " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+            " SELECT T3.MailStreet FROM frpm AS T1 INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+            " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+            " SELECT T3.MailStreet FROM frpm AS T1 INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+            " SELECT T1.MailStreet FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`FRPM Count (K-12)` IS NOT NULL ORDER BY T2.`FRPM Count (K-12)` DESC LIMIT 1 ",
+            " SELECT T3.MailStreet  FROM frpm AS T1  INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode  WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+            " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+            " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+            " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) "
+        ],
+        "selected_candidate": " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) ",
+        "status": "success",
+        "execution_time": 0.0
+    },
+    {
+        "tool_name": "execution_accuracy",
+        "generate_candidate": {
+            "exec_res": 1,
+            "exec_err": "--",
+            "Question": "What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?",
+            "Evidence": "",
+            "GOLD_SQL": "SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode ORDER BY T1.`FRPM Count (K-12)` DESC LIMIT 1",
+            "PREDICTED_SQL": " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) "
+        },
+        "revise_1": {
+            "exec_res": 1,
+            "exec_err": "--",
+            "Question": "What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?",
+            "Evidence": "",
+            "GOLD_SQL": "SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode ORDER BY T1.`FRPM Count (K-12)` DESC LIMIT 1",
+            "PREDICTED_SQL": " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) "
+        },
+        "evaluate_1": {
+            "exec_res": 1,
+            "exec_err": "--",
+            "Question": "What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?",
+            "Evidence": "",
+            "GOLD_SQL": "SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode ORDER BY T1.`FRPM Count (K-12)` DESC LIMIT 1",
+            "PREDICTED_SQL": " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) "
+        },
+        "final_SQL": {
+            "exec_res": 1,
+            "exec_err": "--",
+            "Question": "What is the unabbreviated mailing street address of the school with the highest FRPM count for K-12 students?",
+            "Evidence": "",
+            "GOLD_SQL": "SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode ORDER BY T1.`FRPM Count (K-12)` DESC LIMIT 1",
+            "PREDICTED_SQL": " SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) "
+        },
+        "status": "success",
+        "execution_time": 0.3
+    }
+]

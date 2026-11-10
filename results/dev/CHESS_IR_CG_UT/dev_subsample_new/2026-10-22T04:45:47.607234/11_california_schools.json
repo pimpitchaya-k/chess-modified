@@ -1,0 +1,918 @@
+[
+    {
+        "tool_name": "extract_keywords",
+        "keywords": [
+            "schools",
+            "total enrollment",
+            "over 500",
+            "Enrollment (K-12)",
+            "Enrollment (Ages 5-17)",
+            "codes"
+        ],
+        "status": "success",
+        "execution_time": 8.3
+    },
+    {
+        "tool_name": "retrieve_entity",
+        "similar_columns": {
+            "schools": [
+                "School"
+            ],
+            "frpm": [
+                "Enrollment (K-12)",
+                "Enrollment (Ages 5-17)"
+            ]
+        },
+        "schema_with_examples": {
+            "schools": {
+                "Ext": [
+                    "5003",
+                    "5005",
+                    "5000",
+                    "5006"
+                ],
+                "CharterNum": [
+                    "1500"
+                ],
+                "GSoffered": [
+                    "K-12"
+                ],
+                "GSserved": [
+                    "K-12"
+                ]
+            },
+            "frpm": {
+                "Charter School Number": [
+                    "1500"
+                ]
+            }
+        },
+        "status": "success",
+        "execution_time": 174.8
+    },
+    {
+        "tool_name": "retrieve_context",
+        "schema_with_descriptions": {
+            "frpm": {
+                "school code": {
+                    "column_name": "",
+                    "column_description": "School Code",
+                    "value_description": ""
+                },
+                "enrollment (k-12)": {
+                    "column_name": "",
+                    "column_description": "Enrollment (K-12)",
+                    "value_description": "K-12: 1st grade - 12nd grade"
+                },
+                "enrollment (ages 5-17)": {
+                    "column_name": "",
+                    "column_description": "Enrollment (Ages 5-17)",
+                    "value_description": ""
+                }
+            },
+            "schools": {
+                "gsserved": {
+                    "column_name": "grade span served.",
+                    "column_description": "It is the lowest grade and the highest grade of student enrollment as reported in the most recent certified CALPADS Fall 1 data collection. Only K\u201312 enrollment is reported through CALPADS. This field may differ from the grade span offered.",
+                    "value_description": "1.\u00a0\u00a0\u00a0\u00a0 Only K\u201312 enrollment is reported through CALPADS  2.\u00a0\u00a0\u00a0\u00a0 Note: Special programs at independent study, alternative education, and special education schools will often exceed the typical grade span for schools of that type"
+                },
+                "edopscode": {
+                    "column_name": "Education Option Code",
+                    "column_description": "The Education Option Code is a short text description of the type of education offered.",
+                    "value_description": "\u2022      ALTSOC \u2013 Alternative School of Choice \u2022      COMM \u2013 County Community School \u2022       COMMDAY \u2013 Community Day School \u2022       CON \u2013 Continuation School \u2022       JUV \u2013 Juvenile Court School \u2022       OPP \u2013 Opportunity School \u2022       YTH \u2013 Youth Authority School \u2022       SSS \u2013 State Special School \u2022       SPEC \u2013 Special Education School \u2022       TRAD \u2013 Traditional \u2022       ROP \u2013 Regional Occupational Program \u2022       HOMHOS \u2013 Home and Hospital \u2022       SPECON \u2013 District Consortia Special Education School"
+                },
+                "soc": {
+                    "column_name": "School Ownership Code",
+                    "column_description": "The School Ownership Code is a numeric code used to identify the type of school.",
+                    "value_description": "\u2022      08 - Preschool       \u2022       09 \u2013 Special Education Schools (Public) \u2022      11 \u2013 Youth Authority Facilities (CEA) \u2022       13 \u2013 Opportunity Schools \u2022       14 \u2013 Juvenile Court Schools \u2022       15 \u2013 Other County or District Programs \u2022       31 \u2013 State Special Schools \u2022       60 \u2013 Elementary School (Public) \u2022       61 \u2013 Elementary School in 1 School District (Public) \u2022       62 \u2013 Intermediate/Middle Schools (Public) \u2022       63 \u2013 Alternative Schools of Choice \u2022       64 \u2013 Junior High Schools (Public) \u2022       65 \u2013 K-12 Schools (Public) \u2022       66 \u2013 High Schools (Public) \u2022       67 \u2013 High Schools in 1 School District (Public) \u2022       68 \u2013 Continuation High Schools \u2022       69 \u2013 District Community Day Schools \u2022       70 \u2013 Adult Education Centers \u2022       98 \u2013 Regional Occupational Center/Program (ROC/P)"
+                },
+                "soctype": {
+                    "column_name": "School Ownership Code Type",
+                    "column_description": "The School Ownership Code Type is the text description of the type of school.",
+                    "value_description": "The School Ownership Code Type is the text description of the type of school."
+                }
+            },
+            "satscores": {
+                "enroll12": {
+                    "column_name": "enrollment (1st-12nd grade)",
+                    "column_description": "enrollment (1st-12nd grade)",
+                    "value_description": ""
+                }
+            }
+        },
+        "status": "success",
+        "execution_time": 81.5
+    },
+    {
+        "tool_name": "generate_candidate",
+        "node_type": "generate_candidate",
+        "generation_based_candidates": [
+            {
+                "template_name": "generate_candidate_one",
+                "candidates": [
+                    " SELECT T1.CDSCode FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)` > 500 ",
+                    " SELECT `T2`.`School Code` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T1`.`Enrollment (K-12)` + `T1`.`Enrollment (Ages 5-17)` > 500 ",
+                    " SELECT `T1`.`CDSCode` FROM `frpm` AS `T1` WHERE `T1`.`Enrollment (K-12)` + `T1`.`Enrollment (Ages 5-17)` > 500 ",
+                    " SELECT CDSCode FROM frpm WHERE `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500 ",
+                    " SELECT CDSCode FROM frpm GROUP BY CDSCode HAVING SUM(`Enrollment (K-12)`, `Enrollment (Ages 5-17)`) > 500 ",
+                    " SELECT CDSCode FROM frpm WHERE `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500 ",
+                    " SELECT T1.CDSCode FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)` > 500 ",
+                    " SELECT `School Code` FROM `frpm` WHERE `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500 ",
+                    " SELECT T1.CDSCode FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)` > 500 ",
+                    " SELECT T1.CDSCode FROM frpm AS T1 WHERE T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)` > 500 "
+                ]
+            },
+            {
+                "template_name": "generate_candidate_two",
+                "candidates": [
+                    " SELECT T1.CDSCode  FROM schools AS T1  INNER JOIN frpm AS T2  ON T1.CDSCode = T2.CDSCode  WHERE (T2.`Enrollment (K-12)` + T2.`Enrollment (Ages 5-17)`) > 500 ",
+                    " SELECT CDSCode FROM frpm WHERE (`Enrollment (K-12)` + `Enrollment (Ages 5-17)`) > 500 ",
+                    " SELECT DISTINCT T1.CDSCode FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE (T1.`Enrollment (Ages 5-17)` + T2.`Enroll12`) > 500 ",
+                    " SELECT `School Code` FROM frpm WHERE `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500 ",
+                    " SELECT T2.`School Code` FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE (T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)`) > 500 ",
+                    " SELECT DISTINCT T2.CDSCode  FROM frpm AS T1  INNER JOIN schools AS T2  ON T1.CDSCode = T2.CDSCode  WHERE (T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)`) > 500 ",
+                    " SELECT DISTINCT T2.CDSCode FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE (T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)`) > 500 ",
+                    " SELECT DISTINCT `School Code` FROM frpm WHERE `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500 ",
+                    " SELECT DISTINCT T1.CDSCode FROM frpm AS T1 WHERE (T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)`) > 500 ",
+                    " SELECT DISTINCT T2.CDSCode FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)` > 500 "
+                ]
+            }
+        ],
+        "candidates": [
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T1.CDSCode FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)` > 500 ",
+                "plan": "**Question:** Please list the codes of the schools with a total enrollment of over 500.\n**Evidence:** Total enrollment can be represented by `Enrollment (K-12)` + `Enrollment (Ages 5-17)`\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the codes of the schools with a total enrollment of over 500.\n    * **Analysis:** We need to calculate the total enrollment for each school and then filter those with an enrollment greater than 500. The total enrollment is the sum of `Enrollment (K-12)` and `Enrollment (Ages 5-17)`. We can get these enrollments from the `frpm` table and link it to the `schools` table via the `CDSCode` foreign key.\n    * **Pseudo SQL:** SELECT `T1`.`CDSCode` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE <total enrollment > 500>\n\n    * **Sub-question 1:** total enrollment > 500\n        * **Analysis:** We need to sum up `Enrollment (K-12)` and `Enrollment (Ages 5-17)` from the `frpm` table and compare it against 500.\n        * **Pseudo SQL:** `T1`.`Enrollment (K-12)` + `T1`.`Enrollment (Ages 5-17)` > 500\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (total enrollment > 500):**\n    * **SQL:** `T1`.`Enrollment (K-12)` + `T1`.`Enrollment (Ages 5-17)` > 500\n\n* **Main Question (codes of schools):**\n    * **SQL:** SELECT `T1`.`CDSCode` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T1`.`Enrollment (K-12)` + `T1`.`Enrollment (Ages 5-17)` > 500\n\n**3. Simplification and Optimization:**\n\n* The query is already optimized. We are using an `INNER JOIN` to combine the `frpm` and `schools` tables based on the `CDSCode` foreign key and applying the condition on the total enrollment.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT `T2`.`School Code` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T1`.`Enrollment (K-12)` + `T1`.`Enrollment (Ages 5-17)` > 500 ",
+                "plan": "**Question:** Please list the codes of the schools with a total enrollment of over 500.\n**Evidence:** Total enrollment can be represented by `Enrollment (K-12)` + `Enrollment (Ages 5-17)`\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the codes of the schools with a total enrollment of over 500.\n    * **Analysis:** The question asks for the `School Code` of schools where the sum of `Enrollment (K-12)` and `Enrollment (Ages 5-17)` exceeds 500. We need to join the `frpm` table with the `schools` table to get the `School Code`.\n    * **Pseudo SQL:** SELECT `T2`.`School Code` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE <total enrollment > 500>\n\n    * **Sub-question 1:** total enrollment > 500\n        * **Analysis:** This involves calculating the sum of `Enrollment (K-12)` and `Enrollment (Ages 5-17)` from the `frpm` table and checking if the sum is greater than 500.\n        * **Pseudo SQL:** `T1`.`Enrollment (K-12)` + `T1`.`Enrollment (Ages 5-17)` > 500\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (total enrollment > 500):**\n    * **SQL:** `T1`.`Enrollment (K-12)` + `T1`.`Enrollment (Ages 5-17)` > 500\n\n* **Main Question (codes of the schools):**\n    * **SQL:** SELECT `T2`.`School Code` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T1`.`Enrollment (K-12)` + `T1`.`Enrollment (Ages 5-17)` > 500\n\n**3. Simplification and Optimization:**\n\n* The query in step 2 is already quite optimized. We are using an `INNER JOIN` to combine the `frpm` and `schools` tables based on `CDSCode`, and applying the filter on the sum of enrollments.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT `T1`.`CDSCode` FROM `frpm` AS `T1` WHERE `T1`.`Enrollment (K-12)` + `T1`.`Enrollment (Ages 5-17)` > 500 ",
+                "plan": "**Question:** Please list the codes of the schools with a total enrollment of over 500.\n**Evidence:** Total enrollment can be represented by `Enrollment (K-12)` + `Enrollment (Ages 5-17)`\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the codes of the schools with a total enrollment of over 500.\n    * **Analysis:** The question asks for the `CDSCode` of schools whose total enrollment exceeds 500. We need to calculate the total enrollment by summing up `Enrollment (K-12)` and `Enrollment (Ages 5-17)` from the `frpm` table. Then, we need to filter out schools with a total enrollment greater than 500.\n    * **Pseudo SQL:** SELECT `T1`.`CDSCode` FROM `frpm` AS `T1` WHERE <total enrollment > 500>\n\n    * **Sub-question 1:** total enrollment > 500\n        * **Analysis:** We need to sum up the enrollments from the `frpm` table and compare it against 500.\n        * **Pseudo SQL:** `T1`.`Enrollment (K-12)` + `T1`.`Enrollment (Ages 5-17)` > 500\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (total enrollment > 500):**\n    * **SQL:** `T1`.`Enrollment (K-12)` + `T1`.`Enrollment (Ages 5-17)` > 500\n\n* **Main Question (codes of schools):**\n    * **SQL:** SELECT `T1`.`CDSCode` FROM `frpm` AS `T1` WHERE `T1`.`Enrollment (K-12)` + `T1`.`Enrollment (Ages 5-17)` > 500\n\n**3. Simplification and Optimization:**\n\n* The query in step 2 is already quite optimized. We are directly calculating the total enrollment and applying the filter in a single `WHERE` clause.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT CDSCode FROM frpm WHERE `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500 ",
+                "plan": "**Question:** Please list the codes of the schools with a total enrollment of over 500.\n**Evidence:** Total enrollment can be represented by `Enrollment (K-12)` + `Enrollment (Ages 5-17)`\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the codes of the schools with a total enrollment of over 500.\n    * **Analysis:** The question asks for the `CDSCode` of schools whose total enrollment exceeds 500. We need to calculate the total enrollment by summing `Enrollment (K-12)` and `Enrollment (Ages 5-17)` from the `frpm` table and filter out those with a total enrollment greater than 500.\n    * **Pseudo SQL:** SELECT `CDSCode` FROM `frpm` WHERE <total enrollment > 500>\n\n    * **Sub-question 1:** total enrollment > 500\n        * **Analysis:** We need to calculate the total enrollment by summing `Enrollment (K-12)` and `Enrollment (Ages 5-17)` from the `frpm` table.\n        * **Pseudo SQL:** `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (total enrollment > 500):**\n    * **SQL:** `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500\n\n* **Main Question (codes of schools):**\n    * **SQL:** SELECT `CDSCode` FROM `frpm` WHERE `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500\n\n**3. Simplification and Optimization:**\n\n* The SQL query from step 2 is already quite efficient. We are directly calculating the total enrollment and applying the filter in a single query.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT CDSCode FROM frpm GROUP BY CDSCode HAVING SUM(`Enrollment (K-12)`, `Enrollment (Ages 5-17)`) > 500 ",
+                "plan": "**Question:** Please list the codes of the schools with a total enrollment of over 500.\n**Evidence:** Total enrollment can be represented by `Enrollment (K-12)` + `Enrollment (Ages 5-17)`\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the codes of the schools with a total enrollment of over 500.\n    * **Analysis:** The question is asking for the `CDSCode` of schools whose total enrollment (sum of `Enrollment (K-12)` and `Enrollment (Ages 5-17)`) exceeds 500. We need to sum the enrollments from the `frpm` table and filter those that meet the criteria.\n    * **Pseudo SQL:** SELECT `CDSCode` FROM `frpm` WHERE <total enrollment > 500>\n\n    * **Sub-question 1:** total enrollment > 500\n        * **Analysis:** We need to calculate the total enrollment for each school by summing `Enrollment (K-12)` and `Enrollment (Ages 5-17)` and then filter those that exceed 500.\n        * **Pseudo SQL:** SUM(`Enrollment (K-12)`, `Enrollment (Ages 5-17)`) > 500\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (total enrollment > 500):**\n    * **SQL:** SUM(`Enrollment (K-12)`, `Enrollment (Ages 5-17)`) > 500\n\n* **Main Question (codes of schools):**\n    * **SQL:** SELECT `CDSCode` FROM `frpm` WHERE SUM(`Enrollment (K-12)`, `Enrollment (Ages 5-17)`) > 500\n\n**3. Simplification and Optimization:**\n\n* The above SQL query needs to be adjusted to correctly calculate the sum of the two enrollment fields and apply the filter. We can use a `HAVING` clause to filter the aggregated results.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT CDSCode FROM frpm WHERE `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500 ",
+                "plan": "**Question:** Please list the codes of the schools with a total enrollment of over 500.\n**Evidence:** Total enrollment can be represented by `Enrollment (K-12)` + `Enrollment (Ages 5-17)`\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the codes of the schools with a total enrollment of over 500.\n    * **Analysis:** The question is asking for the `CDSCode` of schools whose total enrollment (sum of `Enrollment (K-12)` and `Enrollment (Ages 5-17)`) is greater than 500. We need to sum the enrollments and filter based on this condition.\n    * **Pseudo SQL:** SELECT `CDSCode` FROM `frpm` WHERE <total enrollment > 500>\n\n    * **Sub-question 1:** total enrollment > 500\n        * **Analysis:** We need to calculate the total enrollment by summing up `Enrollment (K-12)` and `Enrollment (Ages 5-17)`. Then, we filter the records where this sum is greater than 500.\n        * **Pseudo SQL:** SUM(`Enrollment (K-12)`, `Enrollment (Ages 5-17)`) > 500\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (total enrollment > 500):**\n    * **SQL:** SUM(`Enrollment (K-12)`, `Enrollment (Ages 5-17)`) > 500\n\n* **Main Question (codes of schools):**\n    * **SQL:** SELECT `CDSCode` FROM `frpm` WHERE `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500\n\n**3. Simplification and Optimization:**\n\n* The query is already straightforward and does not require further optimization.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T1.CDSCode FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)` > 500 ",
+                "plan": "**Question:** Please list the codes of the schools with a total enrollment of over 500.\n**Evidence:** Total enrollment can be represented by `Enrollment (K-12)` + `Enrollment (Ages 5-17)`\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the codes of the schools with a total enrollment of over 500.\n    * **Analysis:** We need to calculate the total enrollment for each school and then filter those with an enrollment greater than 500. The `frpm` table contains the `Enrollment (K-12)` and `Enrollment (Ages 5-17)` columns, which we will sum to get the total enrollment. We will then join this with the `schools` table to get the `CDSCode`.\n    * **Pseudo SQL:** SELECT `T1`.`CDSCode` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE <total enrollment > 500>\n\n    * **Sub-question 1:** total enrollment > 500\n        * **Analysis:** We need to sum the `Enrollment (K-12)` and `Enrollment (Ages 5-17)` columns from the `frpm` table and filter where the sum is greater than 500.\n        * **Pseudo SQL:** `T1`.`Enrollment (K-12)` + `T1`.`Enrollment (Ages 5-17)` > 500\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (total enrollment > 500):**\n    * **SQL:** `T1`.`Enrollment (K-12)` + `T1`.`Enrollment (Ages 5-17)` > 500\n\n* **Main Question (codes of schools):**\n    * **SQL:** SELECT `T1`.`CDSCode` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T1`.`Enrollment (K-12)` + `T1`.`Enrollment (Ages 5-17)` > 500\n\n**3. Simplification and Optimization:**\n\n* The query in step 2 is already quite efficient. We are using a simple `INNER JOIN` to combine the `frpm` and `schools` tables and applying the filter on the summed enrollment.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT `School Code` FROM `frpm` WHERE `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500 ",
+                "plan": "**Question:** Please list the codes of the schools with a total enrollment of over 500.\n**Evidence:** Total enrollment can be represented by `Enrollment (K-12)` + `Enrollment (Ages 5-17)`\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the codes of the schools with a total enrollment of over 500.\n    * **Analysis:** We need to calculate the total enrollment by summing `Enrollment (K-12)` and `Enrollment (Ages 5-17)` from the `frpm` table. Then, we filter the schools with this total enrollment greater than 500. Finally, we select the `School Code` from the `frpm` table.\n    * **Pseudo SQL:** SELECT `School Code` FROM `frpm` WHERE <total enrollment > 500>\n\n    * **Sub-question 1:** total enrollment > 500\n        * **Analysis:** We need to calculate the total enrollment by summing `Enrollment (K-12)` and `Enrollment (Ages 5-17)`. We will use a `WHERE` clause to filter out schools with this total enrollment greater than 500.\n        * **Pseudo SQL:** `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (total enrollment > 500):**\n    * **SQL:** `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500\n\n* **Main Question (list school codes):**\n    * **SQL:** SELECT `School Code` FROM `frpm` WHERE `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500\n\n**3. Simplification and Optimization:**\n\n* The query is already optimized and does not require further simplification.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T1.CDSCode FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)` > 500 ",
+                "plan": "**Question:** Please list the codes of the schools with a total enrollment of over 500.\n**Evidence:** Total enrollment can be represented by `Enrollment (K-12)` + `Enrollment (Ages 5-17)`\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the codes of the schools with a total enrollment of over 500.\n    * **Analysis:** We need to calculate the total enrollment for each school and then filter out those with a total enrollment greater than 500. The `frpm` table contains the `Enrollment (K-12)` and `Enrollment (Ages 5-17)` columns, while the `schools` table contains the `CDSCode` which serves as the unique identifier for each school.\n    * **Pseudo SQL:** SELECT `T1`.`CDSCode` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE <total enrollment > 500>\n\n    * **Sub-question 1:** total enrollment > 500\n        * **Analysis:** We need to sum up `Enrollment (K-12)` and `Enrollment (Ages 5-17)` from the `frpm` table and compare the result to 500.\n        * **Pseudo SQL:** `T1`.`Enrollment (K-12)` + `T1`.`Enrollment (Ages 5-17)` > 500\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (total enrollment > 500):**\n    * **SQL:** `T1`.`Enrollment (K-12)` + `T1`.`Enrollment (Ages 5-17)` > 500\n\n* **Main Question (codes of schools):**\n    * **SQL:** SELECT `T1`.`CDSCode` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T1`.`Enrollment (K-12)` + `T1`.`Enrollment (Ages 5-17)` > 500\n\n**3. Simplification and Optimization:**\n\n* The SQL query from step 2 is already quite efficient. We're joining the `frpm` and `schools` tables to get the `CDSCode` and applying the necessary condition to filter the schools based on total enrollment.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T1.CDSCode FROM frpm AS T1 WHERE T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)` > 500 ",
+                "plan": "**Question:** Please list the codes of the schools with a total enrollment of over 500.\n**Evidence:** Total enrollment can be represented by `Enrollment (K-12)` + `Enrollment (Ages 5-17)`\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the codes of the schools with a total enrollment of over 500.\n    * **Analysis:** We need to calculate the total enrollment by summing up `Enrollment (K-12)` and `Enrollment (Ages 5-17)` from the `frpm` table. Then, we need to filter out schools with a total enrollment greater than 500 and list their `CDSCode`.\n    * **Pseudo SQL:** SELECT `CDSCode` FROM `frpm` WHERE <total enrollment > 500>\n\n    * **Sub-question 1:** total enrollment > 500\n        * **Analysis:** This involves calculating the total enrollment by summing up `Enrollment (K-12)` and `Enrollment (Ages 5-17)` and then applying the filter.\n        * **Pseudo SQL:** `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (total enrollment > 500):**\n    * **SQL:** `T1.`Enrollment (K-12)` + `T1.`Enrollment (Ages 5-17)` > 500`\n\n* **Main Question (codes of the schools):**\n    * **SQL:** SELECT `T1`.`CDSCode` FROM `frpm` AS `T1` WHERE `T1.`Enrollment (K-12)` + `T1.`Enrollment (Ages 5-17)` > 500\n\n**3. Simplification and Optimization:**\n\n* The SQL query is already quite straightforward and does not require further optimization.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T1.CDSCode  FROM schools AS T1  INNER JOIN frpm AS T2  ON T1.CDSCode = T2.CDSCode  WHERE (T2.`Enrollment (K-12)` + T2.`Enrollment (Ages 5-17)`) > 500 ",
+                "plan": "**Question:** Please list the codes of the schools with a total enrollment of over 500.\n**Evidence:** Total enrollment can be represented by `Enrollment (K-12)` + `Enrollment (Ages 5-17)`\n\n**Query Plan:**\n\n**Preparation Steps:**\n1. Initialize the process: Set up the environment for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the `schools` and `frpm` tables to access relevant data.\n\n**Identify Schools with Total Enrollment Over 500:**\n1. Join `schools` and `frpm` tables: Merge records based on the common `CDSCode` field to link school details with enrollment data.\n2. Calculate total enrollment: Sum `Enrollment (K-12)` and `Enrollment (Ages 5-17)` for each school.\n3. Filter by total enrollment: Select only those rows where the calculated total enrollment is greater than 500.\n4. Extract relevant fields: Select the `CDSCode` field from the `schools` table to list the codes of the schools meeting the criteria.\n\n**Finalize and Deliver the Result:**\n1. Prepare the result for output: Format the list of school codes for presentation.\n2. Output the final result: Deliver the list of school codes as the query result.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT CDSCode FROM frpm WHERE (`Enrollment (K-12)` + `Enrollment (Ages 5-17)`) > 500 ",
+                "plan": "**Question:** Please list the codes of the schools with a total enrollment of over 500.\n**Evidence:** Total enrollment can be represented by `Enrollment (K-12)` + `Enrollment (Ages 5-17)`\n\n**Query Plan:**\n\n**Preparation Steps:**\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open the `frpm` table: Access the `frpm` table to retrieve the relevant data.\n\n**Calculate Total Enrollment:**\n1. Scan the `frpm` table: Start reading rows from the `frpm` table.\n2. Calculate total enrollment: For each row, sum the values in the `Enrollment (K-12)` and `Enrollment (Ages 5-17)` columns.\n3. Filter by total enrollment: Select only those rows where the calculated total enrollment is greater than 500.\n\n**Retrieve School Codes:**\n1. Extract `CDSCode`: For each row that meets the total enrollment criteria, retrieve the `CDSCode` column.\n\n**Prepare and Deliver the Result:**\n1. Prepare the result for output: Format the list of `CDSCode` values for presentation.\n2. Output the final result: Deliver the list of school codes with a total enrollment of over 500.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT DISTINCT T1.CDSCode FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE (T1.`Enrollment (Ages 5-17)` + T2.`Enroll12`) > 500 ",
+                "plan": "**Question:** Please list the codes of the schools with a total enrollment of over 500.\n**Evidence:** Total enrollment can be represented by `Enrollment (K-12)` + `Enrollment (Ages 5-17)`\n\n**Query Plan:**\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the `frpm` and `schools` tables to access relevant data.\n\n** Identify Schools with Total Enrollment Over 500: **\n1. Scan the `frpm` table: Start reading rows from the `frpm` table to retrieve the `Enrollment (Ages 5-17)` column.\n2. Scan the `schools` table: Start reading rows from the `schools` table to retrieve the `Enrollment (K-12)` column.\n3. Join the tables: Join the `frpm` and `schools` tables on the `CDSCode` field to match each school's enrollment data.\n4. Calculate total enrollment: Compute the sum of `Enrollment (K-12)` and `Enrollment (Ages 5-17)` for each school.\n5. Filter by total enrollment over 500: Select only those rows where the calculated total enrollment is greater than 500.\n\n** Select School Codes: **\n1. Extract `CDSCode`: From the filtered rows, retrieve the `CDSCode` column, which represents the unique code of each school.\n2. Ensure distinct codes: Use `DISTINCT` to ensure that each school code is listed only once.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final list of school codes for presentation.\n2. Output the final result: Deliver the list of school codes with a total enrollment over 500.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT `School Code` FROM frpm WHERE `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500 ",
+                "plan": "**Question**: Please list the codes of the schools with a total enrollment of over 500.\n**Evidence**: Total enrollment can be represented by `Enrollment (K-12)` + `Enrollment (Ages 5-17)`\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open the frpm table: Access the frpm table to retrieve the relevant data.\n\n** Calculate Total Enrollment: **\n1. Scan the frpm table: Start reading rows from the frpm table.\n2. Extract `Enrollment (K-12)` and `Enrollment (Ages 5-17)`: For each row, retrieve the values from the `Enrollment (K-12)` and `Enrollment (Ages 5-17)` columns.\n3. Compute total enrollment: Sum the values of `Enrollment (K-12)` and `Enrollment (Ages 5-17)` to calculate the total enrollment for each school.\n4. Filter by total enrollment: Select only those rows where the computed total enrollment is greater than 500.\n\n** Retrieve School Codes: **\n1. Extract `School Code`: For rows that meet the total enrollment criteria, retrieve the `School Code` column.\n2. Store the school codes: Collect the `School Code` values for all schools that meet the criteria.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the collected `School Code` values for presentation.\n2. Output the final result: Deliver the list of school codes as the query result.\n3. Clean up resources: Close the frpm table and release any temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T2.`School Code` FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE (T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)`) > 500 ",
+                "plan": "**Question**: Please list the codes of the schools with a total enrollment of over 500.\n**Evidence**: Total enrollment can be represented by `Enrollment (K-12)` + `Enrollment (Ages 5-17)`\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment for query execution, including initializing variables and temporary storage.\n2. Open required tables: Access the `frpm` and `schools` tables to retrieve relevant data.\n\n** Calculate Total Enrollment: **\n1. Scan the `frpm` table: Retrieve the `Enrollment (K-12)` and `Enrollment (Ages 5-17)` columns for each row.\n2. Sum enrollments: For each row, calculate the sum of `Enrollment (K-12)` and `Enrollment (Ages 5-17)` to get the total enrollment.\n3. Join with `schools` table: Use the `CDSCode` to join the `frpm` table with the `schools` table to get the `School Code`.\n\n** Filter and Identify Relevant Schools: **\n1. Filter by total enrollment: Select only those rows where the calculated total enrollment is greater than 500.\n2. Extract `School Code`: For each row that meets the criteria, retrieve the `School Code` from the `schools` table.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the list of `School Codes` for presentation.\n2. Output the final list: Deliver the `School Codes` as the query result.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT DISTINCT T2.CDSCode  FROM frpm AS T1  INNER JOIN schools AS T2  ON T1.CDSCode = T2.CDSCode  WHERE (T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)`) > 500 ",
+                "plan": "**Question**: Please list the codes of the schools with a total enrollment of over 500.\n**Evidence**: Total enrollment can be represented by `Enrollment (K-12)` + `Enrollment (Ages 5-17)`\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the `frpm` and `schools` tables to access relevant data.\n\n** Identify Relevant Schools: **\n1. Scan the `frpm` table: Start reading rows from the `frpm` table to gather enrollment data.\n2. Calculate total enrollment: For each row, calculate the total enrollment by adding `Enrollment (K-12)` and `Enrollment (Ages 5-17)`.\n3. Filter by total enrollment: Select only those rows where the calculated total enrollment is greater than 500.\n4. Join with `schools` table: Match each filtered `frpm` record to the corresponding school in the `schools` table using the `CDSCode`.\n\n** List School Codes: **\n1. Extract school codes: From the joined records, retrieve the `CDSCode` from the `schools` table.\n2. Ensure distinct codes: Use `SELECT DISTINCT` to avoid duplicate codes in the result set.\n3. Store and prepare the result: Once all relevant schools have been processed, store the result and prepare it for output.\n\n** Deliver the Final Result: **\n1. Prepare the result for output: Format the final list of school codes for presentation.\n2. Output the final result: Deliver the codes of the schools with a total enrollment of over 500.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT DISTINCT T2.CDSCode FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE (T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)`) > 500 ",
+                "plan": "**Question**: Please list the codes of the schools with a total enrollment of over 500.\n**Evidence**: Total enrollment can be represented by `Enrollment (K-12)` + `Enrollment (Ages 5-17)`\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the frpm and schools tables to access relevant data.\n\n** Calculate Total Enrollment: **\n1. Scan the frpm table: Start reading rows from the frpm table to retrieve `Enrollment (K-12)` and `Enrollment (Ages 5-17)`.\n2. Join with schools table: Match each row from the frpm table with the corresponding row in the schools table based on CDSCode.\n3. Compute total enrollment: For each row, calculate the sum of `Enrollment (K-12)` and `Enrollment (Ages 5-17)` to get the total enrollment.\n4. Filter by total enrollment: Select only those rows where the calculated total enrollment is greater than 500.\n\n** Retrieve School Codes: **\n1. Extract school codes: From the filtered rows, retrieve the CDSCode column, which represents the unique identifier for each school.\n2. Ensure distinct values: Use `SELECT DISTINCT` to avoid duplicate entries in the final result set.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final list of school codes for presentation.\n2. Output the final result: Deliver the list of school codes that have a total enrollment of over 500.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT DISTINCT `School Code` FROM frpm WHERE `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500 ",
+                "plan": "**Question**: Please list the codes of the schools with a total enrollment of over 500.\n**Evidence**: Total enrollment can be represented by `Enrollment (K-12)` + `Enrollment (Ages 5-17)`\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the `frpm` table to access relevant data.\n\n** Calculate Total Enrollment: **\n1. Scan the `frpm` table: Start reading rows from the `frpm` table.\n2. Extract `Enrollment (K-12)` and `Enrollment (Ages 5-17)`: For each row, retrieve the values from these two columns.\n3. Sum the enrollments: Add the values of `Enrollment (K-12)` and `Enrollment (Ages 5-17)` to calculate the total enrollment for each school.\n4. Filter by total enrollment over 500: Select only those rows where the calculated total enrollment is greater than 500.\n\n** Retrieve School Codes: **\n1. Extract `School Code`: For rows that meet the total enrollment criterion, retrieve the `School Code` from the `frpm` table.\n2. Ensure uniqueness: Use `DISTINCT` to ensure that each school code appears only once in the result set.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final list of school codes for presentation.\n2. Output the final result: Deliver the list of school codes with a total enrollment of over 500.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT DISTINCT T1.CDSCode FROM frpm AS T1 WHERE (T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)`) > 500 ",
+                "plan": "**Question**: Please list the codes of the schools with a total enrollment of over 500.\n**Evidence**: Total enrollment can be represented by `Enrollment (K-12)` + `Enrollment (Ages 5-17)`\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open the frpm table: Access the frpm table to retrieve relevant data.\n\n** Calculate Total Enrollment: **\n1. Scan the frpm table: Start reading rows from the frpm table.\n2. Extract `Enrollment (K-12)` and `Enrollment (Ages 5-17)`: For each row, retrieve the values from the `Enrollment (K-12)` and `Enrollment (Ages 5-17)` columns.\n3. Compute total enrollment: Sum the values of `Enrollment (K-12)` and `Enrollment (Ages 5-17)` to calculate the total enrollment for each school.\n4. Filter by total enrollment: Select only those rows where the computed total enrollment is greater than 500.\n\n** Retrieve School Codes: **\n1. Extract `CDSCode`: For rows that meet the total enrollment criteria, retrieve the `CDSCode` column.\n2. Ensure distinct codes: Use `SELECT DISTINCT` to avoid duplicate codes in the result set.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final list of school codes for presentation.\n2. Output the final result: Deliver the codes of the schools that have a total enrollment of over 500.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT DISTINCT T2.CDSCode FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)` > 500 ",
+                "plan": "**Question**: Please list the codes of the schools with a total enrollment of over 500.\n**Evidence**: Total enrollment can be represented by `Enrollment (K-12)` + `Enrollment (Ages 5-17)`\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the `frpm` and `schools` tables to access relevant data.\n\n** Combine Enrollment Data: **\n1. Scan the `frpm` table: Retrieve the `Enrollment (K-12)` and `Enrollment (Ages 5-17)` columns for each school.\n2. Join with `schools` table: Use the `CDSCode` to join the `frpm` table with the `schools` table to get the school codes.\n\n** Calculate Total Enrollment: **\n1. Sum the enrollments: For each school, sum the `Enrollment (K-12)` and `Enrollment (Ages 5-17)` to get the total enrollment.\n2. Filter by total enrollment: Select only those rows where the total enrollment is greater than 500.\n\n** List School Codes: **\n1. Select the school codes: Extract the `CDSCode` from the `schools` table for the schools that meet the enrollment criteria.\n2. Ensure distinct values: Use `DISTINCT` to avoid duplicate school codes in the result set.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final list of school codes for presentation.\n2. Output the final result: Deliver the list of school codes that have a total enrollment of over 500.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            }
+        ],
+        "status": "success",
+        "execution_time": 1529.8
+    },
+    {
+        "tool_name": "revise",
+        "original_SQL_id": "generate_candidate",
+        "refined_SQL_id": "revise_1",
+        "candidates": [
+            {
+                "refined_query": " SELECT T1.CDSCode FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)` > 500 "
+            },
+            {
+                "refined_query": " SELECT `T1`.`School Code` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T1`.`Enrollment (K-12)` + `T1`.`Enrollment (Ages 5-17)` > 500 "
+            },
+            {
+                "refined_query": " SELECT `T1`.`CDSCode` FROM `frpm` AS `T1` WHERE `T1`.`Enrollment (K-12)` + `T1`.`Enrollment (Ages 5-17)` > 500 "
+            },
+            {
+                "refined_query": " SELECT CDSCode FROM frpm WHERE `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500 "
+            },
+            {
+                "refined_query": " SELECT CDSCode FROM frpm GROUP BY CDSCode HAVING SUM(`Enrollment (K-12)`) + SUM(`Enrollment (Ages 5-17)`) > 500 "
+            },
+            {
+                "refined_query": " SELECT CDSCode FROM frpm WHERE `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500 "
+            },
+            {
+                "refined_query": " SELECT T1.CDSCode FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)` > 500 "
+            },
+            {
+                "refined_query": " SELECT `School Code` FROM `frpm` WHERE `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500 "
+            },
+            {
+                "refined_query": " SELECT T1.CDSCode FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)` > 500 "
+            },
+            {
+                "refined_query": " SELECT T1.CDSCode FROM frpm AS T1 WHERE T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)` > 500 "
+            },
+            {
+                "refined_query": " SELECT T1.CDSCode  FROM schools AS T1  INNER JOIN frpm AS T2  ON T1.CDSCode = T2.CDSCode  WHERE (T2.`Enrollment (K-12)` + T2.`Enrollment (Ages 5-17)`) > 500 "
+            },
+            {
+                "refined_query": " SELECT CDSCode FROM frpm WHERE (`Enrollment (K-12)` + `Enrollment (Ages 5-17)`) > 500 "
+            },
+            {
+                "refined_query": " SELECT DISTINCT CDSCode FROM frpm WHERE (`Enrollment (Ages 5-17)` + `Enrollment (K-12)`) > 500 "
+            },
+            {
+                "refined_query": " SELECT `School Code` FROM frpm WHERE `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500 "
+            },
+            {
+                "refined_query": " SELECT T2.SchoolCode FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE (T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)`) > 500 "
+            },
+            {
+                "refined_query": " SELECT DISTINCT T2.CDSCode  FROM frpm AS T1  INNER JOIN schools AS T2  ON T1.CDSCode = T2.CDSCode  WHERE (T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)`) > 500 "
+            },
+            {
+                "refined_query": " SELECT DISTINCT T2.CDSCode FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE (T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)`) > 500 "
+            },
+            {
+                "refined_query": " SELECT DISTINCT `School Code` FROM frpm WHERE `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500 "
+            },
+            {
+                "refined_query": " SELECT DISTINCT T1.CDSCode FROM frpm AS T1 WHERE (T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)`) > 500 "
+            },
+            {
+                "refined_query": " SELECT DISTINCT T2.CDSCode FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)` > 500 "
+            }
+        ],
+        "status": "success",
+        "execution_time": 756.6
+    },
+    {
+        "tool_name": "generate_unit_test",
+        "unit_tests": {
+            "unit_test_generation": [
+                "The answer SQL query should select \"CDSCode\" instead of \"School Code\".",
+                "The answer SQL query should not perform an unnecessary inner join between \"frpm\" and \"schools\" tables.",
+                "The answer SQL query should use SUM to calculate the total enrollment when grouping by CDSCode.",
+                "The answer SQL query should use DISTINCT when listing unique school codes.",
+                "The answer SQL query should correctly calculate total enrollment without using SUM when not needed.",
+                "The answer SQL query should mention \"WHERE T1.\"Enrollment (K-12)\" + T1.\"Enrollment (Ages 5-17)\" > 500\"",
+                "The answer SQL query should use \"GROUP BY CDSCode\" if total enrollment per school is being summed up.",
+                "The answer SQL query should not use an unnecessary aliasing like \"T1\", \"T2\" for tables.",
+                "The answer SQL query should not use DISTINCT if there is no risk of duplicate rows.",
+                "The answer SQL query should avoid redundant calculations or conditions.",
+                "The answer SQL query should directly reference columns from \"frpm\" table without joining to \"schools\" if not necessary.",
+                "The answer SQL query should avoid using complex joins when simple WHERE clauses suffice.",
+                "The answer SQL query should correctly handle NULL values in enrollment fields.",
+                "The answer SQL query should ensure that the condition \"Enrollment (K-12)\" + \"Enrollment (Ages 5-17)\" > 500\" is applied correctly.",
+                "The answer SQL query should not include extra columns in the SELECT statement unless explicitly asked.",
+                "The answer SQL query should avoid redundant or unnecessary operations that could affect performance.",
+                "The answer SQL query should ensure that the condition is applied to the right columns.",
+                "The answer SQL query should not include additional filtering conditions that are not part of the original problem statement.",
+                "The answer SQL query should not use GROUP BY when not necessary for the calculation of total enrollment.",
+                "The answer SQL query should ensure that the final result is distinct if multiple entries per school are possible.",
+                "Only the best answer from the set of candidates that most accurately answers the question, given the database schema and hint should pass this test."
+            ]
+        },
+        "candidates": [
+            " SELECT T1.CDSCode FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)` > 500 ",
+            " SELECT `T1`.`School Code` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T1`.`Enrollment (K-12)` + `T1`.`Enrollment (Ages 5-17)` > 500 ",
+            " SELECT `T1`.`CDSCode` FROM `frpm` AS `T1` WHERE `T1`.`Enrollment (K-12)` + `T1`.`Enrollment (Ages 5-17)` > 500 ",
+            " SELECT CDSCode FROM frpm WHERE `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500 ",
+            " SELECT CDSCode FROM frpm GROUP BY CDSCode HAVING SUM(`Enrollment (K-12)`) + SUM(`Enrollment (Ages 5-17)`) > 500 ",
+            " SELECT CDSCode FROM frpm WHERE `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500 ",
+            " SELECT T1.CDSCode FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)` > 500 ",
+            " SELECT `School Code` FROM `frpm` WHERE `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500 ",
+            " SELECT T1.CDSCode FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)` > 500 ",
+            " SELECT T1.CDSCode FROM frpm AS T1 WHERE T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)` > 500 ",
+            " SELECT T1.CDSCode  FROM schools AS T1  INNER JOIN frpm AS T2  ON T1.CDSCode = T2.CDSCode  WHERE (T2.`Enrollment (K-12)` + T2.`Enrollment (Ages 5-17)`) > 500 ",
+            " SELECT CDSCode FROM frpm WHERE (`Enrollment (K-12)` + `Enrollment (Ages 5-17)`) > 500 ",
+            " SELECT DISTINCT CDSCode FROM frpm WHERE (`Enrollment (Ages 5-17)` + `Enrollment (K-12)`) > 500 ",
+            " SELECT `School Code` FROM frpm WHERE `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500 ",
+            " SELECT T2.SchoolCode FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE (T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)`) > 500 ",
+            " SELECT DISTINCT T2.CDSCode  FROM frpm AS T1  INNER JOIN schools AS T2  ON T1.CDSCode = T2.CDSCode  WHERE (T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)`) > 500 ",
+            " SELECT DISTINCT T2.CDSCode FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE (T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)`) > 500 ",
+            " SELECT DISTINCT `School Code` FROM frpm WHERE `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500 ",
+            " SELECT DISTINCT T1.CDSCode FROM frpm AS T1 WHERE (T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)`) > 500 ",
+            " SELECT DISTINCT T2.CDSCode FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)` > 500 "
+        ],
+        "status": "success",
+        "execution_time": 371.1
+    },
+    {
+        "tool_name": "evaluate",
+        "scores": [
+            11,
+            3,
+            20,
+            18,
+            6,
+            19,
+            11,
+            6,
+            11,
+            20,
+            12,
+            19,
+            18,
+            6,
+            0,
+            17,
+            18,
+            7,
+            20,
+            17
+        ],
+        "comparison_matrix": [
+            [
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                0,
+                1,
+                1
+            ],
+            [
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            [
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1,
+                1,
+                0,
+                1,
+                1
+            ],
+            [
+                0,
+                0,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                0,
+                1,
+                1
+            ],
+            [
+                1,
+                0,
+                1,
+                0,
+                0,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                0,
+                1,
+                1
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                0,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                0,
+                1,
+                1
+            ],
+            [
+                0,
+                0,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0,
+                1,
+                1,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                0,
+                1,
+                1,
+                0,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                1,
+                1,
+                0,
+                1,
+                1
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                0,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                0,
+                1,
+                1
+            ],
+            [
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            [
+                0,
+                0,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                1,
+                0,
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                0,
+                1,
+                1
+            ],
+            [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                0,
+                1,
+                1
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                1,
+                0,
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                0,
+                1,
+                1
+            ],
+            [
+                0,
+                0,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                0,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                0,
+                1,
+                1
+            ],
+            [
+                0,
+                0,
+                1,
+                1,
+                0,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                0,
+                1,
+                1
+            ],
+            [
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                0
+            ],
+            [
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            [
+                0,
+                0,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                1,
+                0,
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                0,
+                1,
+                1
+            ]
+        ],
+        "candidates": [
+            " SELECT T1.CDSCode FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)` > 500 ",
+            " SELECT `T1`.`School Code` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T1`.`Enrollment (K-12)` + `T1`.`Enrollment (Ages 5-17)` > 500 ",
+            " SELECT `T1`.`CDSCode` FROM `frpm` AS `T1` WHERE `T1`.`Enrollment (K-12)` + `T1`.`Enrollment (Ages 5-17)` > 500 ",
+            " SELECT CDSCode FROM frpm WHERE `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500 ",
+            " SELECT CDSCode FROM frpm GROUP BY CDSCode HAVING SUM(`Enrollment (K-12)`) + SUM(`Enrollment (Ages 5-17)`) > 500 ",
+            " SELECT CDSCode FROM frpm WHERE `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500 ",
+            " SELECT T1.CDSCode FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)` > 500 ",
+            " SELECT `School Code` FROM `frpm` WHERE `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500 ",
+            " SELECT T1.CDSCode FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)` > 500 ",
+            " SELECT T1.CDSCode FROM frpm AS T1 WHERE T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)` > 500 ",
+            " SELECT T1.CDSCode  FROM schools AS T1  INNER JOIN frpm AS T2  ON T1.CDSCode = T2.CDSCode  WHERE (T2.`Enrollment (K-12)` + T2.`Enrollment (Ages 5-17)`) > 500 ",
+            " SELECT CDSCode FROM frpm WHERE (`Enrollment (K-12)` + `Enrollment (Ages 5-17)`) > 500 ",
+            " SELECT DISTINCT CDSCode FROM frpm WHERE (`Enrollment (Ages 5-17)` + `Enrollment (K-12)`) > 500 ",
+            " SELECT `School Code` FROM frpm WHERE `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500 ",
+            " SELECT T2.SchoolCode FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE (T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)`) > 500 ",
+            " SELECT DISTINCT T2.CDSCode  FROM frpm AS T1  INNER JOIN schools AS T2  ON T1.CDSCode = T2.CDSCode  WHERE (T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)`) > 500 ",
+            " SELECT DISTINCT T2.CDSCode FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE (T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)`) > 500 ",
+            " SELECT DISTINCT `School Code` FROM frpm WHERE `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500 ",
+            " SELECT DISTINCT T1.CDSCode FROM frpm AS T1 WHERE (T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)`) > 500 ",
+            " SELECT DISTINCT T2.CDSCode FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)` > 500 "
+        ],
+        "selected_candidate": " SELECT `T1`.`CDSCode` FROM `frpm` AS `T1` WHERE `T1`.`Enrollment (K-12)` + `T1`.`Enrollment (Ages 5-17)` > 500 ",
+        "status": "success",
+        "execution_time": 1376.5
+    },
+    {
+        "tool_name": "execution_accuracy",
+        "generate_candidate": {
+            "exec_res": 1,
+            "exec_err": "--",
+            "Question": "Please list the codes of the schools with a total enrollment of over 500.",
+            "Evidence": "Total enrollment can be represented by `Enrollment (K-12)` + `Enrollment (Ages 5-17)`",
+            "GOLD_SQL": "SELECT T2.CDSCode FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Enrollment (K-12)` + T2.`Enrollment (Ages 5-17)` > 500",
+            "PREDICTED_SQL": " SELECT T1.CDSCode FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)` > 500 "
+        },
+        "revise_1": {
+            "exec_res": 1,
+            "exec_err": "--",
+            "Question": "Please list the codes of the schools with a total enrollment of over 500.",
+            "Evidence": "Total enrollment can be represented by `Enrollment (K-12)` + `Enrollment (Ages 5-17)`",
+            "GOLD_SQL": "SELECT T2.CDSCode FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Enrollment (K-12)` + T2.`Enrollment (Ages 5-17)` > 500",
+            "PREDICTED_SQL": " SELECT T1.CDSCode FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Enrollment (K-12)` + T1.`Enrollment (Ages 5-17)` > 500 "
+        },
+        "evaluate_1": {
+            "exec_res": 1,
+            "exec_err": "--",
+            "Question": "Please list the codes of the schools with a total enrollment of over 500.",
+            "Evidence": "Total enrollment can be represented by `Enrollment (K-12)` + `Enrollment (Ages 5-17)`",
+            "GOLD_SQL": "SELECT T2.CDSCode FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Enrollment (K-12)` + T2.`Enrollment (Ages 5-17)` > 500",
+            "PREDICTED_SQL": " SELECT `T1`.`CDSCode` FROM `frpm` AS `T1` WHERE `T1`.`Enrollment (K-12)` + `T1`.`Enrollment (Ages 5-17)` > 500 "
+        },
+        "final_SQL": {
+            "exec_res": 1,
+            "exec_err": "--",
+            "Question": "Please list the codes of the schools with a total enrollment of over 500.",
+            "Evidence": "Total enrollment can be represented by `Enrollment (K-12)` + `Enrollment (Ages 5-17)`",
+            "GOLD_SQL": "SELECT T2.CDSCode FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Enrollment (K-12)` + T2.`Enrollment (Ages 5-17)` > 500",
+            "PREDICTED_SQL": " SELECT `T1`.`CDSCode` FROM `frpm` AS `T1` WHERE `T1`.`Enrollment (K-12)` + `T1`.`Enrollment (Ages 5-17)` > 500 "
+        },
+        "status": "success",
+        "execution_time": 0.1
+    }
+]

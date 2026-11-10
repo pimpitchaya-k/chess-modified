@@ -1,0 +1,914 @@
+[
+    {
+        "tool_name": "extract_keywords",
+        "keywords": [
+            "SAT test takers",
+            "schools",
+            "highest FRPM count",
+            "K-12 students",
+            "FRPM"
+        ],
+        "status": "success",
+        "execution_time": 4.8
+    },
+    {
+        "tool_name": "retrieve_entity",
+        "similar_columns": {
+            "schools": [
+                "School",
+                "County"
+            ]
+        },
+        "schema_with_examples": {
+            "schools": {
+                "GSserved": [
+                    "K-12"
+                ],
+                "GSoffered": [
+                    "K-12"
+                ]
+            }
+        },
+        "status": "success",
+        "execution_time": 434.4
+    },
+    {
+        "tool_name": "retrieve_context",
+        "schema_with_descriptions": {
+            "satscores": {
+                "numge1500": {
+                    "column_name": "Number of Test Takers Whose Total SAT Scores Are Greater or Equal to 1500",
+                    "column_description": "Number of Test Takers Whose Total SAT Scores Are Greater or Equal to 1500",
+                    "value_description": "Number of Test Takers Whose Total SAT Scores Are Greater or Equal to 1500    Excellence Rate = NumGE1500 / NumTstTakr"
+                },
+                "numtsttakr": {
+                    "column_name": "Number of Test Takers",
+                    "column_description": "Number of Test Takers in this school",
+                    "value_description": "number of test takers in each school"
+                },
+                "sname": {
+                    "column_name": "school name",
+                    "column_description": "school name",
+                    "value_description": ""
+                },
+                "enroll12": {
+                    "column_name": "enrollment (1st-12nd grade)",
+                    "column_description": "enrollment (1st-12nd grade)",
+                    "value_description": ""
+                }
+            },
+            "schools": {
+                "school": {
+                    "column_name": "",
+                    "column_description": "School",
+                    "value_description": ""
+                },
+                "gsserved": {
+                    "column_name": "grade span served.",
+                    "column_description": "It is the lowest grade and the highest grade of student enrollment as reported in the most recent certified CALPADS Fall 1 data collection. Only K\u201312 enrollment is reported through CALPADS. This field may differ from the grade span offered.",
+                    "value_description": "1.\u00a0\u00a0\u00a0\u00a0 Only K\u201312 enrollment is reported through CALPADS  2.\u00a0\u00a0\u00a0\u00a0 Note: Special programs at independent study, alternative education, and special education schools will often exceed the typical grade span for schools of that type"
+                }
+            },
+            "frpm": {
+                "school name": {
+                    "column_name": "",
+                    "column_description": "School Name",
+                    "value_description": ""
+                },
+                "school type": {
+                    "column_name": "",
+                    "column_description": "School Type",
+                    "value_description": ""
+                },
+                "frpm count (k-12)": {
+                    "column_name": "",
+                    "column_description": "Free or Reduced Price Meal Count (K-12)",
+                    "value_description": "eligible FRPM rate = FRPM / Enrollment"
+                },
+                "free meal count (k-12)": {
+                    "column_name": "",
+                    "column_description": "Free Meal Count (K-12)",
+                    "value_description": "eligible free rate = Free Meal Count / Enrollment"
+                },
+                "enrollment (k-12)": {
+                    "column_name": "",
+                    "column_description": "Enrollment (K-12)",
+                    "value_description": "K-12: 1st grade - 12nd grade"
+                }
+            }
+        },
+        "status": "success",
+        "execution_time": 15.0
+    },
+    {
+        "tool_name": "generate_candidate",
+        "node_type": "generate_candidate",
+        "generation_based_candidates": [
+            {
+                "template_name": "generate_candidate_one",
+                "candidates": [
+                    "**Question:** What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?  **Evidence:** None provided, but we infer that we need to find the `NumTstTakr` (number of test takers) from the `satscores` table for the schools that have the highest `FRPM Count (K-12)` in the `frpm` table.  **1. Divide and Conquer:**  * **Main Question:** What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?     * **Analysis:** We need to find the `NumTstTakr` from the `satscores` table for schools that have the highest `FRPM Count (K-12)` in the `frpm` table. We will first identify the highest `FRPM Count (K-12)` in the `frpm` table and then join this with the `satscores` table to retrieve the `NumTstTakr`.     * **Pseudo SQL:** SELECT `T3`.`NumTstTakr` FROM `satscores` AS `T3` WHERE `T3`.`cds` IN (SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`))      * **Sub-question 1:** Identify the highest `FRPM Count (K-12)` in the `frpm` table         * **Analysis:** We need to find the maximum value of `FRPM Count (K-12)` in the `frpm` table.         * **Pseudo SQL:** SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`      * **Sub-question 2:** Find the `CDSCode` of schools with the highest `FRPM Count (K-12)`         * **Analysis:** We need to find the `CDSCode` from the `frpm` table where `FRPM Count (K-12)` equals the maximum value identified in sub-question 1.         * **Pseudo SQL:** SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = <maximum FRPM Count (K-12)>      * **Sub-question 3:** Retrieve the `NumTstTakr` from `satscores` for those `CDSCode`s         * **Analysis:** We need to join the `satscores` table with the `frpm` table using `CDSCode` and retrieve the `NumTstTakr` for the schools identified in sub-question 2.         * **Pseudo SQL:** SELECT `NumTstTakr` FROM `satscores` WHERE `cds` IN (<sub-question 2 result>)  **2. Assembling SQL:**  * **Sub-question 1 (Identify the highest FRPM Count (K-12)):**     * **SQL:** SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`  * **Sub-question 2 (Find the CDSCode of schools with the highest FRPM Count (K-12)):**     * **SQL:** SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`)  * **Sub-question 3 (Retrieve the NumTstTakr from satscores for those CDSCode's):**     * **SQL:** SELECT `NumTstTakr` FROM `satscores` WHERE `cds` IN (SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`))  * **Main Question (number of SAT test takers):**     * **SQL:** SELECT `NumTstTakr` FROM `satscores` WHERE `cds` IN (SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`))  **3. Simplification and Optimization:**  * The nested queries can be combined into a single query for better readability and performance.  **Final Optimized SQL Query:**  <FINAL_ANSWER> SELECT `NumTstTakr` FROM `satscores` WHERE `cds` IN (SELECT `CDS",
+                    " SELECT T3.NumTstTakr  FROM frpm AS T1  INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode  INNER JOIN satscores AS T3 ON T2.CDSCode = T3.cds  WHERE T1.FRPM Count (K-12) = (SELECT MAX(FRPM Count (K-12)) FROM frpm) ",
+                    " SELECT T2.NumTstTakr FROM frpm AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) ",
+                    " SELECT T2.NumTstTakr FROM frpm AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds WHERE T1.FRPM_Count_K_12 = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+                    " WITH max_frpm AS (     SELECT CDSCode     FROM frpm     WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ) SELECT T1.NumTstTakr FROM satscores AS T1 INNER JOIN max_frpm AS T2 ON T1.cds = T2.CDSCode ",
+                    " SELECT `T2`.`NumTstTakr` FROM `frpm` AS `T1` INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds` WHERE `T1`.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`) ",
+                    " SELECT `T1`.`NumTstTakr`  FROM `satscores` AS `T1`  INNER JOIN `frpm` AS `T2`  ON `T1`.`cds` = `T2`.`CDSCode`  WHERE `T2`.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`) ",
+                    " SELECT T3.NumTstTakr FROM satscores AS T3 INNER JOIN frpm AS T2 ON T3.cds = T2.CDSCode WHERE T2.CDSCode IN (SELECT CDSCode FROM frpm WHERE FRPM Count (K-12) = (SELECT MAX(FRPM Count (K-12)) FROM frpm)) ",
+                    " SELECT T2.NumTstTakr FROM satscores AS T2 WHERE T2.cds IN (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) ",
+                    " SELECT T1.NumTstTakr  FROM satscores AS T1  INNER JOIN frpm AS T2  ON T1.cds = T2.CDSCode  WHERE T2.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) "
+                ]
+            },
+            {
+                "template_name": "generate_candidate_two",
+                "candidates": [
+                    " WITH MaxFRPM AS (     SELECT MAX(`FRPM Count (K-12)`) AS max_frpm_count     FROM frpm ) SELECT T3.NumTstTakr FROM frpm AS T1 JOIN satscores AS T2 ON T1.CDSCode = T2.cds JOIN MaxFRPM AS T4 ON T1.`FRPM Count (K-12)` = T4.max_frpm_count WHERE T1.`FRPM Count (K-12)` = T4.max_frpm_count ",
+                    " WITH MaxFRPM AS (     SELECT CDSCode, `FRPM Count (K-12)`     FROM frpm     WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ) SELECT SUM(T1.NumTstTakr) FROM satscores AS T1 INNER JOIN MaxFRPM AS T2 ON T1.cds = T2.CDSCode ",
+                    " WITH MaxFRPM AS (     SELECT MAX(`FRPM Count (K-12)`) AS max_frpm_k12     FROM frpm ) SELECT T3.NumTstTakr FROM frpm AS T1 JOIN MaxFRPM AS T2 ON T1.`FRPM Count (K-12)` = T2.max_frpm_k12 JOIN satscores AS T3 ON T1.CDSCode = T3.cds ",
+                    " WITH MaxFRPM AS (     SELECT CDSCode, MAX(`FRPM Count (K-12)`) AS max_FRPM     FROM frpm     GROUP BY CDSCode ) SELECT T3.NumTstTakr FROM MaxFRPM AS T1 JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode AND T1.max_FRPM = T2.`FRPM Count (K-12)` JOIN satscores AS T3 ON T2.CDSCode = T3.cds ",
+                    " SELECT T3.NumTstTakr FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T3 ON T2.CDSCode = T3.cds WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+                    " WITH MaxFRPM AS (     SELECT CDSCode, MAX(`Free Meal Count (K-12)`) AS MaxCount     FROM frpm     GROUP BY CDSCode     QUALIFY ROW_NUMBER() OVER (ORDER BY MaxCount DESC) = 1 ) SELECT T3.NumTstTakr FROM frpm AS T1 INNER JOIN MaxFRPM AS T2 ON T1.CDSCode = T2.CDSCode AND T1.`Free Meal Count (K-12)` = T2.MaxCount INNER JOIN satscores AS T3 ON T1.CDSCode = T3.cds ",
+                    " WITH MaxFRPM AS (     SELECT MAX(`FRPM Count (K-12)`) AS max_count     FROM frpm ) SELECT T4.NumTstTakr FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T4 ON T2.CDSCode = T4.cds WHERE T1.`FRPM Count (K-12)` = (SELECT max_count FROM MaxFRPM) ",
+                    " WITH max_frpm AS (     SELECT MAX(`FRPM Count (K-12)`) AS max_count     FROM frpm ) SELECT SUM(T3.NumTstTakr) AS total_sat_takers FROM frpm AS T1 JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode JOIN satscores AS T3 ON T1.CDSCode = T3.cds WHERE T1.`FRPM Count (K-12)` = (SELECT max_count FROM max_frpm) ",
+                    " WITH MaxFRPM AS (     SELECT CDSCode, MAX(`FRPM Count (K-12)`) AS max_frpm_count     FROM frpm     GROUP BY CDSCode ) SELECT SUM(T3.NumTstTakr) AS total_test_takers FROM schools AS T1 INNER JOIN MaxFRPM AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T3 ON T1.CDSCode = T3.cds WHERE T2.max_frpm_count = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+                    " SELECT T3.NumTstTakr FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T3 ON T2.CDSCode = T3.cds WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) "
+                ]
+            }
+        ],
+        "candidates": [
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": "**Question:** What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?  **Evidence:** None provided, but we infer that we need to find the `NumTstTakr` (number of test takers) from the `satscores` table for the schools that have the highest `FRPM Count (K-12)` in the `frpm` table.  **1. Divide and Conquer:**  * **Main Question:** What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?     * **Analysis:** We need to find the `NumTstTakr` from the `satscores` table for schools that have the highest `FRPM Count (K-12)` in the `frpm` table. We will first identify the highest `FRPM Count (K-12)` in the `frpm` table and then join this with the `satscores` table to retrieve the `NumTstTakr`.     * **Pseudo SQL:** SELECT `T3`.`NumTstTakr` FROM `satscores` AS `T3` WHERE `T3`.`cds` IN (SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`))      * **Sub-question 1:** Identify the highest `FRPM Count (K-12)` in the `frpm` table         * **Analysis:** We need to find the maximum value of `FRPM Count (K-12)` in the `frpm` table.         * **Pseudo SQL:** SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`      * **Sub-question 2:** Find the `CDSCode` of schools with the highest `FRPM Count (K-12)`         * **Analysis:** We need to find the `CDSCode` from the `frpm` table where `FRPM Count (K-12)` equals the maximum value identified in sub-question 1.         * **Pseudo SQL:** SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = <maximum FRPM Count (K-12)>      * **Sub-question 3:** Retrieve the `NumTstTakr` from `satscores` for those `CDSCode`s         * **Analysis:** We need to join the `satscores` table with the `frpm` table using `CDSCode` and retrieve the `NumTstTakr` for the schools identified in sub-question 2.         * **Pseudo SQL:** SELECT `NumTstTakr` FROM `satscores` WHERE `cds` IN (<sub-question 2 result>)  **2. Assembling SQL:**  * **Sub-question 1 (Identify the highest FRPM Count (K-12)):**     * **SQL:** SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`  * **Sub-question 2 (Find the CDSCode of schools with the highest FRPM Count (K-12)):**     * **SQL:** SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`)  * **Sub-question 3 (Retrieve the NumTstTakr from satscores for those CDSCode's):**     * **SQL:** SELECT `NumTstTakr` FROM `satscores` WHERE `cds` IN (SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`))  * **Main Question (number of SAT test takers):**     * **SQL:** SELECT `NumTstTakr` FROM `satscores` WHERE `cds` IN (SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`))  **3. Simplification and Optimization:**  * The nested queries can be combined into a single query for better readability and performance.  **Final Optimized SQL Query:**  <FINAL_ANSWER> SELECT `NumTstTakr` FROM `satscores` WHERE `cds` IN (SELECT `CDS"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T3.NumTstTakr  FROM frpm AS T1  INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode  INNER JOIN satscores AS T3 ON T2.CDSCode = T3.cds  WHERE T1.FRPM Count (K-12) = (SELECT MAX(FRPM Count (K-12)) FROM frpm) ",
+                "plan": "**Question:** What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?\n\n**1. Divide and Conquer:**\n\n* **Main Question:** What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?\n    * **Analysis:** We need to find the number of SAT test takers (`NumTstTakr`) from the `satscores` table for schools with the highest FRPM count for K-12 students. The highest FRPM count can be determined by ordering the `frpm` table by `FRPM Count (K-12)` in descending order and selecting the top record.\n    * **Pseudo SQL:** SELECT `T3`.`NumTstTakr` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` INNER JOIN `satscores` AS `T3` ON `T2`.`CDSCode` = `T3`.`cds` WHERE <highest FRPM count for K-12 students>\n\n    * **Sub-question 1:** highest FRPM count for K-12 students\n        * **Analysis:** We need to find the maximum `FRPM Count (K-12)` from the `frpm` table. Then, we will filter the records to include only those with this maximum value.\n        * **Pseudo SQL:** SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`)\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (highest FRPM count for K-12 students):**\n    * **SQL:** SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`)\n\n* **Main Question (number of SAT test takers):**\n    * **SQL:** SELECT `T3`.`NumTstTakr` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` INNER JOIN `satscores` AS `T3` ON `T2`.`CDSCode` = `T3`.`cds` WHERE `T1`.`CDSCode` IN (SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`))\n\n**3. Simplification and Optimization:**\n\n* The nested query to find the highest FRPM count can be directly integrated into the main query for better readability and performance.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T2.NumTstTakr FROM frpm AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) ",
+                "plan": "**Question:** What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?\n**Evidence:** None provided.\n\n**1. Divide and Conquer:**\n\n* **Main Question:** What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?\n    * **Analysis:** The question requires finding the `NumTstTakr` (number of SAT test takers) from the `satscores` table for the schools with the highest `FRPM Count (K-12)` from the `frpm` table. We need to join the `frpm` and `satscores` tables on `CDSCode` to link the FRPM count to the SAT test takers.\n    * **Pseudo SQL:** SELECT `T2`.`NumTstTakr` FROM `frpm` AS `T1` INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds` WHERE <highest FRPM count for K-12 students>\n\n    * **Sub-question 1:** highest FRPM count for K-12 students\n        * **Analysis:** We need to find the maximum `FRPM Count (K-12)` from the `frpm` table. This requires grouping by `CDSCode` and ordering by `FRPM Count (K-12)` in descending order to get the highest value.\n        * **Pseudo SQL:** SELECT `CDSCode` FROM `frpm` ORDER BY `FRPM Count (K-12)` DESC LIMIT 1\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (highest FRPM count for K-12 students):**\n    * **SQL:** SELECT `CDSCode` FROM `frpm` ORDER BY `FRPM Count (K-12)` DESC LIMIT 1\n\n* **Main Question (number of SAT test takers):**\n    * **SQL:** SELECT `T2`.`NumTstTakr` FROM `frpm` AS `T1` INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds` WHERE `T1`.`CDSCode` = (SELECT `CDSCode` FROM `frpm` ORDER BY `FRPM Count (K-12)` DESC LIMIT 1)\n\n**3. Simplification and Optimization:**\n\n* The nested query can be directly incorporated into the main query to simplify it.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T2.NumTstTakr FROM frpm AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds WHERE T1.FRPM_Count_K_12 = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+                "plan": "**Question:** What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?\n\n**Evidence:** None provided.\n\n**1. Divide and Conquer:**\n\n* **Main Question:** What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?\n    * **Analysis:** The question requires finding the `NumTstTakr` (number of SAT test takers) from the `satscores` table for the schools that have the highest `FRPM Count (K-12)` from the `frpm` table.\n    * **Pseudo SQL:** SELECT `T2`.`NumTstTakr` FROM `frpm` AS `T1` INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds` WHERE <highest FRPM count for K-12 students>\n\n    * **Sub-question 1:** highest FRPM count for K-12 students\n        * **Analysis:** We need to find the maximum `FRPM Count (K-12)` from the `frpm` table. This will involve selecting the maximum value of `FRPM Count (K-12)` and then filtering the `frpm` table to only include rows with this maximum value.\n        * **Pseudo SQL:** SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`)\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (highest FRPM count for K-12 students):**\n    * **SQL:** SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`)\n\n* **Main Question (number of SAT test takers):**\n    * **SQL:** SELECT `T2`.`NumTstTakr` FROM `frpm` AS `T1` INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds` WHERE `T1`.`CDSCode` IN (SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`))\n\n**3. Simplification and Optimization:**\n\n* The nested query can be simplified and optimized by combining the innermost subquery directly into the main query.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " WITH max_frpm AS (     SELECT CDSCode     FROM frpm     WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ) SELECT T1.NumTstTakr FROM satscores AS T1 INNER JOIN max_frpm AS T2 ON T1.cds = T2.CDSCode ",
+                "plan": "**Question:** What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?\n\n**1. Divide and Conquer:**\n\n* **Main Question:** What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?\n    * **Analysis:** The question asks for the number of SAT test takers (`NumTstTakr`) from the `satscores` table. We need to identify the schools with the highest FRPM count for K-12 students from the `frpm` table and then retrieve the SAT test taker count for those schools.\n    * **Pseudo SQL:** SELECT `T1`.`NumTstTakr` FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE <highest FRPM count for K-12 students>\n\n    * **Sub-question 1:** highest FRPM count for K-12 students\n        * **Analysis:** We need to find the maximum FRPM count for K-12 students from the `frpm` table. This involves finding the maximum value of `FRPM Count (K-12)` and then filtering the rows to match this maximum value.\n        * **Pseudo SQL:** SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`)\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (highest FRPM count for K-12 students):**\n    * **SQL:** SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`)\n\n* **Main Question (number of SAT test takers):**\n    * **SQL:** SELECT `T1`.`NumTstTakr` FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T2`.`CDSCode` IN (SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`))\n\n**3. Simplification and Optimization:**\n\n* The nested query can be simplified and combined into a single query with a `WITH` clause for better readability and performance.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT `T2`.`NumTstTakr` FROM `frpm` AS `T1` INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds` WHERE `T1`.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`) ",
+                "plan": "**Question:** What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?\n\n**Evidence:** None provided, but we infer that we need to find the maximum `FRPM Count (K-12)` from the `frpm` table and then find the corresponding `NumTstTakr` from the `satscores` table.\n\n**1. Divide and Conquer:**\n\n* **Main Question:** What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?\n    * **Analysis:** We need to find the maximum `FRPM Count (K-12)` from the `frpm` table and then join with the `satscores` table to get the corresponding `NumTstTakr`.\n    * **Pseudo SQL:** SELECT `T2`.`NumTstTakr` FROM `frpm` AS `T1` INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds` WHERE `T1`.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`)\n\n    * **Sub-question 1:** Maximum FRPM Count (K-12)\n        * **Analysis:** We need to find the maximum value of `FRPM Count (K-12)` from the `frpm` table.\n        * **Pseudo SQL:** SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (maximum FRPM Count (K-12)):**\n    * **SQL:** SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`\n\n* **Main Question (number of SAT test takers):**\n    * **SQL:** SELECT `T2`.`NumTstTakr` FROM `frpm` AS `T1` INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds` WHERE `T1`.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`)\n\n**3. Simplification and Optimization:**\n\n* The query is already efficient and does not require further optimization.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT `T1`.`NumTstTakr`  FROM `satscores` AS `T1`  INNER JOIN `frpm` AS `T2`  ON `T1`.`cds` = `T2`.`CDSCode`  WHERE `T2`.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`) ",
+                "plan": "**Question:** What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?\n\n**Evidence:** None provided, but we infer that we need to find the schools with the highest FRPM count for K-12 students and then retrieve the number of SAT test takers for those schools.\n\n**1. Divide and Conquer:**\n\n* **Main Question:** What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?\n    * **Analysis:** We need to find the schools with the highest FRPM count for K-12 students and then retrieve the number of SAT test takers for those schools. This involves identifying the maximum FRPM count for K-12 students and then filtering the SAT scores table to get the number of test takers for those schools.\n    * **Pseudo SQL:** SELECT `T1`.`NumTstTakr` FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE <highest FRPM count for K-12 students>\n\n    * **Sub-question 1:** highest FRPM count for K-12 students\n        * **Analysis:** We need to find the maximum FRPM count for K-12 students from the `frpm` table. We can use the `MAX()` function to get the highest FRPM count.\n        * **Pseudo SQL:** SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`\n\n    * **Sub-question 2:** schools with the highest FRPM count for K-12 students\n        * **Analysis:** We need to filter the `frpm` table to get the schools that have the highest FRPM count for K-12 students.\n        * **Pseudo SQL:** SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`)\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (highest FRPM count for K-12 students):**\n    * **SQL:** SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`\n\n* **Sub-question 2 (schools with the highest FRPM count for K-12 students):**\n    * **SQL:** SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`)\n\n* **Main Question (number of SAT test takers):**\n    * **SQL:** SELECT `T1`.`NumTstTakr` FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T2`.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`)\n\n**3. Simplification and Optimization:**\n\n* The nested query in the main question can be simplified to avoid redundant calculations.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T3.NumTstTakr FROM satscores AS T3 INNER JOIN frpm AS T2 ON T3.cds = T2.CDSCode WHERE T2.CDSCode IN (SELECT CDSCode FROM frpm WHERE FRPM Count (K-12) = (SELECT MAX(FRPM Count (K-12)) FROM frpm)) ",
+                "plan": "**Question:** What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?\n\n**1. Divide and Conquer:**\n\n* **Main Question:** What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?\n    * **Analysis:** The question asks for the number of SAT test takers (`NumTstTakr`) from the `satscores` table. We need to find the schools with the highest FRPM count for K-12 students from the `frpm` table and then match those schools to the `satscores` table to retrieve the number of SAT test takers.\n    * **Pseudo SQL:** SELECT `T3`.`NumTstTakr` FROM `satscores` AS `T3` INNER JOIN `frpm` AS `T2` ON `T3`.`cds` = `T2`.`CDSCode` WHERE <highest FRPM count for K-12 students>\n\n    * **Sub-question 1:** highest FRPM count for K-12 students\n        * **Analysis:** We need to find the maximum FRPM count for K-12 students from the `frpm` table and then filter the records to get the schools with this maximum FRPM count.\n        * **Pseudo SQL:** SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`)\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (highest FRPM count for K-12 students):**\n    * **SQL:** SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`)\n\n* **Main Question (number of SAT test takers):**\n    * **SQL:** SELECT `T3`.`NumTstTakr` FROM `satscores` AS `T3` INNER JOIN `frpm` AS `T2` ON `T3`.`cds` = `T2`.`CDSCode` WHERE `T2`.`CDSCode` IN (SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`))\n\n**3. Simplification and Optimization:**\n\n* The query is already optimized. We're using a subquery to find the maximum FRPM count for K-12 students and then filtering the `frpm` table to get the relevant `CDSCode` values. These codes are then used to join the `satscores` table to retrieve the number of SAT test takers.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T2.NumTstTakr FROM satscores AS T2 WHERE T2.cds IN (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) ",
+                "plan": "**Question:** What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?\n\n**1. Divide and Conquer:**\n\n* **Main Question:** What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?\n    * **Analysis:** We need to find the `NumTstTakr` from the `satscores` table for the schools that have the highest `FRPM Count (K-12)` in the `frpm` table.\n    * **Pseudo SQL:** SELECT `T2`.`NumTstTakr` FROM `satscores` AS `T2` WHERE `T2`.`cds` IN (SELECT `T1`.`CDSCode` FROM `frpm` AS `T1` WHERE <highest FRPM Count (K-12)>)\n\n    * **Sub-question 1:** highest FRPM Count (K-12)\n        * **Analysis:** We need to find the maximum `FRPM Count (K-12)` from the `frpm` table. This will involve grouping by `CDSCode` and ordering by `FRPM Count (K-12)` in descending order to get the highest value.\n        * **Pseudo SQL:** SELECT `CDSCode` FROM `frpm` ORDER BY `FRPM Count (K-12)` DESC LIMIT 1\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (highest FRPM Count (K-12)):**\n    * **SQL:** SELECT `CDSCode` FROM `frpm` ORDER BY `FRPM Count (K-12)` DESC LIMIT 1\n\n* **Main Question (number of SAT test takers):**\n    * **SQL:** SELECT `T2`.`NumTstTakr` FROM `satscores` AS `T2` WHERE `T2`.`cds` IN (SELECT `CDSCode` FROM `frpm` ORDER BY `FRPM Count (K-12)` DESC LIMIT 1)\n\n**3. Simplification and Optimization:**\n\n* The final SQL query is already optimized and does not require further simplification.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T1.NumTstTakr  FROM satscores AS T1  INNER JOIN frpm AS T2  ON T1.cds = T2.CDSCode  WHERE T2.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) ",
+                "plan": "**Question:** What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?\n\n**1. Divide and Conquer:**\n\n* **Main Question:** What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?\n    * **Analysis:** The question asks for the `NumTstTakr` (number of test takers) from the `satscores` table for schools with the highest `FRPM Count (K-12)` from the `frpm` table. We need to identify the school with the maximum `FRPM Count (K-12)` and then retrieve the corresponding `NumTstTakr` from `satscores`.\n    * **Pseudo SQL:** SELECT `T1`.`NumTstTakr` FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE <highest FRPM count for K-12 students>\n\n    * **Sub-question 1:** highest FRPM count for K-12 students\n        * **Analysis:** We need to find the school with the maximum `FRPM Count (K-12)` from the `frpm` table. This can be achieved by ordering the `FRPM Count (K-12)` in descending order and selecting the top record.\n        * **Pseudo SQL:** SELECT `CDSCode` FROM `frpm` ORDER BY `FRPM Count (K-12)` DESC LIMIT 1\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (highest FRPM count for K-12 students):**\n    * **SQL:** SELECT `CDSCode` FROM `frpm` ORDER BY `FRPM Count (K-12)` DESC LIMIT 1\n\n* **Main Question (number of SAT test takers):**\n    * **SQL:** SELECT `T1`.`NumTstTakr` FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T2`.`CDSCode` = (SELECT `CDSCode` FROM `frpm` ORDER BY `FRPM Count (K-12)` DESC LIMIT 1)\n\n**3. Simplification and Optimization:**\n\n* The nested query can be incorporated directly into the main query to improve readability and performance.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " WITH MaxFRPM AS (     SELECT MAX(`FRPM Count (K-12)`) AS max_frpm_count     FROM frpm ) SELECT T3.NumTstTakr FROM frpm AS T1 JOIN satscores AS T2 ON T1.CDSCode = T2.cds JOIN MaxFRPM AS T4 ON T1.`FRPM Count (K-12)` = T4.max_frpm_count WHERE T1.`FRPM Count (K-12)` = T4.max_frpm_count ",
+                "plan": "**Question:** What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?\n**Evidence:** None provided, but we infer that we need to find the schools with the highest FRPM count for K-12 students and then retrieve the number of SAT test takers for those schools.\n\n**Query Plan:**\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the frpm and satscores tables to access relevant data.\n\n** Identify Schools with Highest FRPM Count: **\n1. Scan the frpm table: Start reading rows from the frpm table.\n2. Extract the FRPM Count (K-12): For each row, retrieve the value from the `FRPM Count (K-12)` column.\n3. Identify the maximum FRPM count: Track the highest FRPM count encountered while scanning the table.\n4. Collect CDSCode of schools with max FRPM count: Store the CDSCode of schools that have the highest FRPM count.\n\n** Retrieve SAT Test Takers for Identified Schools: **\n1. Join frpm and satscores tables: Use the CDSCode to join the frpm and satscores tables to retrieve the number of SAT test takers.\n2. Filter by the collected CDSCode: Select only those rows where the CDSCode matches the schools with the highest FRPM count.\n3. Extract the number of test takers: Retrieve the `NumTstTakr` column from the satscores table for the matched rows.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final number of SAT test takers for presentation.\n2. Output the final result: Deliver the number of SAT test takers as the query result.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " WITH MaxFRPM AS (     SELECT CDSCode, `FRPM Count (K-12)`     FROM frpm     WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ) SELECT SUM(T1.NumTstTakr) FROM satscores AS T1 INNER JOIN MaxFRPM AS T2 ON T1.cds = T2.CDSCode ",
+                "plan": "**Question**: What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?\n\n**Query Plan**:\n\n**Preparation Steps:**\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the `satscores` and `frpm` tables to access relevant data.\n\n**Identify Schools with Highest FRPM Count:**\n1. Scan the `frpm` table: Start reading rows from the `frpm` table.\n2. Extract the `FRPM Count (K-12)` column: For each row, retrieve the value from the `FRPM Count (K-12)` column.\n3. Identify the maximum FRPM count: Determine the highest `FRPM Count (K-12)` value.\n4. Filter rows by the maximum FRPM count: Select only those rows where the `FRPM Count (K-12)` equals the maximum value.\n\n**Join with SAT Scores Table:**\n1. Join `satscores` with `frpm`: Use the `CDSCode` foreign key to join the `satscores` table with the filtered rows from the `frpm` table.\n2. Extract the `NumTstTakr` column: For each joined row, retrieve the value from the `NumTstTakr` column in the `satscores` table.\n\n**Count the SAT Test Takers:**\n1. Initialize the count: Set up a counter to keep track of the number of SAT test takers.\n2. Sum the test takers: For each row that meets the criteria, sum the `NumTstTakr` values.\n3. Store the final count: Once all rows have been processed, store the total count of SAT test takers.\n\n**Finalize and Deliver the Result:**\n1. Prepare the result for output: Format the final count for presentation.\n2. Output the final count: Deliver the count as the query result, indicating the number of SAT test takers for the schools with the highest FRPM count for K-12 students.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " WITH MaxFRPM AS (     SELECT MAX(`FRPM Count (K-12)`) AS max_frpm_k12     FROM frpm ) SELECT T3.NumTstTakr FROM frpm AS T1 JOIN MaxFRPM AS T2 ON T1.`FRPM Count (K-12)` = T2.max_frpm_k12 JOIN satscores AS T3 ON T1.CDSCode = T3.cds ",
+                "plan": "**Question**: What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment for query execution, including necessary variables and temporary storage.\n2. Open required tables: Open the `frpm` and `satscores` tables to access relevant data.\n\n** Identify Schools with Highest FRPM Count for K-12 Students: **\n1. Scan the `frpm` table: Retrieve records from the `frpm` table to identify the highest FRPM count for K-12 students.\n2. Extract the highest FRPM count: Identify the maximum value of `FRPM Count (K-12)` from the `frpm` table.\n3. Filter by the highest FRPM count: Select only those rows where `FRPM Count (K-12)` equals the highest value identified.\n\n** Match with SAT Test Taker Data: **\n1. Join with `satscores` table: Use the `CDSCode` to join the filtered rows from `frpm` with the `satscores` table to retrieve the number of SAT test takers.\n2. Extract the number of test takers: For each matched row, retrieve the `NumTstTakr` column from the `satscores` table.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final number of SAT test takers for presentation.\n2. Output the final result: Deliver the number of SAT test takers as the query result.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " WITH MaxFRPM AS (     SELECT CDSCode, MAX(`FRPM Count (K-12)`) AS max_FRPM     FROM frpm     GROUP BY CDSCode ) SELECT T3.NumTstTakr FROM MaxFRPM AS T1 JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode AND T1.max_FRPM = T2.`FRPM Count (K-12)` JOIN satscores AS T3 ON T2.CDSCode = T3.cds ",
+                "plan": "**Question:** What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?\n\n**Query Plan:**\n\n**Preparation Steps:**\n1. Initialize the process: Set up the environment for query execution, including necessary variables and temporary storage.\n2. Open required tables: Open the `frpm`, `satscores`, and `schools` tables to access relevant data.\n\n**Identify Schools with the Highest FRPM Count:**\n1. Scan the `frpm` table: Retrieve records from the `frpm` table to identify schools based on their FRPM count.\n2. Extract the FRPM count: For each row, retrieve the value from the `FRPM Count (K-12)` column.\n3. Identify the maximum FRPM count: Determine the highest FRPM count among all schools.\n4. Filter by the highest FRPM count: Select only those rows where the FRPM count equals the maximum value.\n\n**Retrieve SAT Test Taker Information:**\n1. Join with `satscores`: Use the `CDSCode` to join the `frpm` table with the `satscores` table to retrieve the number of SAT test takers.\n2. Extract the number of SAT test takers: For each school that matches the highest FRPM count, retrieve the value from the `NumTstTakr` column in the `satscores` table.\n\n**Finalize and Deliver the Result:**\n1. Prepare the result for output: Format the final number of SAT test takers for presentation.\n2. Output the final result: Deliver the number of SAT test takers as the query result.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T3.NumTstTakr FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T3 ON T2.CDSCode = T3.cds WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+                "plan": "**Question**: What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the frpm, schools, and satscores tables to access relevant data.\n\n** Identify Schools with Highest FRPM Count: **\n1. Scan the frpm table: Retrieve records from the frpm table to identify the highest FRPM count for K-12 students.\n2. Extract FRPM Count (K-12): For each row in frpm, retrieve the value from the `FRPM Count (K-12)` column.\n3. Determine the maximum FRPM Count: Identify the maximum FRPM count among all records.\n4. Filter by the maximum FRPM Count: Select only those rows where the FRPM count equals the maximum value.\n\n** Join with SAT Scores: **\n1. Join with schools table: Use the CDSCode from the frpm table to join with the schools table to get the school details.\n2. Join with satscores table: Use the CDSCode from the schools table to join with the satscores table to get the SAT test taker numbers.\n\n** Retrieve the Number of SAT Test Takers: **\n1. Select the `NumTstTakr` column from the satscores table: This column contains the number of SAT test takers for each school.\n2. Ensure uniqueness: Since we are interested in the number of SAT test takers for the school(s) with the highest FRPM count, we need to ensure that we are selecting the correct number of test takers.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final number of SAT test takers for presentation.\n2. Output the final number: Deliver the number of SAT test takers as the query result.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " WITH MaxFRPM AS (     SELECT CDSCode, MAX(`Free Meal Count (K-12)`) AS MaxCount     FROM frpm     GROUP BY CDSCode     QUALIFY ROW_NUMBER() OVER (ORDER BY MaxCount DESC) = 1 ) SELECT T3.NumTstTakr FROM frpm AS T1 INNER JOIN MaxFRPM AS T2 ON T1.CDSCode = T2.CDSCode AND T1.`Free Meal Count (K-12)` = T2.MaxCount INNER JOIN satscores AS T3 ON T1.CDSCode = T3.cds ",
+                "plan": "**Question**: What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?\n**Evidence**: None provided, but we infer that we need to find the school(s) with the highest FRPM count for K-12 students and then retrieve the number of SAT test takers for those schools.\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the `frpm` and `satscores` tables to access relevant data.\n\n** Identify Schools with Highest FRPM Count: **\n1. Scan the `frpm` table: Start reading rows from the `frpm` table.\n2. Extract the `Free Meal Count (K-12)` column: For each row, retrieve the value from the `Free Meal Count (K-12)` column.\n3. Determine the maximum FRPM count: Identify the highest value of `Free Meal Count (K-12)` from the scanned rows.\n4. Filter rows based on the maximum FRPM count: Select only those rows where the `Free Meal Count (K-12)` equals the determined maximum value.\n\n** Join with SAT Scores Table: **\n1. Join the filtered rows from `frpm` with the `satscores` table: Use the `CDSCode` column from `frpm` to join with the `cds` column in `satscores`.\n\n** Retrieve Number of SAT Test Takers: **\n1. Extract the `NumTstTakr` column: For each joined row, retrieve the value from the `NumTstTakr` column in the `satscores` table.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final number of SAT test takers for presentation.\n2. Output the final result: Deliver the number of SAT test takers as the query result.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " WITH MaxFRPM AS (     SELECT MAX(`FRPM Count (K-12)`) AS max_count     FROM frpm ) SELECT T4.NumTstTakr FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T4 ON T2.CDSCode = T4.cds WHERE T1.`FRPM Count (K-12)` = (SELECT max_count FROM MaxFRPM) ",
+                "plan": "**Question**: What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?\n**Evidence**: The evidence is not provided but based on the question, we can infer that we need to find the school(s) with the highest `FRPM Count (K-12)` and then find the number of SAT test takers for those schools.\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the frpm, schools, and satscores tables to access relevant data.\n\n** Identify Schools with Highest FRPM Count: **\n1. Scan the frpm table: Start reading rows from the frpm table.\n2. Extract FRPM Count (K-12): For each row, retrieve the value from the `FRPM Count (K-12)` column.\n3. Find the maximum FRPM Count: Identify the highest value of `FRPM Count (K-12)` among all rows.\n4. Filter rows with maximum FRPM Count: Select only those rows where the `FRPM Count (K-12)` equals the maximum value.\n\n** Join with SAT Scores: **\n1. Join frpm with schools: Use the `CDSCode` column to join the frpm table with the schools table.\n2. Join schools with satscores: Use the `CDSCode` column to join the schools table with the satscores table.\n3. Ensure only relevant schools are included: Filter the joined results to include only those schools that have the maximum `FRPM Count (K-12)`.\n\n** Retrieve SAT Test Taker Count: **\n1. Extract NumTstTakr: From the satscores table, retrieve the `NumTstTakr` column which represents the number of SAT test takers.\n2. Handle potential duplicates: Since multiple schools could have the same highest FRPM count, ensure that each school is uniquely identified.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final count of SAT test takers for presentation.\n2. Output the final result: Deliver the count as the query result, indicating the number of SAT test takers for the schools with the highest FRPM count.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " WITH max_frpm AS (     SELECT MAX(`FRPM Count (K-12)`) AS max_count     FROM frpm ) SELECT SUM(T3.NumTstTakr) AS total_sat_takers FROM frpm AS T1 JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode JOIN satscores AS T3 ON T1.CDSCode = T3.cds WHERE T1.`FRPM Count (K-12)` = (SELECT max_count FROM max_frpm) ",
+                "plan": "**Question:** What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?\n\n**Query Plan:**\n\n**Preparation Steps:**\n1. Initialize the process: Set up the environment for query execution, including initializing variables and temporary storage.\n2. Open required tables: Access the `frpm`, `schools`, and `satscores` tables to retrieve relevant data.\n\n**Identify Schools with the Highest FRPM Count:**\n1. Scan the `frpm` table: Start reading rows from the `frpm` table.\n2. Extract the `FRPM Count (K-12)` column: For each row, retrieve the value from the `FRPM Count (K-12)` column.\n3. Identify the maximum FRPM count: Determine the highest value of `FRPM Count (K-12)` among all rows.\n4. Filter rows by the maximum FRPM count: Select only those rows where the `FRPM Count (K-12)` equals the highest value.\n\n**Join Tables to Get SAT Test Takers:**\n1. Join `frpm` with `schools`: Use the `CDSCode` field to match rows between the `frpm` and `schools` tables.\n2. Join the resulting table with `satscores`: Again, use the `CDSCode` field to match rows between the joined table and the `satscores` table.\n3. Extract the `NumTstTakr` column: Retrieve the `NumTstTakr` column from the `satscores` table.\n\n**Count and Finalize the Results:**\n1. Count the matching SAT test takers: Summarize the `NumTstTakr` values for the schools that have the highest FRPM count.\n2. Store the final count: Once all rows have been processed, store the total count of SAT test takers.\n3. Prepare the result for output: Format the final count for presentation.\n\n**Deliver the Final Result:**\n1. Prepare the result for output: Format the final count of SAT test takers for presentation.\n2. Output the final count: Deliver the count as the query result, indicating the number of SAT test takers for the schools with the highest FRPM count.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " WITH MaxFRPM AS (     SELECT CDSCode, MAX(`FRPM Count (K-12)`) AS max_frpm_count     FROM frpm     GROUP BY CDSCode ) SELECT SUM(T3.NumTstTakr) AS total_test_takers FROM schools AS T1 INNER JOIN MaxFRPM AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T3 ON T1.CDSCode = T3.cds WHERE T2.max_frpm_count = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+                "plan": "**Question**: What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?\n\n**Query Plan**:\n\n**Preparation Steps:**\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the `schools`, `frpm`, and `satscores` tables to access relevant data.\n\n**Identify Schools with the Highest FRPM Count for K-12 Students:**\n1. Scan the `frpm` table: Start reading rows from the `frpm` table.\n2. Extract the FRPM Count (K-12) column: For each row, retrieve the value from the `FRPM Count (K-12)` column.\n3. Determine the maximum FRPM Count (K-12): Identify the highest value in the `FRPM Count (K-12)` column.\n4. Filter by the highest FRPM Count (K-12): Select only those rows where the `FRPM Count (K-12)` matches the highest value identified.\n\n**Join with Schools Table:**\n1. Join `frpm` with `schools` on `CDSCode`: Use the `CDSCode` column to match rows between the `frpm` and `schools` tables.\n2. Extract the school name and CDSCode: Retrieve the `School` and `CDSCode` columns from the `schools` table for the matched rows.\n\n**Join with SAT Scores Table:**\n1. Join the filtered `schools` table with `satscores` on `CDSCode`: Use the `CDSCode` column to match rows between the `schools` table and `satscores` table.\n2. Extract the number of SAT test takers: Retrieve the `NumTstTakr` column from the `satscores` table for the matched rows.\n\n**Count and Finalize the Results:**\n1. Count the number of SAT test takers: Summarize the `NumTstTakr` values for the schools with the highest FRPM count.\n2. Prepare the result for output: Format the final count for presentation.\n3. Output the final count: Deliver the count as the query result, indicating the number of SAT test takers for the schools with the highest FRPM count for K-12 students.\n4. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T3.NumTstTakr FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T3 ON T2.CDSCode = T3.cds WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+                "plan": "**Question**: What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the frpm, satscores, and schools tables to access relevant data.\n\n** Identify Schools with Highest FRPM Count: **\n1. Scan the frpm table: Retrieve records from the frpm table to find the schools with the highest FRPM count for K-12 students.\n2. Extract FRPM Count (K-12): For each row in the frpm table, retrieve the value from the `FRPM Count (K-12)` column.\n3. Identify the maximum FRPM Count (K-12): Determine the highest FRPM count among all schools.\n4. Filter by the maximum FRPM Count (K-12): Select only those rows where the FRPM Count (K-12) equals the maximum value.\n\n** Join Tables to Get SAT Test Taker Counts: **\n1. Join frpm with schools: Use the CDSCode column to join the frpm table with the schools table to get additional details about the schools.\n2. Join schools with satscores: Use the cds column to join the schools table with the satscores table to get the number of SAT test takers.\n\n** Retrieve the Number of SAT Test Takers: **\n1. Extract NumTstTakr: From the satscores table, retrieve the value from the NumTstTakr column for the schools that meet the criteria.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final count of SAT test takers for presentation.\n2. Output the final count: Deliver the count as the query result, indicating the number of SAT test takers for the schools with the highest FRPM count for K-12 students.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            }
+        ],
+        "status": "success",
+        "execution_time": 1893.1
+    },
+    {
+        "tool_name": "revise",
+        "original_SQL_id": "generate_candidate",
+        "refined_SQL_id": "revise_1",
+        "candidates": [
+            {
+                "refined_query": " SELECT T3.NumTstTakr FROM satscores AS T3 WHERE T3.cds IN (SELECT T1.CDSCode FROM frpm AS T1 WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm)) "
+            },
+            {
+                "refined_query": " SELECT T3.NumTstTakr FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T3 ON T2.CDSCode = T3.cds WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) "
+            },
+            {
+                "refined_query": " SELECT T2.NumTstTakr FROM frpm AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) "
+            },
+            {
+                "refined_query": " SELECT T2.NumTstTakr FROM frpm AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) "
+            },
+            {
+                "refined_query": " WITH max_frpm AS (     SELECT CDSCode     FROM frpm     WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ) SELECT T1.NumTstTakr FROM satscores AS T1 INNER JOIN max_frpm AS T2 ON T1.cds = T2.CDSCode "
+            },
+            {
+                "refined_query": " SELECT `T2`.`NumTstTakr` FROM `frpm` AS `T1` INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds` WHERE `T1`.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`) "
+            },
+            {
+                "refined_query": " SELECT `T1`.`NumTstTakr`  FROM `satscores` AS `T1`  INNER JOIN `frpm` AS `T2`  ON `T1`.`cds` = `T2`.`CDSCode`  WHERE `T2`.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`) "
+            },
+            {
+                "refined_query": " SELECT T3.NumTstTakr FROM satscores AS T3 INNER JOIN frpm AS T2 ON T3.cds = T2.CDSCode WHERE T2.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) "
+            },
+            {
+                "refined_query": " SELECT T2.NumTstTakr FROM satscores AS T2 WHERE T2.cds IN (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) "
+            },
+            {
+                "refined_query": " SELECT T1.NumTstTakr  FROM satscores AS T1  INNER JOIN frpm AS T2  ON T1.cds = T2.CDSCode  WHERE T2.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) "
+            },
+            {
+                "refined_query": " WITH MaxFRPM AS (SELECT MAX(`FRPM Count (K-12)`) AS max_frpm_count FROM frpm) SELECT T2.NumTstTakr FROM frpm AS T1 JOIN satscores AS T2 ON T1.CDSCode = T2.cds JOIN MaxFRPM AS T4 ON T1.`FRPM Count (K-12)` = T4.max_frpm_count WHERE T1.`FRPM Count (K-12)` = T4.max_frpm_count "
+            },
+            {
+                "refined_query": " WITH MaxFRPM AS (     SELECT CDSCode, `FRPM Count (K-12)`     FROM frpm     WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ) SELECT SUM(T1.NumTstTakr) FROM satscores AS T1 INNER JOIN MaxFRPM AS T2 ON T1.cds = T2.CDSCode "
+            },
+            {
+                "refined_query": " WITH MaxFRPM AS (     SELECT MAX(`FRPM Count (K-12)`) AS max_frpm_k12     FROM frpm ) SELECT T3.NumTstTakr FROM frpm AS T1 JOIN MaxFRPM AS T2 ON T1.`FRPM Count (K-12)` = T2.max_frpm_k12 JOIN satscores AS T3 ON T1.CDSCode = T3.cds "
+            },
+            {
+                "refined_query": " WITH MaxFRPM AS (     SELECT CDSCode, MAX(`FRPM Count (K-12)`) AS max_FRPM     FROM frpm     GROUP BY CDSCode ) SELECT T3.NumTstTakr FROM MaxFRPM AS T1 JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode AND T1.max_FRPM = T2.`FRPM Count (K-12)` JOIN satscores AS T3 ON T2.CDSCode = T3.cds "
+            },
+            {
+                "refined_query": " SELECT T3.NumTstTakr FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T3 ON T2.CDSCode = T3.cds WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) "
+            },
+            {
+                "refined_query": " WITH MaxFRPM AS (SELECT CDSCode, `Free Meal Count (K-12)`, ROW_NUMBER() OVER (PARTITION BY CDSCode ORDER BY `Free Meal Count (K-12)` DESC) AS rn FROM frpm) SELECT T3.NumTstTakr FROM frpm AS T1 INNER JOIN MaxFRPM AS T2 ON T1.CDSCode = T2.CDSCode AND T1.`Free Meal Count (K-12)` = T2.`Free Meal Count (K-12)` AND T2.rn = 1 INNER JOIN satscores AS T3 ON T1.CDSCode = T3.cds "
+            },
+            {
+                "refined_query": " WITH MaxFRPM AS (     SELECT MAX(`FRPM Count (K-12)`) AS max_count     FROM frpm ) SELECT T4.NumTstTakr FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T4 ON T2.CDSCode = T4.cds WHERE T1.`FRPM Count (K-12)` = (SELECT max_count FROM MaxFRPM) "
+            },
+            {
+                "refined_query": " WITH max_frpm AS (     SELECT MAX(`FRPM Count (K-12)`) AS max_count     FROM frpm ) SELECT SUM(T3.NumTstTakr) AS total_sat_takers FROM frpm AS T1 JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode JOIN satscores AS T3 ON T1.CDSCode = T3.cds WHERE T1.`FRPM Count (K-12)` = (SELECT max_count FROM max_frpm) "
+            },
+            {
+                "refined_query": " WITH MaxFRPM AS (     SELECT CDSCode, MAX(`FRPM Count (K-12)`) AS max_frpm_count     FROM frpm     GROUP BY CDSCode ) SELECT SUM(T3.NumTstTakr) AS total_test_takers FROM schools AS T1 INNER JOIN MaxFRPM AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T3 ON T1.CDSCode = T3.cds WHERE T2.max_frpm_count = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) "
+            },
+            {
+                "refined_query": " SELECT T3.NumTstTakr FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T3 ON T2.CDSCode = T3.cds WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) "
+            }
+        ],
+        "status": "success",
+        "execution_time": 382.0
+    },
+    {
+        "tool_name": "generate_unit_test",
+        "unit_tests": {
+            "unit_test_generation": [
+                "The answer SQL query should mention a join between `frpm` and `satscores` tables.",
+                "The answer SQL query should use a subquery to identify the maximum `FRPM Count (K-12)` value.",
+                "The answer SQL query should return a single value representing the number of SAT test takers, not a sum of multiple test takers.",
+                "The answer SQL query should not include unnecessary tables like `schools` unless required for the join.",
+                "The answer SQL query should not use aggregate functions like SUM if the requirement is to return a single value.",
+                "The answer SQL query should not use complex CTEs or window functions unless necessary to solve the problem.",
+                "The answer SQL query should use an INNER JOIN between `frpm` and `satscores` tables.",
+                "The answer SQL query should not return more than one row.",
+                "The answer SQL query should correctly identify the CDSCode corresponding to the maximum `FRPM Count (K-12)` value.",
+                "The answer SQL query should not filter based on `Free Meal Count (K-12)` unless explicitly required by the question.",
+                "The answer SQL query should not group by `CDSCode` unless aggregating multiple schools.",
+                "The answer SQL query should not include additional conditions or columns beyond what is necessary to answer the question.",
+                "The answer SQL query should use a subquery to get the maximum `FRPM Count (K-12)` value without grouping.",
+                "The answer SQL query should not use window functions like ROW_NUMBER unless specified in the question.",
+                "The answer SQL query should not perform any unnecessary calculations or transformations on the data.",
+                "The answer SQL query should directly retrieve the `NumTstTakr` field from the `satscores` table.",
+                "The answer SQL query should not involve any aggregation if the requirement is to return a single record.",
+                "The answer SQL query should not have redundant or duplicate logic that does not contribute to solving the problem.",
+                "The answer SQL query should not join the `schools` table unless it provides necessary information to resolve the join between `frpm` and `satscores`.",
+                "The answer SQL query should not include unnecessary filtering conditions.",
+                "Only the best answer from the set of candidates that most accurately answers the question, given the database schema and hint should pass this test."
+            ]
+        },
+        "candidates": [
+            " SELECT T3.NumTstTakr FROM satscores AS T3 WHERE T3.cds IN (SELECT T1.CDSCode FROM frpm AS T1 WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm)) ",
+            " SELECT T3.NumTstTakr FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T3 ON T2.CDSCode = T3.cds WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+            " SELECT T2.NumTstTakr FROM frpm AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) ",
+            " SELECT T2.NumTstTakr FROM frpm AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+            " WITH max_frpm AS (     SELECT CDSCode     FROM frpm     WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ) SELECT T1.NumTstTakr FROM satscores AS T1 INNER JOIN max_frpm AS T2 ON T1.cds = T2.CDSCode ",
+            " SELECT `T2`.`NumTstTakr` FROM `frpm` AS `T1` INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds` WHERE `T1`.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`) ",
+            " SELECT `T1`.`NumTstTakr`  FROM `satscores` AS `T1`  INNER JOIN `frpm` AS `T2`  ON `T1`.`cds` = `T2`.`CDSCode`  WHERE `T2`.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`) ",
+            " SELECT T3.NumTstTakr FROM satscores AS T3 INNER JOIN frpm AS T2 ON T3.cds = T2.CDSCode WHERE T2.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+            " SELECT T2.NumTstTakr FROM satscores AS T2 WHERE T2.cds IN (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) ",
+            " SELECT T1.NumTstTakr  FROM satscores AS T1  INNER JOIN frpm AS T2  ON T1.cds = T2.CDSCode  WHERE T2.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) ",
+            " WITH MaxFRPM AS (SELECT MAX(`FRPM Count (K-12)`) AS max_frpm_count FROM frpm) SELECT T2.NumTstTakr FROM frpm AS T1 JOIN satscores AS T2 ON T1.CDSCode = T2.cds JOIN MaxFRPM AS T4 ON T1.`FRPM Count (K-12)` = T4.max_frpm_count WHERE T1.`FRPM Count (K-12)` = T4.max_frpm_count ",
+            " WITH MaxFRPM AS (     SELECT CDSCode, `FRPM Count (K-12)`     FROM frpm     WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ) SELECT SUM(T1.NumTstTakr) FROM satscores AS T1 INNER JOIN MaxFRPM AS T2 ON T1.cds = T2.CDSCode ",
+            " WITH MaxFRPM AS (     SELECT MAX(`FRPM Count (K-12)`) AS max_frpm_k12     FROM frpm ) SELECT T3.NumTstTakr FROM frpm AS T1 JOIN MaxFRPM AS T2 ON T1.`FRPM Count (K-12)` = T2.max_frpm_k12 JOIN satscores AS T3 ON T1.CDSCode = T3.cds ",
+            " WITH MaxFRPM AS (     SELECT CDSCode, MAX(`FRPM Count (K-12)`) AS max_FRPM     FROM frpm     GROUP BY CDSCode ) SELECT T3.NumTstTakr FROM MaxFRPM AS T1 JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode AND T1.max_FRPM = T2.`FRPM Count (K-12)` JOIN satscores AS T3 ON T2.CDSCode = T3.cds ",
+            " SELECT T3.NumTstTakr FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T3 ON T2.CDSCode = T3.cds WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+            " WITH MaxFRPM AS (SELECT CDSCode, `Free Meal Count (K-12)`, ROW_NUMBER() OVER (PARTITION BY CDSCode ORDER BY `Free Meal Count (K-12)` DESC) AS rn FROM frpm) SELECT T3.NumTstTakr FROM frpm AS T1 INNER JOIN MaxFRPM AS T2 ON T1.CDSCode = T2.CDSCode AND T1.`Free Meal Count (K-12)` = T2.`Free Meal Count (K-12)` AND T2.rn = 1 INNER JOIN satscores AS T3 ON T1.CDSCode = T3.cds ",
+            " WITH MaxFRPM AS (     SELECT MAX(`FRPM Count (K-12)`) AS max_count     FROM frpm ) SELECT T4.NumTstTakr FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T4 ON T2.CDSCode = T4.cds WHERE T1.`FRPM Count (K-12)` = (SELECT max_count FROM MaxFRPM) ",
+            " WITH max_frpm AS (     SELECT MAX(`FRPM Count (K-12)`) AS max_count     FROM frpm ) SELECT SUM(T3.NumTstTakr) AS total_sat_takers FROM frpm AS T1 JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode JOIN satscores AS T3 ON T1.CDSCode = T3.cds WHERE T1.`FRPM Count (K-12)` = (SELECT max_count FROM max_frpm) ",
+            " WITH MaxFRPM AS (     SELECT CDSCode, MAX(`FRPM Count (K-12)`) AS max_frpm_count     FROM frpm     GROUP BY CDSCode ) SELECT SUM(T3.NumTstTakr) AS total_test_takers FROM schools AS T1 INNER JOIN MaxFRPM AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T3 ON T1.CDSCode = T3.cds WHERE T2.max_frpm_count = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+            " SELECT T3.NumTstTakr FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T3 ON T2.CDSCode = T3.cds WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) "
+        ],
+        "status": "success",
+        "execution_time": 784.1
+    },
+    {
+        "tool_name": "evaluate",
+        "scores": [
+            20,
+            4,
+            21,
+            21,
+            20,
+            21,
+            21,
+            21,
+            20,
+            21,
+            20,
+            3,
+            20,
+            1,
+            18,
+            0,
+            20,
+            6,
+            8,
+            17
+        ],
+        "comparison_matrix": [
+            [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                1
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1
+            ],
+            [
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            [
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                1
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1
+            ],
+            [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1
+            ]
+        ],
+        "candidates": [
+            " SELECT T3.NumTstTakr FROM satscores AS T3 WHERE T3.cds IN (SELECT T1.CDSCode FROM frpm AS T1 WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm)) ",
+            " SELECT T3.NumTstTakr FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T3 ON T2.CDSCode = T3.cds WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+            " SELECT T2.NumTstTakr FROM frpm AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) ",
+            " SELECT T2.NumTstTakr FROM frpm AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+            " WITH max_frpm AS (     SELECT CDSCode     FROM frpm     WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ) SELECT T1.NumTstTakr FROM satscores AS T1 INNER JOIN max_frpm AS T2 ON T1.cds = T2.CDSCode ",
+            " SELECT `T2`.`NumTstTakr` FROM `frpm` AS `T1` INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds` WHERE `T1`.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`) ",
+            " SELECT `T1`.`NumTstTakr`  FROM `satscores` AS `T1`  INNER JOIN `frpm` AS `T2`  ON `T1`.`cds` = `T2`.`CDSCode`  WHERE `T2`.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`) ",
+            " SELECT T3.NumTstTakr FROM satscores AS T3 INNER JOIN frpm AS T2 ON T3.cds = T2.CDSCode WHERE T2.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+            " SELECT T2.NumTstTakr FROM satscores AS T2 WHERE T2.cds IN (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) ",
+            " SELECT T1.NumTstTakr  FROM satscores AS T1  INNER JOIN frpm AS T2  ON T1.cds = T2.CDSCode  WHERE T2.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) ",
+            " WITH MaxFRPM AS (SELECT MAX(`FRPM Count (K-12)`) AS max_frpm_count FROM frpm) SELECT T2.NumTstTakr FROM frpm AS T1 JOIN satscores AS T2 ON T1.CDSCode = T2.cds JOIN MaxFRPM AS T4 ON T1.`FRPM Count (K-12)` = T4.max_frpm_count WHERE T1.`FRPM Count (K-12)` = T4.max_frpm_count ",
+            " WITH MaxFRPM AS (     SELECT CDSCode, `FRPM Count (K-12)`     FROM frpm     WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ) SELECT SUM(T1.NumTstTakr) FROM satscores AS T1 INNER JOIN MaxFRPM AS T2 ON T1.cds = T2.CDSCode ",
+            " WITH MaxFRPM AS (     SELECT MAX(`FRPM Count (K-12)`) AS max_frpm_k12     FROM frpm ) SELECT T3.NumTstTakr FROM frpm AS T1 JOIN MaxFRPM AS T2 ON T1.`FRPM Count (K-12)` = T2.max_frpm_k12 JOIN satscores AS T3 ON T1.CDSCode = T3.cds ",
+            " WITH MaxFRPM AS (     SELECT CDSCode, MAX(`FRPM Count (K-12)`) AS max_FRPM     FROM frpm     GROUP BY CDSCode ) SELECT T3.NumTstTakr FROM MaxFRPM AS T1 JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode AND T1.max_FRPM = T2.`FRPM Count (K-12)` JOIN satscores AS T3 ON T2.CDSCode = T3.cds ",
+            " SELECT T3.NumTstTakr FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T3 ON T2.CDSCode = T3.cds WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+            " WITH MaxFRPM AS (SELECT CDSCode, `Free Meal Count (K-12)`, ROW_NUMBER() OVER (PARTITION BY CDSCode ORDER BY `Free Meal Count (K-12)` DESC) AS rn FROM frpm) SELECT T3.NumTstTakr FROM frpm AS T1 INNER JOIN MaxFRPM AS T2 ON T1.CDSCode = T2.CDSCode AND T1.`Free Meal Count (K-12)` = T2.`Free Meal Count (K-12)` AND T2.rn = 1 INNER JOIN satscores AS T3 ON T1.CDSCode = T3.cds ",
+            " WITH MaxFRPM AS (     SELECT MAX(`FRPM Count (K-12)`) AS max_count     FROM frpm ) SELECT T4.NumTstTakr FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T4 ON T2.CDSCode = T4.cds WHERE T1.`FRPM Count (K-12)` = (SELECT max_count FROM MaxFRPM) ",
+            " WITH max_frpm AS (     SELECT MAX(`FRPM Count (K-12)`) AS max_count     FROM frpm ) SELECT SUM(T3.NumTstTakr) AS total_sat_takers FROM frpm AS T1 JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode JOIN satscores AS T3 ON T1.CDSCode = T3.cds WHERE T1.`FRPM Count (K-12)` = (SELECT max_count FROM max_frpm) ",
+            " WITH MaxFRPM AS (     SELECT CDSCode, MAX(`FRPM Count (K-12)`) AS max_frpm_count     FROM frpm     GROUP BY CDSCode ) SELECT SUM(T3.NumTstTakr) AS total_test_takers FROM schools AS T1 INNER JOIN MaxFRPM AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T3 ON T1.CDSCode = T3.cds WHERE T2.max_frpm_count = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) ",
+            " SELECT T3.NumTstTakr FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T3 ON T2.CDSCode = T3.cds WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm) "
+        ],
+        "selected_candidate": " SELECT T2.NumTstTakr FROM frpm AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) ",
+        "status": "success",
+        "execution_time": 3897.2
+    },
+    {
+        "tool_name": "execution_accuracy",
+        "generate_candidate": {
+            "exec_res": 0,
+            "exec_err": "near \"*\": syntax error",
+            "Question": "What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?",
+            "Evidence": "",
+            "GOLD_SQL": "SELECT NumTstTakr FROM satscores WHERE cds = ( SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1 )",
+            "PREDICTED_SQL": "**Question:** What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?  **Evidence:** None provided, but we infer that we need to find the `NumTstTakr` (number of test takers) from the `satscores` table for the schools that have the highest `FRPM Count (K-12)` in the `frpm` table.  **1. Divide and Conquer:**  * **Main Question:** What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?     * **Analysis:** We need to find the `NumTstTakr` from the `satscores` table for schools that have the highest `FRPM Count (K-12)` in the `frpm` table. We will first identify the highest `FRPM Count (K-12)` in the `frpm` table and then join this with the `satscores` table to retrieve the `NumTstTakr`.     * **Pseudo SQL:** SELECT `T3`.`NumTstTakr` FROM `satscores` AS `T3` WHERE `T3`.`cds` IN (SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`))      * **Sub-question 1:** Identify the highest `FRPM Count (K-12)` in the `frpm` table         * **Analysis:** We need to find the maximum value of `FRPM Count (K-12)` in the `frpm` table.         * **Pseudo SQL:** SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`      * **Sub-question 2:** Find the `CDSCode` of schools with the highest `FRPM Count (K-12)`         * **Analysis:** We need to find the `CDSCode` from the `frpm` table where `FRPM Count (K-12)` equals the maximum value identified in sub-question 1.         * **Pseudo SQL:** SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = <maximum FRPM Count (K-12)>      * **Sub-question 3:** Retrieve the `NumTstTakr` from `satscores` for those `CDSCode`s         * **Analysis:** We need to join the `satscores` table with the `frpm` table using `CDSCode` and retrieve the `NumTstTakr` for the schools identified in sub-question 2.         * **Pseudo SQL:** SELECT `NumTstTakr` FROM `satscores` WHERE `cds` IN (<sub-question 2 result>)  **2. Assembling SQL:**  * **Sub-question 1 (Identify the highest FRPM Count (K-12)):**     * **SQL:** SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`  * **Sub-question 2 (Find the CDSCode of schools with the highest FRPM Count (K-12)):**     * **SQL:** SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`)  * **Sub-question 3 (Retrieve the NumTstTakr from satscores for those CDSCode's):**     * **SQL:** SELECT `NumTstTakr` FROM `satscores` WHERE `cds` IN (SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`))  * **Main Question (number of SAT test takers):**     * **SQL:** SELECT `NumTstTakr` FROM `satscores` WHERE `cds` IN (SELECT `CDSCode` FROM `frpm` WHERE `FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM `frpm`))  **3. Simplification and Optimization:**  * The nested queries can be combined into a single query for better readability and performance.  **Final Optimized SQL Query:**  <FINAL_ANSWER> SELECT `NumTstTakr` FROM `satscores` WHERE `cds` IN (SELECT `CDS"
+        },
+        "revise_1": {
+            "exec_res": 1,
+            "exec_err": "--",
+            "Question": "What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?",
+            "Evidence": "",
+            "GOLD_SQL": "SELECT NumTstTakr FROM satscores WHERE cds = ( SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1 )",
+            "PREDICTED_SQL": " SELECT T3.NumTstTakr FROM satscores AS T3 WHERE T3.cds IN (SELECT T1.CDSCode FROM frpm AS T1 WHERE T1.`FRPM Count (K-12)` = (SELECT MAX(`FRPM Count (K-12)`) FROM frpm)) "
+        },
+        "evaluate_1": {
+            "exec_res": 1,
+            "exec_err": "--",
+            "Question": "What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?",
+            "Evidence": "",
+            "GOLD_SQL": "SELECT NumTstTakr FROM satscores WHERE cds = ( SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1 )",
+            "PREDICTED_SQL": " SELECT T2.NumTstTakr FROM frpm AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) "
+        },
+        "final_SQL": {
+            "exec_res": 1,
+            "exec_err": "--",
+            "Question": "What is the number of SAT test takers of the schools with the highest FRPM count for K-12 students?",
+            "Evidence": "",
+            "GOLD_SQL": "SELECT NumTstTakr FROM satscores WHERE cds = ( SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1 )",
+            "PREDICTED_SQL": " SELECT T2.NumTstTakr FROM frpm AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1) "
+        },
+        "status": "success",
+        "execution_time": 0.0
+    }
+]

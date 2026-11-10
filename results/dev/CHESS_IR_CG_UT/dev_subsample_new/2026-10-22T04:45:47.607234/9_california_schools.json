@@ -1,0 +1,452 @@
+[
+    {
+        "tool_name": "extract_keywords",
+        "keywords": [
+            "average score",
+            "Math",
+            "SAT test",
+            "charter-funded",
+            "schools",
+            "average score in Math over 560"
+        ],
+        "status": "success",
+        "execution_time": 5.3
+    },
+    {
+        "tool_name": "retrieve_entity",
+        "similar_columns": {
+            "schools": [
+                "School"
+            ]
+        },
+        "schema_with_examples": {
+            "schools": {
+                "School": [
+                    "TEAM Charter"
+                ],
+                "CharterNum": [
+                    "0560"
+                ],
+                "MailCity": [
+                    "Mather"
+                ],
+                "AdmLName1": [
+                    "Mather"
+                ],
+                "City": [
+                    "Mather"
+                ]
+            },
+            "frpm": {
+                "School Name": [
+                    "TEAM Charter"
+                ],
+                "Charter School Number": [
+                    "0560"
+                ]
+            }
+        },
+        "status": "success",
+        "execution_time": 150.7
+    },
+    {
+        "tool_name": "retrieve_context",
+        "schema_with_descriptions": {
+            "schools": {
+                "charternum": {
+                    "column_name": "",
+                    "column_description": "The charter school number,",
+                    "value_description": "4-digit number assigned to a charter school."
+                },
+                "fundingtype": {
+                    "column_name": "",
+                    "column_description": "Indicates the charter school funding type",
+                    "value_description": "Values are as follows:  \u00b7\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0 Not in CS (California School) funding model  \u00b7\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0 Locally funded  \u00b7\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0 Directly funded"
+                },
+                "charter": {
+                    "column_name": "",
+                    "column_description": "This field identifies a charter school.",
+                    "value_description": "The field is coded as follows:  \u00b7\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0 1 = The school is a charter  \u00b7\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0 0 = The school is not a charter"
+                },
+                "school": {
+                    "column_name": "",
+                    "column_description": "School",
+                    "value_description": ""
+                }
+            },
+            "frpm": {
+                "charter school number": {
+                    "column_name": "",
+                    "column_description": "Charter School Number",
+                    "value_description": ""
+                },
+                "high grade": {
+                    "column_name": "",
+                    "column_description": "High Grade",
+                    "value_description": ""
+                },
+                "charter funding type": {
+                    "column_name": "",
+                    "column_description": "Charter Funding Type",
+                    "value_description": ""
+                },
+                "charter school (y/n)": {
+                    "column_name": "",
+                    "column_description": "Charter School (Y/N)",
+                    "value_description": "0: N; 1: Y"
+                },
+                "school name": {
+                    "column_name": "",
+                    "column_description": "School Name",
+                    "value_description": ""
+                },
+                "school type": {
+                    "column_name": "",
+                    "column_description": "School Type",
+                    "value_description": ""
+                }
+            },
+            "satscores": {
+                "avgscrmath": {
+                    "column_name": "average scores in Math",
+                    "column_description": "average scores in Math",
+                    "value_description": "average scores in Math"
+                },
+                "avgscrread": {
+                    "column_name": "average scores in Reading",
+                    "column_description": "average scores in Reading",
+                    "value_description": "average scores in Reading"
+                },
+                "numge1500": {
+                    "column_name": "Number of Test Takers Whose Total SAT Scores Are Greater or Equal to 1500",
+                    "column_description": "Number of Test Takers Whose Total SAT Scores Are Greater or Equal to 1500",
+                    "value_description": "Number of Test Takers Whose Total SAT Scores Are Greater or Equal to 1500    Excellence Rate = NumGE1500 / NumTstTakr"
+                },
+                "numtsttakr": {
+                    "column_name": "Number of Test Takers",
+                    "column_description": "Number of Test Takers in this school",
+                    "value_description": "number of test takers in each school"
+                },
+                "sname": {
+                    "column_name": "school name",
+                    "column_description": "school name",
+                    "value_description": ""
+                }
+            }
+        },
+        "status": "success",
+        "execution_time": 244.2
+    },
+    {
+        "tool_name": "generate_candidate",
+        "node_type": "generate_candidate",
+        "generation_based_candidates": [
+            {
+                "template_name": "generate_candidate_one",
+                "candidates": [
+                    " SELECT COUNT(T1.CDSCode) FROM schools AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds INNER JOIN frpm AS T3 ON T1.CDSCode = T3.CDSCode WHERE T2.AvgScrMath > 560 AND T3.`Charter Funding Type` = 'Directly funded' ",
+                    " SELECT COUNT(T1.cds) FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded' ",
+                    " SELECT COUNT(DISTINCT T1.cds) FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded' ",
+                    " SELECT COUNT(T1.CDSCode)  FROM satscores AS T1  INNER JOIN schools AS T2  ON T1.cds = T2.CDSCode  WHERE T1.AvgScrMath > 560 AND T2.FundingType = 'Directly funded'; ",
+                    " SELECT COUNT(DISTINCT `T1`.`CDSCode`) FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrMath` > 560 AND `T2`.`Charter Funding Type` = 'Directly funded' ",
+                    " SELECT COUNT(T1.cds)  FROM satscores AS T1  INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode  INNER JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode  WHERE T1.AvgScrMath > 560 AND T3.Charter Funding Type = 'Directly funded' ",
+                    " SELECT COUNT(DISTINCT T1.cds)  FROM satscores AS T1  INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode  WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded'; ",
+                    " SELECT COUNT(T1.cds) FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded' ",
+                    " SELECT COUNT(T1.CDSCode)  FROM satscores AS T1  INNER JOIN schools AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T1.AvgScrMath > 560  AND T2.FundingType = 'Directly funded'; ",
+                    " SELECT COUNT(T1.cds) FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded' "
+                ]
+            },
+            {
+                "template_name": "generate_candidate_two",
+                "candidates": [
+                    " SELECT COUNT(T1.CDSCode)  FROM satscores AS T1  INNER JOIN schools AS T2  ON T1.cds = T2.CDSCode  WHERE T1.AvgScrMath > 560 AND T2.FundingType = 'Directly funded'; ",
+                    " SELECT COUNT(DISTINCT T1.cds)  FROM satscores AS T1  INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode  WHERE T1.AvgScrMath > 560 AND T2.Charter = 1 AND T2.FundingType = 'Directly funded' ",
+                    " SELECT COUNT(T3.CDSCode)  FROM satscores AS T1  INNER JOIN schools AS T3 ON T1.cds = T3.CDSCode  WHERE T1.AvgScrMath > 560 AND T3.FundingType = 'Directly funded' ",
+                    " SELECT COUNT(DISTINCT T1.CDSCode)  FROM satscores AS T1  INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode  INNER JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode  WHERE T1.AvgScrMath > 560 AND T3.`Charter Funding Type` = 'Directly funded' ",
+                    " SELECT COUNT(T1.CDSCode)  FROM satscores AS T1  INNER JOIN frpm AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded'; ",
+                    " SELECT COUNT(T2.cds) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.FundingType = 'Directly funded' ",
+                    " SELECT COUNT(T2.CDSCode)  FROM satscores AS T1  INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode  WHERE T1.AvgScrMath > 560 AND T2.FundingType = 'Directly funded' ",
+                    " SELECT COUNT(T3.CDSCode)  FROM satscores AS T1  INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode  WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded'; ",
+                    " SELECT COUNT(T2.CDSCode) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.CharterFundingType = 'Directly funded' ",
+                    " SELECT COUNT(*) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.FundingType = 'Directly funded'; "
+                ]
+            }
+        ],
+        "candidates": [
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT COUNT(T1.CDSCode) FROM schools AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds INNER JOIN frpm AS T3 ON T1.CDSCode = T3.CDSCode WHERE T2.AvgScrMath > 560 AND T3.`Charter Funding Type` = 'Directly funded' ",
+                "plan": "**Question:** Among the schools with the average score in Math over 560 in the SAT test, how many schools are directly charter-funded?\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Among the schools with the average score in Math over 560 in the SAT test, how many schools are directly charter-funded?\n    * **Analysis:** We need to count the number of schools that meet two criteria: having an average score in Math over 560 and being directly charter-funded. This requires joining `schools` and `satscores` tables on `CDSCode` and filtering based on the `AvgScrMath` and `Charter Funding Type` columns.\n    * **Pseudo SQL:** SELECT COUNT(`T1`.`CDSCode`) FROM `schools` AS `T1` INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds` WHERE <average score in Math over 560> AND <directly charter-funded>\n\n    * **Sub-question 1:** average score in Math over 560\n        * **Analysis:** We need to filter the `satscores` table to include only those schools with an `AvgScrMath` greater than 560.\n        * **Pseudo SQL:** `T2`.`AvgScrMath` > 560\n\n    * **Sub-question 2:** directly charter-funded\n        * **Analysis:** We need to filter the `frpm` table to include only those schools that are directly funded. The `Charter Funding Type` column in the `frpm` table indicates the funding type, and we're interested in \"Directly funded\".\n        * **Pseudo SQL:** `T3`.`Charter Funding Type` = 'Directly funded'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (average score in Math over 560):**\n    * **SQL:** `T2`.`AvgScrMath` > 560\n\n* **Sub-question 2 (directly charter-funded):**\n    * **SQL:** `T3`.`Charter Funding Type` = 'Directly funded'\n\n* **Main Question (count of schools):**\n    * **SQL:** SELECT COUNT(`T1`.`CDSCode`) FROM `schools` AS `T1` INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds` INNER JOIN `frpm` AS `T3` ON `T1`.`CDSCode` = `T3`.`CDSCode` WHERE `T2`.`AvgScrMath` > 560 AND `T3`.`Charter Funding Type` = 'Directly funded'\n\n**3. Simplification and Optimization:**\n\n* The query in step 2 is already quite optimized. We are using `INNER JOIN` to combine the tables based on their relationships and applying the necessary filters.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT COUNT(T1.cds) FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded' ",
+                "plan": "**Question:** Among the schools with the average score in Math over 560 in the SAT test, how many schools are directly charter-funded?\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Among the schools with the average score in Math over 560 in the SAT test, how many schools are directly charter-funded?\n    * **Analysis:** We need to find the count of schools that meet two criteria: they have an average Math score greater than 560 and they are directly charter-funded. We will need to join the `satscores` and `frpm` tables on `cds` and `CDSCode` respectively, and filter based on the conditions.\n    * **Pseudo SQL:** SELECT COUNT(`T1`.`cds`) FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE <average score in Math over 560> AND <directly charter-funded>\n\n    * **Sub-question 1:** average score in Math over 560\n        * **Analysis:** This involves checking the `AvgScrMath` column in the `satscores` table.\n        * **Pseudo SQL:** `T1`.`AvgScrMath` > 560\n\n    * **Sub-question 2:** directly charter-funded\n        * **Analysis:** This involves checking the `Charter Funding Type` column in the `frpm` table.\n        * **Pseudo SQL:** `T2`.`Charter Funding Type` = 'Directly funded'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (average score in Math over 560):**\n    * **SQL:** `T1`.`AvgScrMath` > 560\n\n* **Sub-question 2 (directly charter-funded):**\n    * **SQL:** `T2`.`Charter Funding Type` = 'Directly funded'\n\n* **Main Question (count of schools):**\n    * **SQL:** SELECT COUNT(`T1`.`cds`) FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrMath` > 560 AND `T2`.`Charter Funding Type` = 'Directly funded'\n\n**3. Simplification and Optimization:**\n\n* The SQL query from step 2 is already quite efficient. It uses an `INNER JOIN` to combine the necessary tables and applies the required filters directly.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT COUNT(DISTINCT T1.cds) FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded' ",
+                "plan": "**Question:** Among the schools with the average score in Math over 560 in the SAT test, how many schools are directly charter-funded?\n**Evidence:** None provided, but we can infer that directly charter-funded schools are identified by the `Charter Funding Type` column in the `frpm` table with the value 'Directly funded'.\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Among the schools with the average score in Math over 560 in the SAT test, how many schools are directly charter-funded?\n    * **Analysis:** We need to count the number of schools that meet two criteria: they have an average math score over 560 and they are directly charter-funded. We will use the `satscores` table to filter for the math scores and the `frpm` table to filter for charter funding type.\n    * **Pseudo SQL:** SELECT COUNT(DISTINCT `T1`.`CDSCode`) FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE <average score in Math over 560> AND <directly charter-funded>\n\n    * **Sub-question 1:** average score in Math over 560\n        * **Analysis:** This is a simple filter on the `AvgScrMath` column in the `satscores` table.\n        * **Pseudo SQL:** `T1`.`AvgScrMath` > 560\n\n    * **Sub-question 2:** directly charter-funded\n        * **Analysis:** This is a filter on the `Charter Funding Type` column in the `frpm` table, where the value should be 'Directly funded'.\n        * **Pseudo SQL:** `T2`.`Charter Funding Type` = 'Directly funded'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (average score in Math over 560):**\n    * **SQL:** `T1`.`AvgScrMath` > 560\n\n* **Sub-question 2 (directly charter-funded):**\n    * **SQL:** `T2`.`Charter Funding Type` = 'Directly funded'\n\n* **Main Question (count of schools):**\n    * **SQL:** SELECT COUNT(DISTINCT `T1`.`cds`) FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrMath` > 560 AND `T2`.`Charter Funding Type` = 'Directly funded'\n\n**3. Simplification and Optimization:**\n\n* The SQL query is already quite efficient and does not require further simplification.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT COUNT(T1.CDSCode)  FROM satscores AS T1  INNER JOIN schools AS T2  ON T1.cds = T2.CDSCode  WHERE T1.AvgScrMath > 560 AND T2.FundingType = 'Directly funded'; ",
+                "plan": "**Question:** Among the schools with the average score in Math over 560 in the SAT test, how many schools are directly charter-funded?\n\n**1. Divide and Conquer:**\n\n* **Main Question:** How many schools are directly charter-funded among those with an average score in Math over 560 in the SAT test?\n    * **Analysis:** The question requires us to count the number of schools that meet two criteria: having an average score in Math over 560 and being directly charter-funded. We need to join the `satscores` and `schools` tables on the `CDSCode` foreign key.\n    * **Pseudo SQL:** SELECT COUNT(`T1`.`CDSCode`) FROM `satscores` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE <average score in Math over 560> AND <directly charter-funded>\n\n    * **Sub-question 1:** average score in Math over 560\n        * **Analysis:** We need to filter the `satscores` table to include only those records where `AvgScrMath` is greater than 560.\n        * **Pseudo SQL:** `T1`.`AvgScrMath` > 560\n\n    * **Sub-question 2:** directly charter-funded\n        * **Analysis:** We need to filter the `schools` table to include only those records where `FundingType` is 'Directly funded'.\n        * **Pseudo SQL:** `T2`.`FundingType` = 'Directly funded'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (average score in Math over 560):**\n    * **SQL:** `T1`.`AvgScrMath` > 560\n\n* **Sub-question 2 (directly charter-funded):**\n    * **SQL:** `T2`.`FundingType` = 'Directly funded'\n\n* **Main Question (count of schools):**\n    * **SQL:** SELECT COUNT(`T1`.`CDSCode`) FROM `satscores` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrMath` > 560 AND `T2`.`FundingType` = 'Directly funded'\n\n**3. Simplification and Optimization:**\n\n* The SQL query from step 2 is already quite efficient. We are using `INNER JOIN` to combine the `satscores` and `schools` tables based on the `CDSCode` foreign key and applying the necessary filters in the `WHERE` clause.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT COUNT(DISTINCT `T1`.`CDSCode`) FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrMath` > 560 AND `T2`.`Charter Funding Type` = 'Directly funded' ",
+                "plan": "**Question:** Among the schools with the average score in Math over 560 in the SAT test, how many schools are directly charter-funded?\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Among the schools with the average score in Math over 560 in the SAT test, how many schools are directly charter-funded?\n    * **Analysis:** We need to find the count of schools that meet two criteria: having an average Math score over 560 and being directly charter-funded. We will use the `satscores` table to filter by Math scores and the `frpm` table to filter by charter funding type.\n    * **Pseudo SQL:** SELECT COUNT(DISTINCT `T1`.`CDSCode`) FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE <average score in Math over 560> AND <directly charter-funded>\n\n    * **Sub-question 1:** average score in Math over 560\n        * **Analysis:** This is a simple filter on the `AvgScrMath` column in the `satscores` table.\n        * **Pseudo SQL:** `T1`.`AvgScrMath` > 560\n\n    * **Sub-question 2:** directly charter-funded\n        * **Analysis:** This involves checking the `Charter Funding Type` column in the `frpm` table for the value 'Directly funded'.\n        * **Pseudo SQL:** `T2`.`Charter Funding Type` = 'Directly funded'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (average score in Math over 560):**\n    * **SQL:** `T1`.`AvgScrMath` > 560\n\n* **Sub-question 2 (directly charter-funded):**\n    * **SQL:** `T2`.`Charter Funding Type` = 'Directly funded'\n\n* **Main Question (count of schools):**\n    * **SQL:** SELECT COUNT(DISTINCT `T1`.`CDSCode`) FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrMath` > 560 AND `T2`.`Charter Funding Type` = 'Directly funded'\n\n**3. Simplification and Optimization:**\n\n* The final SQL query from step 2 is already quite efficient. It uses `INNER JOIN` to combine the `satscores` and `frpm` tables based on the `CDSCode` and applies the necessary filters in the `WHERE` clause.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT COUNT(T1.cds)  FROM satscores AS T1  INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode  INNER JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode  WHERE T1.AvgScrMath > 560 AND T3.Charter Funding Type = 'Directly funded' ",
+                "plan": "**Question:** Among the schools with the average score in Math over 560 in the SAT test, how many schools are directly charter-funded?\n\n**1. Divide and Conquer:**\n\n* **Main Question:** How many schools are directly charter-funded among those with an average score in Math over 560 in the SAT test?\n    * **Analysis:** The question asks for a count of schools, specifically those that are directly charter-funded and have an average score in Math over 560. We need to join `satscores` and `schools` tables to get the relevant information, and then filter based on the Math score and charter funding type.\n    * **Pseudo SQL:** SELECT COUNT(`T1`.`cds`) FROM `satscores` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE <average score in Math over 560> AND <directly charter-funded>\n\n    * **Sub-question 1:** average score in Math over 560\n        * **Analysis:** This involves filtering the `satscores` table based on the `AvgScrMath` column.\n        * **Pseudo SQL:** `T1`.`AvgScrMath` > 560\n\n    * **Sub-question 2:** directly charter-funded\n        * **Analysis:** We need to filter the `frpm` table based on the `Charter Funding Type` column to find schools that are directly funded.\n        * **Pseudo SQL:** `T3`.`Charter Funding Type` = 'Directly funded'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (average score in Math over 560):**\n    * **SQL:** `T1`.`AvgScrMath` > 560\n\n* **Sub-question 2 (directly charter-funded):**\n    * **SQL:** `T3`.`Charter Funding Type` = 'Directly funded'\n\n* **Main Question (count of schools):**\n    * **SQL:** SELECT COUNT(`T1`.`cds`) FROM `satscores` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` INNER JOIN `frpm` AS `T3` ON `T2`.`CDSCode` = `T3`.`CDSCode` WHERE `T1`.`AvgScrMath` > 560 AND `T3`.`Charter Funding Type` = 'Directly funded'\n\n**3. Simplification and Optimization:**\n\n* The SQL query from step 2 is already quite efficient. We are using `INNER JOIN` to combine the tables based on their relationships, and the `WHERE` clause clearly defines our filtering criteria.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT COUNT(DISTINCT T1.cds)  FROM satscores AS T1  INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode  WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded'; ",
+                "plan": "**Question:** Among the schools with the average score in Math over 560 in the SAT test, how many schools are directly charter-funded?\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Among the schools with the average score in Math over 560 in the SAT test, how many schools are directly charter-funded?\n    * **Analysis:** The question asks for the count of schools that meet two criteria: having an average score in Math greater than 560 and being directly charter-funded. We need to join the `satscores` and `frpm` tables to get the relevant information.\n    * **Pseudo SQL:** SELECT COUNT(DISTINCT `T1`.`cds`) FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE <average score in Math over 560> AND <directly charter-funded>\n\n    * **Sub-question 1:** average score in Math over 560\n        * **Analysis:** This involves filtering the `satscores` table based on the `AvgScrMath` column.\n        * **Pseudo SQL:** `T1`.`AvgScrMath` > 560\n\n    * **Sub-question 2:** directly charter-funded\n        * **Analysis:** This involves checking the `Charter Funding Type` column in the `frpm` table for the value 'Directly funded'.\n        * **Pseudo SQL:** `T2`.`Charter Funding Type` = 'Directly funded'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (average score in Math over 560):**\n    * **SQL:** `T1`.`AvgScrMath` > 560\n\n* **Sub-question 2 (directly charter-funded):**\n    * **SQL:** `T2`.`Charter Funding Type` = 'Directly funded'\n\n* **Main Question (count of schools):**\n    * **SQL:** SELECT COUNT(DISTINCT `T1`.`cds`) FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrMath` > 560 AND `T2`.`Charter Funding Type` = 'Directly funded'\n\n**3. Simplification and Optimization:**\n\n* The query is already well-structured and does not require further simplification.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT COUNT(T1.cds) FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded' ",
+                "plan": "**Question:** Among the schools with the average score in Math over 560 in the SAT test, how many schools are directly charter-funded?\n**Evidence:** None provided.\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Among the schools with the average score in Math over 560 in the SAT test, how many schools are directly charter-funded?\n    * **Analysis:** We need to count the number of schools that meet two criteria: having an average SAT Math score greater than 560 and being directly charter-funded. The `satscores` table contains the average SAT Math scores, while the `frpm` table contains the charter funding type.\n    * **Pseudo SQL:** SELECT COUNT(`T1`.`cds`) FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE <average SAT Math score > 560> AND <directly charter-funded>\n\n    * **Sub-question 1:** average SAT Math score > 560\n        * **Analysis:** This is a simple filter on the `AvgScrMath` column in the `satscores` table.\n        * **Pseudo SQL:** `T1`.`AvgScrMath` > 560\n\n    * **Sub-question 2:** directly charter-funded\n        * **Analysis:** This is a filter on the `Charter Funding Type` column in the `frpm` table, checking if it equals 'Directly funded'.\n        * **Pseudo SQL:** `T2`.`Charter Funding Type` = 'Directly funded'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (average SAT Math score > 560):**\n    * **SQL:** `T1`.`AvgScrMath` > 560\n\n* **Sub-question 2 (directly charter-funded):**\n    * **SQL:** `T2`.`Charter Funding Type` = 'Directly funded'\n\n* **Main Question (count of schools):**\n    * **SQL:** SELECT COUNT(`T1`.`cds`) FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrMath` > 560 AND `T2`.`Charter Funding Type` = 'Directly funded'\n\n**3. Simplification and Optimization:**\n\n* The SQL query in step 2 is already quite optimized. We're using an `INNER JOIN` to combine the `satscores` and `frpm` tables based on the `CDSCode` column, and applying the necessary filters.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT COUNT(T1.CDSCode)  FROM satscores AS T1  INNER JOIN schools AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T1.AvgScrMath > 560  AND T2.FundingType = 'Directly funded'; ",
+                "plan": "**Question:** Among the schools with the average score in Math over 560 in the SAT test, how many schools are directly charter-funded?\n**Evidence:** None specified.\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Among the schools with the average score in Math over 560 in the SAT test, how many schools are directly charter-funded?\n    * **Analysis:** The question asks for a count of schools that meet two criteria: having an average Math SAT score greater than 560 and being directly charter-funded. We need to join the `satscores` and `schools` tables on `CDSCode` to get the relevant information and then filter based on the criteria.\n    * **Pseudo SQL:** SELECT COUNT(`T1`.`CDSCode`) FROM `satscores` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE <average score in Math over 560> AND <directly charter-funded>\n\n    * **Sub-question 1:** average score in Math over 560\n        * **Analysis:** This involves filtering the `satscores` table based on the `AvgScrMath` column.\n        * **Pseudo SQL:** `T1`.`AvgScrMath` > 560\n\n    * **Sub-question 2:** directly charter-funded\n        * **Analysis:** This involves checking the `FundingType` column in the `schools` table for the value 'Directly funded'.\n        * **Pseudo SQL:** `T2`.`FundingType` = 'Directly funded'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (average score in Math over 560):**\n    * **SQL:** `T1`.`AvgScrMath` > 560\n\n* **Sub-question 2 (directly charter-funded):**\n    * **SQL:** `T2`.`FundingType` = 'Directly funded'\n\n* **Main Question (count of schools):**\n    * **SQL:** SELECT COUNT(`T1`.`CDSCode`) FROM `satscores` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T1`.`AvgScrMath` > 560 AND `T2`.`FundingType` = 'Directly funded'\n\n**3. Simplification and Optimization:**\n\n* The SQL query from step 2 is already quite efficient and does not require further optimization.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT COUNT(T1.cds) FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded' ",
+                "plan": "**Question:** Among the schools with the average score in Math over 560 in the SAT test, how many schools are directly charter-funded?\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Among the schools with the average score in Math over 560 in the SAT test, how many schools are directly charter-funded?\n    * **Analysis:** The question is asking for a count of schools that meet two criteria: having an average SAT Math score over 560 and being directly charter-funded. We need to join the `satscores` and `frpm` tables based on `CDSCode` and filter based on the specified conditions.\n    * **Pseudo SQL:** SELECT COUNT(`T1`.`cds`) FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE <average score in Math over 560> AND <directly charter-funded>\n\n    * **Sub-question 1:** average score in Math over 560\n        * **Analysis:** This is a simple filter on the `AvgScrMath` column in the `satscores` table.\n        * **Pseudo SQL:** `T1`.`AvgScrMath` > 560\n\n    * **Sub-question 2:** directly charter-funded\n        * **Analysis:** This condition can be checked by filtering the `frpm` table on the `Charter Funding Type` column.\n        * **Pseudo SQL:** `T2`.`Charter Funding Type` = 'Directly funded'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (average score in Math over 560):**\n    * **SQL:** `T1`.`AvgScrMath` > 560\n\n* **Sub-question 2 (directly charter-funded):**\n    * **SQL:** `T2`.`Charter Funding Type` = 'Directly funded'\n\n* **Main Question (count of schools):**\n    * **SQL:** SELECT COUNT(`T1`.`cds`) FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrMath` > 560 AND `T2`.`Charter Funding Type` = 'Directly funded'\n\n**3. Simplification and Optimization:**\n\n* The query in step 2 is already quite optimized. We are joining the necessary tables and applying the appropriate filters directly.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT COUNT(T1.CDSCode)  FROM satscores AS T1  INNER JOIN schools AS T2  ON T1.cds = T2.CDSCode  WHERE T1.AvgScrMath > 560 AND T2.FundingType = 'Directly funded'; ",
+                "plan": "**Question:** Among the schools with the average score in Math over 560 in the SAT test, how many schools are directly charter-funded?\n**Evidence:** None provided.\n\n**Query Plan:**\n\n** Preparation Steps:**\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the `satscores` and `schools` tables to access relevant data.\n\n** Filter and Identify Relevant Schools:**\n1. Scan the `satscores` table: Start reading rows from the `satscores` table.\n2. Filter by average score in Math: Select only those rows where the `AvgScrMath` is greater than 560.\n3. Join with `schools` table: Match each school in the `satscores` table with the corresponding school in the `schools` table using the `CDSCode`.\n\n** Filter by Funding Type:**\n1. Extract the `FundingType` column: For each row in the joined result, retrieve the value from the `FundingType` column in the `schools` table.\n2. Filter by direct charter funding: Select only those rows where the `FundingType` is 'Directly funded'.\n\n** Count the Matching Schools:**\n1. Initialize the count: Set up a counter to keep track of how many schools meet the criteria.\n2. Increment the count: For each row that meets the conditions (average score in Math over 560 and directly charter-funded), increment the counter.\n3. Store the final count: Once all rows have been processed, store the total count of matching schools.\n\n** Finalize and Deliver the Result:**\n1. Prepare the result for output: Format the final count for presentation.\n2. Output the final count: Deliver the count as the query result, indicating how many schools are directly charter-funded and have an average score in Math over 560.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT COUNT(DISTINCT T1.cds)  FROM satscores AS T1  INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode  WHERE T1.AvgScrMath > 560 AND T2.Charter = 1 AND T2.FundingType = 'Directly funded' ",
+                "plan": "**Question**: Among the schools with the average score in Math over 560 in the SAT test, how many schools are directly charter-funded?\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the satscores, schools, and frpm tables to access relevant data.\n\n** Filter and Identify Relevant Schools: **\n1. Scan the satscores table: Start reading rows from the satscores table.\n2. Filter by AvgScrMath > 560: Select only those rows where the average score in Math is greater than 560.\n3. Join with schools table: Match each school in the satscores table to its corresponding entry in the schools table using the cds foreign key.\n4. Filter by Charter = 1: Select only those schools that are charter schools (Charter = 1).\n5. Join with frpm table: Match each school in the schools table to its corresponding entry in the frpm table using the CDSCode foreign key.\n6. Filter by Charter Funding Type = 'Directly funded': Select only those schools that are directly charter-funded.\n\n** Count the Matching Schools: **\n1. Initialize the count: Set up a counter to keep track of how many schools meet the criteria.\n2. Increment the count: For each school that meets the conditions (average score in Math > 560 and directly charter-funded), increment the counter.\n3. Store the final count: Once all rows have been processed, store the total count of matching schools.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final count for presentation.\n2. Output the final count: Deliver the count as the query result, indicating how many schools are directly charter-funded and have an average score in Math over 560.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT COUNT(T3.CDSCode)  FROM satscores AS T1  INNER JOIN schools AS T3 ON T1.cds = T3.CDSCode  WHERE T1.AvgScrMath > 560 AND T3.FundingType = 'Directly funded' ",
+                "plan": "**Question**: Among the schools with the average score in Math over 560 in the SAT test, how many schools are directly charter-funded?\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the `frpm`, `satscores`, and `schools` tables to access relevant data.\n\n** Filter and Identify Relevant Schools: **\n1. Scan the `satscores` table: Start reading rows from the `satscores` table.\n2. Filter by average score in Math: Select only those rows where the `AvgScrMath` is greater than 560.\n3. Join with `schools` table: Match each school in `satscores` to the corresponding school in `schools` by joining on `CDSCode`.\n\n** Identify Directly Charter-Funded Schools: **\n1. Extract `FundingType` from `schools`: Use the `FundingType` column to identify schools that are directly funded.\n2. Filter by `FundingType = 'Directly funded'`: Select only those rows where the `FundingType` is 'Directly funded'.\n\n** Count the Matching Schools: **\n1. Initialize the count: Set up a counter to keep track of how many schools meet both criteria (average score in Math over 560 and directly charter-funded).\n2. Increment the count: For each row that meets the criteria, increment the counter.\n3. Store the final count: Once all rows have been processed, store the total count of matching schools.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final count for presentation.\n2. Output the final count: Deliver the count as the query result, indicating how many schools are directly charter-funded and have an average score in Math over 560.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT COUNT(DISTINCT T1.CDSCode)  FROM satscores AS T1  INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode  INNER JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode  WHERE T1.AvgScrMath > 560 AND T3.`Charter Funding Type` = 'Directly funded' ",
+                "plan": "**Question**: Among the schools with the average score in Math over 560 in the SAT test, how many schools are directly charter-funded?\n**Evidence**: None provided explicitly, but based on the context, we infer that \"directly charter-funded\" refers to the `Charter Funding Type` being 'Directly funded' in the `frpm` table.\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the `satscores`, `schools`, and `frpm` tables to access relevant data.\n\n** Filter and Identify Relevant Schools: **\n1. Scan the `satscores` table: Start reading rows from the `satscores` table.\n2. Filter by average score in Math: Select only those rows where the `AvgScrMath` is greater than 560.\n3. Join with `schools` table: Match each school from the `satscores` table to the corresponding school in the `schools` table by joining on `CDSCode`.\n\n** Identify Directly Charter-Funded Schools: **\n1. Join with `frpm` table: For each school that meets the Math score criteria, join with the `frpm` table to get the charter funding type.\n2. Filter by charter funding type: Select only those rows where the `Charter Funding Type` is 'Directly funded'.\n\n** Count the Matching Schools: **\n1. Initialize the count: Set up a counter to keep track of how many schools meet both the Math score criteria and the charter funding type.\n2. Increment the count: For each school that meets both conditions, increment the counter.\n3. Store the final count: Once all rows have been processed, store the total count of matching schools.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final count for presentation.\n2. Output the final count: Deliver the count as the query result, indicating how many schools are directly charter-funded and have an average Math SAT score over 560.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT COUNT(T1.CDSCode)  FROM satscores AS T1  INNER JOIN frpm AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded'; ",
+                "plan": "**Question**: Among the schools with the average score in Math over 560 in the SAT test, how many schools are directly charter-funded?\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the satscores and frpm tables to access relevant data.\n\n** Filter and Identify Relevant Schools: **\n1. Scan the satscores table: Start reading rows from the satscores table.\n2. Filter by average score in Math: Select only those rows where the AvgScrMath is greater than 560.\n3. Join with frpm table: Use the CDSCode to join the satscores table with the frpm table to get the charter funding type.\n\n** Identify Directly Charter-Funded Schools: **\n1. Filter by Charter Funding Type: From the joined data, select only those rows where the `Charter Funding Type` is 'Directly funded'.\n2. Count the matching schools: Count the number of schools that meet both criteria (average score in Math over 560 and directly charter-funded).\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final count for presentation.\n2. Output the final count: Deliver the count as the query result, indicating how many schools are directly charter-funded and have an average score in Math over 560.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT COUNT(T2.cds) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.FundingType = 'Directly funded' ",
+                "plan": "**Question**: Among the schools with the average score in Math over 560 in the SAT test, how many schools are directly charter-funded?\n**Evidence**: None provided, but based on the table schema, directly charter-funded refers to FundingType = 'Directly funded' in the schools table.\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the satscores and schools tables to access relevant data.\n\n** Filter and Identify Relevant Schools: **\n1. Scan the satscores table: Start reading rows from the satscores table.\n2. Filter by average Math score: Select only those rows where AvgScrMath is greater than 560.\n3. Join with schools table: Match each school in the satscores table to the corresponding school in the schools table by joining on cds.\n\n** Filter by Funding Type: **\n1. Filter by FundingType: From the joined results, select only those rows where FundingType is 'Directly funded'.\n2. Count the matching schools: Count the number of schools that meet both criteria (average Math score over 560 and directly charter-funded).\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final count for presentation.\n2. Output the final count: Deliver the count as the query result, indicating how many schools meet the specified criteria.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT COUNT(T2.CDSCode)  FROM satscores AS T1  INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode  WHERE T1.AvgScrMath > 560 AND T2.FundingType = 'Directly funded' ",
+                "plan": "**Question**: Among the schools with the average score in Math over 560 in the SAT test, how many schools are directly charter-funded?\n\n**Query Plan**:\n\n**Preparation Steps:**\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the `frpm`, `schools`, and `satscores` tables to access relevant data.\n\n**Filter and Identify Relevant Schools:**\n1. Scan the `satscores` table: Start reading rows from the `satscores` table.\n2. Filter by average score in Math: Select only those rows where the `AvgScrMath` is greater than 560.\n3. Join with `schools` table: Match each school in the `satscores` table to the corresponding school in the `schools` table using the `cds` foreign key.\n4. Filter by direct charter funding: Select only those schools where the `FundingType` is 'Directly funded'.\n\n**Count the Matching Schools:**\n1. Initialize the count: Set up a counter to keep track of how many schools meet the criteria.\n2. Increment the count: For each school that meets the conditions (average score in Math over 560 and directly charter-funded), increment the counter.\n3. Store the final count: Once all rows have been processed, store the total count of matching schools.\n\n**Finalize and Deliver the Result:**\n1. Prepare the result for output: Format the final count for presentation.\n2. Output the final count: Deliver the count as the query result, indicating how many schools are directly charter-funded and have an average score in Math over 560.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT COUNT(T3.CDSCode)  FROM satscores AS T1  INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode  WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded'; ",
+                "plan": "**Question**: Among the schools with the average score in Math over 560 in the SAT test, how many schools are directly charter-funded?\n**Evidence**: None provided, but we can infer that directly charter-funded refers to the `Charter Funding Type` being 'Directly funded'.\n\n** Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the `schools`, `frpm`, and `satscores` tables to access relevant data.\n\n** Identify Schools with High Math Scores: **\n1. Scan the `satscores` table: Start reading rows from the `satscores` table.\n2. Filter by AvgScrMath > 560: Select only those rows where the average score in Math is greater than 560.\n3. Extract cds code: For each row that meets the Math score condition, retrieve the `cds` code which corresponds to the `CDSCode` in the `schools` table.\n\n** Join with Frpm Table: **\n1. Join `satscores` with `frpm`: Use the `cds` code from `satscores` to join with the `CDSCode` in the `frpm` table.\n2. Filter by Charter Funding Type: Select only those rows where the `Charter Funding Type` is 'Directly funded'.\n\n** Count the Matching Schools: **\n1. Initialize the count: Set up a counter to keep track of how many schools meet both conditions.\n2. Increment the count: For each row that meets the conditions (AvgScrMath > 560 and Charter Funding Type = 'Directly funded'), increment the counter.\n3. Store the final count: Once all rows have been processed, store the total count of matching schools.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final count for presentation.\n2. Output the final count: Deliver the count as the query result, indicating how many schools are directly charter-funded and have an average Math score over 560.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT COUNT(T2.CDSCode) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.CharterFundingType = 'Directly funded' ",
+                "plan": "**Question**: Among the schools with the average score in Math over 560 in the SAT test, how many schools are directly charter-funded?\n\n**Query Plan**:\n\n**Preparation Steps:**\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the `frpm`, `schools`, and `satscores` tables to access relevant data.\n\n**Filter and Identify Relevant Schools:**\n1. Scan the `satscores` table: Start reading rows from the `satscores` table.\n2. Filter by average score in Math: Select only those rows where the `AvgScrMath` is greater than 560.\n3. Join with `schools` table: Match each `satscores` entry to the corresponding `schools` entry by joining on `CDSCode`.\n\n**Identify Directly Charter-Funded Schools:**\n1. Extract `Charter Funding Type`: From the `schools` table, retrieve the `Charter Funding Type` for each school.\n2. Filter by `Charter Funding Type`: Select only those rows where the `Charter Funding Type` is 'Directly funded'.\n\n**Count the Matching Schools:**\n1. Initialize the count: Set up a counter to keep track of how many schools meet the criteria.\n2. Increment the count: For each school that meets the conditions (average score in Math over 560 and directly charter-funded), increment the counter.\n3. Store the final count: Once all rows have been processed, store the total count of matching schools.\n\n**Finalize and Deliver the Result:**\n1. Prepare the result for output: Format the final count for presentation.\n2. Output the final count: Deliver the count as the query result, indicating how many schools are directly charter-funded and have an average score in Math over 560.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT COUNT(*) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.FundingType = 'Directly funded'; ",
+                "plan": "**Question**: Among the schools with the average score in Math over 560 in the SAT test, how many schools are directly charter-funded?\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the satscores and schools tables to access relevant data.\n\n** Filter and Identify Relevant Schools: **\n1. Scan the satscores table: Start reading rows from the satscores table.\n2. Filter by average score in Math: Select only those rows where the AvgScrMath column is greater than 560.\n3. Join with the schools table: Match each school in the satscores table with the corresponding school in the schools table using the cds column.\n\n** Identify Directly Charter-Funded Schools: **\n1. Filter by FundingType: From the joined data, select only those schools where the FundingType column in the schools table is 'Directly funded'.\n\n** Count the Matching Schools: **\n1. Initialize the count: Set up a counter to keep track of how many schools are directly charter-funded and meet the Math score criteria.\n2. Increment the count: For each school that meets both criteria (average score in Math over 560 and directly charter-funded), increment the counter.\n3. Store the final count: Once all rows have been processed, store the total count of matching schools.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final count for presentation.\n2. Output the final count: Deliver the count as the query result, indicating how many schools are directly charter-funded and have an average Math score over 560.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            }
+        ],
+        "status": "success",
+        "execution_time": 1842.2
+    },
+    {
+        "tool_name": "revise",
+        "original_SQL_id": "generate_candidate",
+        "refined_SQL_id": "revise_1",
+        "candidates": [
+            {
+                "refined_query": " SELECT COUNT(T1.CDSCode) FROM schools AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds INNER JOIN frpm AS T3 ON T1.CDSCode = T3.CDSCode WHERE T2.AvgScrMath > 560 AND T3.`Charter Funding Type` = 'Directly funded' "
+            },
+            {
+                "refined_query": " SELECT COUNT(T1.cds) FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded' "
+            },
+            {
+                "refined_query": " SELECT COUNT(DISTINCT T1.cds) FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded' "
+            },
+            {
+                "refined_query": " SELECT COUNT(T1.cds) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.FundingType = 'Directly funded' "
+            },
+            {
+                "refined_query": " SELECT COUNT(DISTINCT `T1`.`cds`) FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrMath` > 560 AND `T2`.`Charter Funding Type` = 'Directly funded' "
+            },
+            {
+                "refined_query": " SELECT COUNT(T1.cds) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode INNER JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode WHERE T1.AvgScrMath > 560 AND T3.\"Charter Funding Type\" = 'Directly funded' "
+            },
+            {
+                "refined_query": " SELECT COUNT(DISTINCT T1.cds)  FROM satscores AS T1  INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode  WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded'; "
+            },
+            {
+                "refined_query": " SELECT COUNT(T1.cds) FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded' "
+            },
+            {
+                "refined_query": " SELECT COUNT(T1.cds) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.FundingType = 'Directly funded' "
+            },
+            {
+                "refined_query": " SELECT COUNT(T1.cds) FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded' "
+            },
+            {
+                "refined_query": " SELECT COUNT(T1.cds) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.FundingType = 'Directly funded' "
+            },
+            {
+                "refined_query": " SELECT COUNT(DISTINCT T1.cds)  FROM satscores AS T1  INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode  WHERE T1.AvgScrMath > 560 AND T2.Charter = 1 AND T2.FundingType = 'Directly funded' "
+            },
+            {
+                "refined_query": " SELECT COUNT(T3.CDSCode)  FROM satscores AS T1  INNER JOIN schools AS T3 ON T1.cds = T3.CDSCode  WHERE T1.AvgScrMath > 560 AND T3.FundingType = 'Directly funded' "
+            },
+            {
+                "refined_query": " SELECT COUNT(DISTINCT T1.cds) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode INNER JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode WHERE T1.AvgScrMath > 560 AND T3.`Charter Funding Type` = 'Directly funded' "
+            },
+            {
+                "refined_query": " SELECT COUNT(T1.cds) FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.cds WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded' "
+            },
+            {
+                "refined_query": " SELECT COUNT(T2.CDSCode) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.FundingType = 'Directly funded' "
+            },
+            {
+                "refined_query": " SELECT COUNT(T2.CDSCode)  FROM satscores AS T1  INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode  WHERE T1.AvgScrMath > 560 AND T2.FundingType = 'Directly funded' "
+            },
+            {
+                "refined_query": " SELECT COUNT(T2.CDSCode) FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded' "
+            },
+            {
+                "refined_query": " SELECT COUNT(T2.CDSCode) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.FundingType = 'Directly funded' "
+            },
+            {
+                "refined_query": " SELECT COUNT(*) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.FundingType = 'Directly funded'; "
+            }
+        ],
+        "status": "success",
+        "execution_time": 447.4
+    },
+    {
+        "tool_name": "generate_unit_test",
+        "unit_tests": {
+            "unit_test_generation": []
+        },
+        "candidates": [
+            " SELECT COUNT(T1.CDSCode) FROM schools AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds INNER JOIN frpm AS T3 ON T1.CDSCode = T3.CDSCode WHERE T2.AvgScrMath > 560 AND T3.`Charter Funding Type` = 'Directly funded' ",
+            " SELECT COUNT(T1.cds) FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded' ",
+            " SELECT COUNT(DISTINCT T1.cds) FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded' ",
+            " SELECT COUNT(T1.cds) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.FundingType = 'Directly funded' ",
+            " SELECT COUNT(DISTINCT `T1`.`cds`) FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrMath` > 560 AND `T2`.`Charter Funding Type` = 'Directly funded' ",
+            " SELECT COUNT(T1.cds) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode INNER JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode WHERE T1.AvgScrMath > 560 AND T3.\"Charter Funding Type\" = 'Directly funded' ",
+            " SELECT COUNT(DISTINCT T1.cds)  FROM satscores AS T1  INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode  WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded'; ",
+            " SELECT COUNT(T1.cds) FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded' ",
+            " SELECT COUNT(T1.cds) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.FundingType = 'Directly funded' ",
+            " SELECT COUNT(T1.cds) FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded' ",
+            " SELECT COUNT(T1.cds) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.FundingType = 'Directly funded' ",
+            " SELECT COUNT(DISTINCT T1.cds)  FROM satscores AS T1  INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode  WHERE T1.AvgScrMath > 560 AND T2.Charter = 1 AND T2.FundingType = 'Directly funded' ",
+            " SELECT COUNT(T3.CDSCode)  FROM satscores AS T1  INNER JOIN schools AS T3 ON T1.cds = T3.CDSCode  WHERE T1.AvgScrMath > 560 AND T3.FundingType = 'Directly funded' ",
+            " SELECT COUNT(DISTINCT T1.cds) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode INNER JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode WHERE T1.AvgScrMath > 560 AND T3.`Charter Funding Type` = 'Directly funded' ",
+            " SELECT COUNT(T1.cds) FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.cds WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded' ",
+            " SELECT COUNT(T2.CDSCode) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.FundingType = 'Directly funded' ",
+            " SELECT COUNT(T2.CDSCode)  FROM satscores AS T1  INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode  WHERE T1.AvgScrMath > 560 AND T2.FundingType = 'Directly funded' ",
+            " SELECT COUNT(T2.CDSCode) FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded' ",
+            " SELECT COUNT(T2.CDSCode) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.FundingType = 'Directly funded' ",
+            " SELECT COUNT(*) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.FundingType = 'Directly funded'; "
+        ],
+        "status": "success",
+        "execution_time": 0.1
+    },
+    {
+        "tool_name": "evaluate",
+        "scores": [
+            1
+        ],
+        "comparison_matrix": [
+            [
+                1
+            ]
+        ],
+        "candidates": [
+            " SELECT COUNT(T1.CDSCode) FROM schools AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds INNER JOIN frpm AS T3 ON T1.CDSCode = T3.CDSCode WHERE T2.AvgScrMath > 560 AND T3.`Charter Funding Type` = 'Directly funded' ",
+            " SELECT COUNT(T1.cds) FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded' ",
+            " SELECT COUNT(DISTINCT T1.cds) FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded' ",
+            " SELECT COUNT(T1.cds) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.FundingType = 'Directly funded' ",
+            " SELECT COUNT(DISTINCT `T1`.`cds`) FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrMath` > 560 AND `T2`.`Charter Funding Type` = 'Directly funded' ",
+            " SELECT COUNT(T1.cds) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode INNER JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode WHERE T1.AvgScrMath > 560 AND T3.\"Charter Funding Type\" = 'Directly funded' ",
+            " SELECT COUNT(DISTINCT T1.cds)  FROM satscores AS T1  INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode  WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded'; ",
+            " SELECT COUNT(T1.cds) FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded' ",
+            " SELECT COUNT(T1.cds) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.FundingType = 'Directly funded' ",
+            " SELECT COUNT(T1.cds) FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded' ",
+            " SELECT COUNT(T1.cds) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.FundingType = 'Directly funded' ",
+            " SELECT COUNT(DISTINCT T1.cds)  FROM satscores AS T1  INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode  WHERE T1.AvgScrMath > 560 AND T2.Charter = 1 AND T2.FundingType = 'Directly funded' ",
+            " SELECT COUNT(T3.CDSCode)  FROM satscores AS T1  INNER JOIN schools AS T3 ON T1.cds = T3.CDSCode  WHERE T1.AvgScrMath > 560 AND T3.FundingType = 'Directly funded' ",
+            " SELECT COUNT(DISTINCT T1.cds) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode INNER JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode WHERE T1.AvgScrMath > 560 AND T3.`Charter Funding Type` = 'Directly funded' ",
+            " SELECT COUNT(T1.cds) FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.cds WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded' ",
+            " SELECT COUNT(T2.CDSCode) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.FundingType = 'Directly funded' ",
+            " SELECT COUNT(T2.CDSCode)  FROM satscores AS T1  INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode  WHERE T1.AvgScrMath > 560 AND T2.FundingType = 'Directly funded' ",
+            " SELECT COUNT(T2.CDSCode) FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded' ",
+            " SELECT COUNT(T2.CDSCode) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.FundingType = 'Directly funded' ",
+            " SELECT COUNT(*) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.FundingType = 'Directly funded'; "
+        ],
+        "selected_candidate": " SELECT COUNT(T1.CDSCode) FROM schools AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds INNER JOIN frpm AS T3 ON T1.CDSCode = T3.CDSCode WHERE T2.AvgScrMath > 560 AND T3.`Charter Funding Type` = 'Directly funded' ",
+        "status": "success",
+        "execution_time": 0.0
+    },
+    {
+        "tool_name": "execution_accuracy",
+        "generate_candidate": {
+            "exec_res": 1,
+            "exec_err": "--",
+            "Question": "Among the schools with the average score in Math over 560 in the SAT test, how many schools are directly charter-funded?",
+            "Evidence": "",
+            "GOLD_SQL": "SELECT COUNT(T2.`School Code`) FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded'",
+            "PREDICTED_SQL": " SELECT COUNT(T1.CDSCode) FROM schools AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds INNER JOIN frpm AS T3 ON T1.CDSCode = T3.CDSCode WHERE T2.AvgScrMath > 560 AND T3.`Charter Funding Type` = 'Directly funded' "
+        },
+        "revise_1": {
+            "exec_res": 1,
+            "exec_err": "--",
+            "Question": "Among the schools with the average score in Math over 560 in the SAT test, how many schools are directly charter-funded?",
+            "Evidence": "",
+            "GOLD_SQL": "SELECT COUNT(T2.`School Code`) FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded'",
+            "PREDICTED_SQL": " SELECT COUNT(T1.CDSCode) FROM schools AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds INNER JOIN frpm AS T3 ON T1.CDSCode = T3.CDSCode WHERE T2.AvgScrMath > 560 AND T3.`Charter Funding Type` = 'Directly funded' "
+        },
+        "evaluate_1": {
+            "exec_res": 1,
+            "exec_err": "--",
+            "Question": "Among the schools with the average score in Math over 560 in the SAT test, how many schools are directly charter-funded?",
+            "Evidence": "",
+            "GOLD_SQL": "SELECT COUNT(T2.`School Code`) FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded'",
+            "PREDICTED_SQL": " SELECT COUNT(T1.CDSCode) FROM schools AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds INNER JOIN frpm AS T3 ON T1.CDSCode = T3.CDSCode WHERE T2.AvgScrMath > 560 AND T3.`Charter Funding Type` = 'Directly funded' "
+        },
+        "final_SQL": {
+            "exec_res": 1,
+            "exec_err": "--",
+            "Question": "Among the schools with the average score in Math over 560 in the SAT test, how many schools are directly charter-funded?",
+            "Evidence": "",
+            "GOLD_SQL": "SELECT COUNT(T2.`School Code`) FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath > 560 AND T2.`Charter Funding Type` = 'Directly funded'",
+            "PREDICTED_SQL": " SELECT COUNT(T1.CDSCode) FROM schools AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds INNER JOIN frpm AS T3 ON T1.CDSCode = T3.CDSCode WHERE T2.AvgScrMath > 560 AND T3.`Charter Funding Type` = 'Directly funded' "
+        },
+        "status": "success",
+        "execution_time": 0.0
+    }
+]

@@ -1,8 +1,8 @@
 venv/
-.env
-results/
-data/
 src/__pycache__/
 .DS_Store
 *.pyc
 __pycache__/
+data/dev/dev_databases.zip
+data/dev/dev_databases/california_schools/preprocessed/california_schools_lsh.pkl
+data/dev/dev_databases/california_schools/preprocessed/california_schools_minhashes.pkl

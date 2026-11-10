@@ -1,0 +1,82 @@
+{
+    "counts": {
+        "final_SQL": {
+            "correct": 11,
+            "incorrect": 2,
+            "error": 2,
+            "total": 15
+        }
+    },
+    "ids": {
+        "final_SQL": {
+            "correct": [
+                [
+                    "california_schools",
+                    0
+                ],
+                [
+                    "california_schools",
+                    1
+                ],
+                [
+                    "california_schools",
+                    2
+                ],
+                [
+                    "california_schools",
+                    3
+                ],
+                [
+                    "california_schools",
+                    5
+                ],
+                [
+                    "california_schools",
+                    6
+                ],
+                [
+                    "california_schools",
+                    8
+                ],
+                [
+                    "california_schools",
+                    9
+                ],
+                [
+                    "california_schools",
+                    11
+                ],
+                [
+                    "california_schools",
+                    13
+                ],
+                [
+                    "california_schools",
+                    14
+                ]
+            ],
+            "incorrect": [
+                [
+                    "california_schools",
+                    10
+                ],
+                [
+                    "california_schools",
+                    12
+                ]
+            ],
+            "error": [
+                [
+                    "california_schools",
+                    4,
+                    "list index out of range"
+                ],
+                [
+                    "california_schools",
+                    7,
+                    "list index out of range"
+                ]
+            ]
+        }
+    }
+}

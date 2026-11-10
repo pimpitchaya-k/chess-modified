@@ -1,0 +1,929 @@
+[
+    {
+        "tool_name": "extract_keywords",
+        "keywords": [
+            "lowest three",
+            "eligible free rates",
+            "students aged 5-17",
+            "continuation schools",
+            "Free Meal Count (Ages 5-17)",
+            "Enrollment (Ages 5-17)"
+        ],
+        "status": "success",
+        "execution_time": 14.0
+    },
+    {
+        "tool_name": "retrieve_entity",
+        "similar_columns": {
+            "frpm": [
+                "Free Meal Count (Ages 5-17)",
+                "Enrollment (Ages 5-17)"
+            ],
+            "schools": [
+                "County",
+                "School"
+            ]
+        },
+        "schema_with_examples": {
+            "schools": {
+                "GSserved": [
+                    "5-11",
+                    "5-12"
+                ],
+                "GSoffered": [
+                    "5-12"
+                ],
+                "School": [
+                    "Continuation School"
+                ],
+                "EdOpsName": [
+                    "Continuation School"
+                ],
+                "SOCType": [
+                    "Continuation High Schools"
+                ],
+                "AdmLName1": [
+                    "Free"
+                ]
+            },
+            "frpm": {
+                "Educational Option Type": [
+                    "Continuation School"
+                ],
+                "School Type": [
+                    "Continuation High Schools"
+                ],
+                "School Name": [
+                    "Mission Continuation"
+                ]
+            },
+            "satscores": {
+                "sname": [
+                    "Mission Continuation"
+                ]
+            }
+        },
+        "status": "success",
+        "execution_time": 312.1
+    },
+    {
+        "tool_name": "retrieve_context",
+        "schema_with_descriptions": {
+            "frpm": {
+                "enrollment (ages 5-17)": {
+                    "column_name": "",
+                    "column_description": "Enrollment (Ages 5-17)",
+                    "value_description": ""
+                },
+                "free meal count (k-12)": {
+                    "column_name": "",
+                    "column_description": "Free Meal Count (K-12)",
+                    "value_description": "eligible free rate = Free Meal Count / Enrollment"
+                },
+                "free meal count (ages 5-17)": {
+                    "column_name": "",
+                    "column_description": "Free Meal Count (Ages 5-17)",
+                    "value_description": "eligible free rate = Free Meal Count / Enrollment"
+                },
+                "frpm count (k-12)": {
+                    "column_name": "",
+                    "column_description": "Free or Reduced Price Meal Count (K-12)",
+                    "value_description": "eligible FRPM rate = FRPM / Enrollment"
+                }
+            },
+            "schools": {
+                "soc": {
+                    "column_name": "School Ownership Code",
+                    "column_description": "The School Ownership Code is a numeric code used to identify the type of school.",
+                    "value_description": "\u2022      08 - Preschool       \u2022       09 \u2013 Special Education Schools (Public) \u2022      11 \u2013 Youth Authority Facilities (CEA) \u2022       13 \u2013 Opportunity Schools \u2022       14 \u2013 Juvenile Court Schools \u2022       15 \u2013 Other County or District Programs \u2022       31 \u2013 State Special Schools \u2022       60 \u2013 Elementary School (Public) \u2022       61 \u2013 Elementary School in 1 School District (Public) \u2022       62 \u2013 Intermediate/Middle Schools (Public) \u2022       63 \u2013 Alternative Schools of Choice \u2022       64 \u2013 Junior High Schools (Public) \u2022       65 \u2013 K-12 Schools (Public) \u2022       66 \u2013 High Schools (Public) \u2022       67 \u2013 High Schools in 1 School District (Public) \u2022       68 \u2013 Continuation High Schools \u2022       69 \u2013 District Community Day Schools \u2022       70 \u2013 Adult Education Centers \u2022       98 \u2013 Regional Occupational Center/Program (ROC/P)"
+                },
+                "gsserved": {
+                    "column_name": "grade span served.",
+                    "column_description": "It is the lowest grade and the highest grade of student enrollment as reported in the most recent certified CALPADS Fall 1 data collection. Only K\u201312 enrollment is reported through CALPADS. This field may differ from the grade span offered.",
+                    "value_description": "1.\u00a0\u00a0\u00a0\u00a0 Only K\u201312 enrollment is reported through CALPADS  2.\u00a0\u00a0\u00a0\u00a0 Note: Special programs at independent study, alternative education, and special education schools will often exceed the typical grade span for schools of that type"
+                }
+            },
+            "satscores": {
+                "enroll12": {
+                    "column_name": "enrollment (1st-12nd grade)",
+                    "column_description": "enrollment (1st-12nd grade)",
+                    "value_description": ""
+                }
+            }
+        },
+        "status": "success",
+        "execution_time": 97.4
+    },
+    {
+        "tool_name": "generate_candidate",
+        "node_type": "generate_candidate",
+        "generation_based_candidates": [
+            {
+                "template_name": "generate_candidate_one",
+                "candidates": [
+                    " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm` AS `T1` WHERE `T1`.`School Type` = 'Continuation High Schools' AND `T1`.`Enrollment (Ages 5-17)` IS NOT NULL ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST LIMIT 3 ",
+                    " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm`  WHERE `School Type` = 'Continuation High Schools'  AND `Free Meal Count (Ages 5-17)` IS NOT NULL  AND `Enrollment (Ages 5-17)` IS NOT NULL  ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST  LIMIT 3; ",
+                    " SELECT `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` AS `eligible_free_rate` FROM `frpm` WHERE `School Type` = 'Continuation High Schools' ORDER BY `eligible_free_rate` ASC LIMIT 3 ",
+                    " SELECT `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` AS `eligible_free_rate`  FROM `frpm` AS `T1`  WHERE `T1`.`School Type` = 'Continuation High Schools'  AND `T1`.`Enrollment (Ages 5-17)` IS NOT NULL  AND `T1`.`Free Meal Count (Ages 5-17)` IS NOT NULL  ORDER BY `eligible_free_rate` ASC NULLS LAST  LIMIT 3 ",
+                    " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS `eligible_free_rate` FROM `frpm` WHERE `CDSCode` IN (     SELECT `T2.CDSCode`     FROM `schools` AS `T2`     INNER JOIN `frpm` AS `T1` ON `T2.CDSCode` = `T1.CDSCode`     WHERE `T1.School Type` = 'Continuation High Schools' ) ORDER BY `eligible_free_rate` ASC NULLS LAST LIMIT 3 ",
+                    " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS `eligible_free_rate` FROM `frpm` AS `T1` WHERE `T1`.`School Type` = 'Continuation High Schools'   AND `T1`.`Enrollment (Ages 5-17)` IS NOT NULL   AND `T1`.`Free Meal Count (Ages 5-17)` IS NOT NULL ORDER BY `eligible_free_rate` ASC NULLS LAST LIMIT 3 ",
+                    " SELECT `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` AS `eligible_free_rate`  FROM `frpm`  WHERE `School Type` = 'Continuation High Schools'  ORDER BY `eligible_free_rate` ASC  LIMIT 3 ",
+                    " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS eligible_free_rate FROM `frpm` AS `T1` WHERE `T1`.`School Type` = 'Continuation High Schools' ORDER BY eligible_free_rate ASC NULLS LAST LIMIT 3 ",
+                    " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm` AS `T1` WHERE `T1.School Type` = 'Continuation High Schools' AND `T1.Enrollment (Ages 5-17)` IS NOT NULL ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST LIMIT 3 ",
+                    " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM frpm AS T1 WHERE T1.`School Type` = 'Continuation High Schools' AND `Enrollment (Ages 5-17)` IS NOT NULL ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST LIMIT 3 "
+                ]
+            },
+            {
+                "template_name": "generate_candidate_two",
+                "candidates": [
+                    " SELECT T1.`School Name`, T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)` AS eligible_free_rate FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.SOCType = 'Continuation High Schools' ORDER BY eligible_free_rate ASC LIMIT 3 ",
+                    " SELECT T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)` AS eligible_free_rate FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`School Type` = 'Continuation High Schools' ORDER BY eligible_free_rate ASC LIMIT 3 ",
+                    " SELECT T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)` AS eligible_free_rate FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.School = 'Continuation School' ORDER BY eligible_free_rate ASC LIMIT 3 ",
+                    " SELECT (T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)`) AS eligible_free_rate FROM frpm AS T1 WHERE T1.`School Type` = 'Continuation High Schools' ORDER BY eligible_free_rate ASC LIMIT 3 ",
+                    " SELECT T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)` AS eligible_free_rate FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.GSserved IN ('5-12') OR T2.School = 'Continuation School' AND T1.`Free Meal Count (Ages 5-17)` IS NOT NULL AND T1.`Enrollment (Ages 5-17)` IS NOT NULL ORDER BY eligible_free_rate ASC LIMIT 3 ",
+                    " SELECT T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)` AS eligible_free_rate FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.EducOpsName = 'Continuation School' ORDER BY eligible_free_rate ASC LIMIT 3 ",
+                    " WITH RankedRates AS (     SELECT          T1.`School Name`,         (T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)`) AS EligibleFreeRate,         RANK() OVER (ORDER BY (T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)`) ASC) AS RateRank     FROM          frpm AS T1     INNER JOIN          schools AS T2      ON          T1.CDSCode = T2.CDSCode     WHERE          T1.`School Type` = 'Continuation School' ) SELECT      `School Name`,     EligibleFreeRate FROM      RankedRates WHERE      RateRank <= 3 ",
+                    " SELECT DISTINCT T1.`Percent (%) Eligible Free (Ages 5-17)` FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`School Type` = 'Continuation High Schools' ORDER BY T1.`Percent (%) Eligible Free (Ages 5-17)` ASC LIMIT 3 ",
+                    " SELECT `School Name`, `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` AS EligibleFreeRate FROM frpm WHERE `School Type` = 'Continuation High Schools' ORDER BY EligibleFreeRate ASC LIMIT 3 ",
+                    " SELECT T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)` AS eligible_free_rate FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.School = 'Continuation School' ORDER BY eligible_free_rate ASC LIMIT 3 "
+                ]
+            }
+        ],
+        "candidates": [
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm` AS `T1` WHERE `T1`.`School Type` = 'Continuation High Schools' AND `T1`.`Enrollment (Ages 5-17)` IS NOT NULL ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST LIMIT 3 ",
+                "plan": "**Question:** Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.\n**Evidence:** Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.\n    * **Analysis:** The question requires calculating the eligible free rate for students aged 5-17 and listing the lowest three values. This involves dividing the `Free Meal Count (Ages 5-17)` by the `Enrollment (Ages 5-17)` and filtering for continuation schools.\n    * **Pseudo SQL:** SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm` WHERE <continuation schools> ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST LIMIT 3\n\n    * **Sub-question 1:** continuation schools\n        * **Analysis:** We need to filter the `frpm` table to only include continuation schools. This can be done by checking the `School Type` column.\n        * **Pseudo SQL:** `T1`.`School Type` = 'Continuation High Schools'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (continuation schools):**\n    * **SQL:** `T1`.`School Type` = 'Continuation High Schools'\n\n* **Main Question (lowest three eligible free rates):**\n    * **SQL:** SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm` AS `T1` WHERE `T1`.`School Type` = 'Continuation High Schools' AND `T1`.`Enrollment (Ages 5-17)` IS NOT NULL ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST LIMIT 3\n\n**3. Simplification and Optimization:**\n\n* The query is already optimized and does not require further simplification.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm`  WHERE `School Type` = 'Continuation High Schools'  AND `Free Meal Count (Ages 5-17)` IS NOT NULL  AND `Enrollment (Ages 5-17)` IS NOT NULL  ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST  LIMIT 3; ",
+                "plan": "**Question:** Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.\n**Evidence:** Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.\n    * **Analysis:** The question asks for the lowest three eligible free rates for students aged 5-17 in continuation schools. We need to calculate the eligible free rate using the formula `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` and filter for continuation schools.\n    * **Pseudo SQL:** SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm` WHERE <continuation schools> ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST LIMIT 3\n\n    * **Sub-question 1:** continuation schools\n        * **Analysis:** We need to identify continuation schools from the `frpm` table. The `School Type` column in the `frpm` table indicates whether a school is a continuation school.\n        * **Pseudo SQL:** `T1`.`School Type` = 'Continuation High Schools'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (continuation schools):**\n    * **SQL:** `T1`.`School Type` = 'Continuation High Schools'\n\n* **Main Question (lowest three eligible free rates):**\n    * **SQL:** SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm` WHERE `School Type` = 'Continuation High Schools' AND `Free Meal Count (Ages 5-17)` IS NOT NULL AND `Enrollment (Ages 5-17)` IS NOT NULL ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST LIMIT 3\n\n**3. Simplification and Optimization:**\n\n* The final SQL query from step 2 is already quite optimized. We are calculating the eligible free rate directly in the `SELECT` clause and ensuring that both `Free Meal Count (Ages 5-17)` and `Enrollment (Ages 5-17)` are not null to avoid division by zero errors.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` AS `eligible_free_rate` FROM `frpm` WHERE `School Type` = 'Continuation High Schools' ORDER BY `eligible_free_rate` ASC LIMIT 3 ",
+                "plan": "**Question:** Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.\n**Evidence:** Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.\n    * **Analysis:** The question asks for the lowest three eligible free rates for students aged 5-17 in continuation schools. We need to calculate the eligible free rate using the formula `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` and filter the results to only include continuation schools.\n    * **Pseudo SQL:** SELECT `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` AS `eligible_free_rate` FROM `frpm` WHERE <continuation schools> ORDER BY `eligible_free_rate` ASC LIMIT 3\n\n    * **Sub-question 1:** continuation schools\n        * **Analysis:** We need to identify continuation schools based on the `School Type` column in the `frpm` table. We will filter for rows where `School Type` equals 'Continuation High Schools'.\n        * **Pseudo SQL:** `T1`.`School Type` = 'Continuation High Schools'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (continuation schools):**\n    * **SQL:** `T1`.`School Type` = 'Continuation High Schools'\n\n* **Main Question (lowest three eligible free rates):**\n    * **SQL:** SELECT `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` AS `eligible_free_rate` FROM `frpm` AS `T1` WHERE `T1`.`School Type` = 'Continuation High Schools' ORDER BY `eligible_free_rate` ASC LIMIT 3\n\n**3. Simplification and Optimization:**\n\n* The query in step 2 is already quite optimized. We are calculating the eligible free rate directly and filtering by continuation schools.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` AS `eligible_free_rate`  FROM `frpm` AS `T1`  WHERE `T1`.`School Type` = 'Continuation High Schools'  AND `T1`.`Enrollment (Ages 5-17)` IS NOT NULL  AND `T1`.`Free Meal Count (Ages 5-17)` IS NOT NULL  ORDER BY `eligible_free_rate` ASC NULLS LAST  LIMIT 3 ",
+                "plan": "**Question:** Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.\n**Evidence:** Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.\n    * **Analysis:** The question requires us to calculate the eligible free rate for students aged 5-17 and list the lowest three rates. This involves calculating the rate using the formula `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` and filtering for continuation schools.\n    * **Pseudo SQL:** SELECT `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` AS `eligible_free_rate` FROM `frpm` WHERE <continuation schools> ORDER BY `eligible_free_rate` ASC NULLS LAST LIMIT 3\n\n    * **Sub-question 1:** continuation schools\n        * **Analysis:** We need to identify continuation schools from the `frpm` table. The `School Type` column indicates the type of school, and we need to filter for continuation schools.\n        * **Pseudo SQL:** `T1`.`School Type` = 'Continuation High Schools'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (continuation schools):**\n    * **SQL:** `T1`.`School Type` = 'Continuation High Schools'\n\n* **Main Question (lowest three eligible free rates):**\n    * **SQL:** SELECT `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` AS `eligible_free_rate` FROM `frpm` AS `T1` WHERE `T1`.`School Type` = 'Continuation High Schools' AND `T1`.`Enrollment (Ages 5-17)` IS NOT NULL AND `T1`.`Free Meal Count (Ages 5-17)` IS NOT NULL ORDER BY `eligible_free_rate` ASC NULLS LAST LIMIT 3\n\n**3. Simplification and Optimization:**\n\n* The final SQL query from step 2 is already quite optimized. We are ensuring that the division operation does not involve NULL values and ordering the results to get the lowest three eligible free rates.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS `eligible_free_rate` FROM `frpm` WHERE `CDSCode` IN (     SELECT `T2.CDSCode`     FROM `schools` AS `T2`     INNER JOIN `frpm` AS `T1` ON `T2.CDSCode` = `T1.CDSCode`     WHERE `T1.School Type` = 'Continuation High Schools' ) ORDER BY `eligible_free_rate` ASC NULLS LAST LIMIT 3 ",
+                "plan": "**Question:** Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.\n**Evidence:** Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.\n    * **Analysis:** The question is asking for the lowest three eligible free rates, which can be calculated as `Free Meal Count (Ages 5-17)` divided by `Enrollment (Ages 5-17)`. We need to filter the data to only include continuation schools.\n    * **Pseudo SQL:** SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm` WHERE <continuation schools> ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST LIMIT 3\n\n    * **Sub-question 1:** continuation schools\n        * **Analysis:** We need to find the continuation schools from the `frpm` table. This can be achieved by joining `frpm` with `schools` on `CDSCode` and filtering by `School Type` in `frpm` being 'Continuation High Schools'.\n        * **Pseudo SQL:** `T1.CDSCode` IN (SELECT `T2.CDSCode` FROM `schools` AS `T2` INNER JOIN `frpm` AS `T1` ON `T2.CDSCode` = `T1.CDSCode` WHERE `T1.School Type` = 'Continuation High Schools')\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (continuation schools):**\n    * **SQL:** `T1.CDSCode` IN (SELECT `T2.CDSCode` FROM `schools` AS `T2` INNER JOIN `frpm` AS `T1` ON `T2.CDSCode` = `T1.CDSCode` WHERE `T1.School Type` = 'Continuation High Schools')\n\n* **Main Question (lowest three eligible free rates):**\n    * **SQL:** SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm` WHERE `CDSCode` IN (SELECT `T2.CDSCode` FROM `schools` AS `T2` INNER JOIN `frpm` AS `T1` ON `T2.CDSCode` = `T1.CDSCode` WHERE `T1.School Type` = 'Continuation High Schools') ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST LIMIT 3\n\n**3. Simplification and Optimization:**\n\n* The query in step 2 is already quite optimized. We are using a subquery to filter continuation schools and then calculating the eligible free rate for students aged 5-17.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS `eligible_free_rate` FROM `frpm` AS `T1` WHERE `T1`.`School Type` = 'Continuation High Schools'   AND `T1`.`Enrollment (Ages 5-17)` IS NOT NULL   AND `T1`.`Free Meal Count (Ages 5-17)` IS NOT NULL ORDER BY `eligible_free_rate` ASC NULLS LAST LIMIT 3 ",
+                "plan": "**Question:** Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.\n**Evidence:** Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.\n    * **Analysis:** We need to calculate the eligible free rate for students aged 5-17, which is `Free Meal Count (Ages 5-17)` divided by `Enrollment (Ages 5-17)`. We need to filter the records to only include continuation schools.\n    * **Pseudo SQL:** SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm` WHERE <continuation schools> ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST LIMIT 3\n\n    * **Sub-question 1:** continuation schools\n        * **Analysis:** We need to identify continuation schools from the `frpm` table. The `School Type` column in the `frpm` table indicates the type of school, and we need to filter for `School Type` = 'Continuation High Schools'.\n        * **Pseudo SQL:** `T1`.`School Type` = 'Continuation High Schools'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (continuation schools):**\n    * **SQL:** `T1`.`School Type` = 'Continuation High Schools'\n\n* **Main Question (lowest three eligible free rates):**\n    * **SQL:** SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm` AS `T1` WHERE `T1`.`School Type` = 'Continuation High Schools' AND `T1`.`Enrollment (Ages 5-17)` IS NOT NULL AND `T1`.`Free Meal Count (Ages 5-17)` IS NOT NULL ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST LIMIT 3\n\n**3. Simplification and Optimization:**\n\n* The SQL query from step 2 is already quite efficient. We've used `INNER JOIN` to combine the tables based on their relationship, and the `WHERE` clause clearly defines our filtering criteria. There's no need for nested queries or complex sub-selections in this case.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` AS `eligible_free_rate`  FROM `frpm`  WHERE `School Type` = 'Continuation High Schools'  ORDER BY `eligible_free_rate` ASC  LIMIT 3 ",
+                "plan": "**Question:** Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.\n**Evidence:** Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.\n    * **Analysis:** The question is asking for the lowest three eligible free rates for students aged 5-17 in continuation schools. We need to calculate the eligible free rate using the formula `Free Meal Count (Ages 5-17) / Enrollment (Ages 5-17)`. We also need to filter the data to only include continuation schools.\n    * **Pseudo SQL:** SELECT `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` AS `eligible_free_rate` FROM `frpm` WHERE <continuation schools> ORDER BY `eligible_free_rate` ASC LIMIT 3\n\n    * **Sub-question 1:** continuation schools\n        * **Analysis:** We need to identify continuation schools from the `frpm` table. Based on the evidence, the `School Type` column in the `frpm` table should contain the information about the school type.\n        * **Pseudo SQL:** `T1.School Type` = 'Continuation High Schools'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (continuation schools):**\n    * **SQL:** `T1.School Type` = 'Continuation High Schools'\n\n* **Main Question (lowest three eligible free rates):**\n    * **SQL:** SELECT `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` AS `eligible_free_rate` FROM `frpm` AS `T1` WHERE `T1.School Type` = 'Continuation High Schools' ORDER BY `eligible_free_rate` ASC LIMIT 3\n\n**3. Simplification and Optimization:**\n\n* The SQL query from step 2 is already quite efficient. We are filtering the data to only include continuation schools and calculating the eligible free rate. We then sort the results and limit the output to the lowest three rates.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS eligible_free_rate FROM `frpm` AS `T1` WHERE `T1`.`School Type` = 'Continuation High Schools' ORDER BY eligible_free_rate ASC NULLS LAST LIMIT 3 ",
+                "plan": "**Question:** Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.\n**Evidence:** Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.\n    * **Analysis:** The question requires calculating the eligible free rate for students aged 5-17 and listing the lowest three rates. This involves dividing `Free Meal Count (Ages 5-17)` by `Enrollment (Ages 5-17)` and filtering for continuation schools.\n    * **Pseudo SQL:** SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm` WHERE <continuation schools> ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST LIMIT 3\n\n    * **Sub-question 1:** continuation schools\n        * **Analysis:** We need to identify continuation schools. This information is available in the `School Type` column of the `frpm` table.\n        * **Pseudo SQL:** `T1`.`School Type` = 'Continuation High Schools'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (continuation schools):**\n    * **SQL:** `T1`.`School Type` = 'Continuation High Schools'\n\n* **Main Question (lowest three eligible free rates):**\n    * **SQL:** SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm` AS `T1` WHERE `T1`.`School Type` = 'Continuation High Schools' ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST LIMIT 3\n\n**3. Simplification and Optimization:**\n\n* The SQL query from step 2 is already quite efficient. We are filtering for continuation schools and ordering the results to get the lowest three eligible free rates.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm` AS `T1` WHERE `T1.School Type` = 'Continuation High Schools' AND `T1.Enrollment (Ages 5-17)` IS NOT NULL ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST LIMIT 3 ",
+                "plan": "**Question:** Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.\n**Evidence:** Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.\n    * **Analysis:** The question requires us to calculate the eligible free rate for students aged 5-17 and list the lowest three rates. We need to filter the data to only include continuation schools.\n    * **Pseudo SQL:** SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm` WHERE <continuation schools> ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST LIMIT 3\n\n    * **Sub-question 1:** continuation schools\n        * **Analysis:** We need to identify continuation schools, which can be determined by checking the `School Type` column in the `frpm` table.\n        * **Pseudo SQL:** `T1.School Type` = 'Continuation High Schools'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (continuation schools):**\n    * **SQL:** `T1.School Type` = 'Continuation High Schools'\n\n* **Main Question (lowest three eligible free rates):**\n    * **SQL:** SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm` AS `T1` WHERE `T1.School Type` = 'Continuation High Schools' AND `T1.Enrollment (Ages 5-17)` IS NOT NULL ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST LIMIT 3\n\n**3. Simplification and Optimization:**\n\n* The query is already optimized and correctly addresses the requirement of listing the lowest three eligible free rates for students aged 5-17 in continuation schools.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM frpm AS T1 WHERE T1.`School Type` = 'Continuation High Schools' AND `Enrollment (Ages 5-17)` IS NOT NULL ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST LIMIT 3 ",
+                "plan": "**Question:** Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.\n**Evidence:** Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.\n    * **Analysis:** The question asks for the lowest three eligible free rates, which means we need to calculate the ratio of `Free Meal Count (Ages 5-17)` to `Enrollment (Ages 5-17)` and then sort and limit the results to the lowest three. We also need to filter the schools to only include continuation schools.\n    * **Pseudo SQL:** SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm` WHERE <continuation schools> ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST LIMIT 3\n\n    * **Sub-question 1:** continuation schools\n        * **Analysis:** We need to identify continuation schools, which can be done by checking the `School Type` column in the `frpm` table.\n        * **Pseudo SQL:** `T1`.`School Type` = 'Continuation High Schools'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (continuation schools):**\n    * **SQL:** `T1`.`School Type` = 'Continuation High Schools'\n\n* **Main Question (lowest three eligible free rates):**\n    * **SQL:** SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm` AS `T1` WHERE `T1`.`School Type` = 'Continuation High Schools' AND `Enrollment (Ages 5-17)` IS NOT NULL ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST LIMIT 3\n\n**3. Simplification and Optimization:**\n\n* The SQL query from step 2 is already quite efficient. We're filtering for continuation schools and calculating the eligible free rate, then ordering and limiting the results.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T1.`School Name`, T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)` AS eligible_free_rate FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.SOCType = 'Continuation High Schools' ORDER BY eligible_free_rate ASC LIMIT 3 ",
+                "plan": "**Question**: Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.\n**Evidence**: Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the frpm and schools tables to access relevant data.\n\n** Calculate Eligible Free Rates: **\n1. Scan the frpm table: Start reading rows from the frpm table.\n2. Extract Free Meal Count (Ages 5-17) and Enrollment (Ages 5-17): For each row, retrieve the values from the `Free Meal Count (Ages 5-17)` and `Enrollment (Ages 5-17)` columns.\n3. Calculate the eligible free rate: Compute the eligible free rate by dividing the `Free Meal Count (Ages 5-17)` by the `Enrollment (Ages 5-17)`.\n\n** Filter Continuation Schools: **\n1. Join with schools table: Use the CDSCode to join the frpm table with the schools table to filter for continuation schools.\n2. Filter by School Type: Select only those rows where the `School Type` is 'Continuation High Schools'.\n\n** Rank the Rates: **\n1. Rank the calculated eligible free rates: Assign a rank to each eligible free rate based on its value.\n2. Filter for the lowest three rates: Select only the rows with ranks 1, 2, and 3.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final list of eligible free rates for presentation.\n2. Output the final result: Deliver the lowest three eligible free rates for students aged 5-17 in continuation schools.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)` AS eligible_free_rate FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`School Type` = 'Continuation High Schools' ORDER BY eligible_free_rate ASC LIMIT 3 ",
+                "plan": "**Question**: Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.\n**Evidence**: Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**Query Plan**:\n\n**Preparation Steps:**\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the `frpm` and `schools` tables to access relevant data.\n\n**Filter and Calculate Eligible Free Rates:**\n1. Scan the `frpm` table: Start reading rows from the `frpm` table.\n2. Filter by `School Type`: Select only those rows where `School Type` is 'Continuation High Schools'.\n3. Calculate eligible free rates: For each row, compute the eligible free rate using the formula `Free Meal Count (Ages 5-17) / Enrollment (Ages 5-17)`.\n4. Join with `schools` table: Match each `frpm` entry to the corresponding school by joining on `CDSCode`.\n\n**Identify the Lowest Three Rates:**\n1. Order the calculated rates: Sort the computed eligible free rates in ascending order.\n2. Limit the results: Select the top three lowest rates from the sorted list.\n\n**Finalize and Deliver the Result:**\n1. Prepare the result for output: Format the final list of the lowest three eligible free rates for presentation.\n2. Output the final result: Deliver the lowest three eligible free rates.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)` AS eligible_free_rate FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.School = 'Continuation School' ORDER BY eligible_free_rate ASC LIMIT 3 ",
+                "plan": "**Question**: Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.\n**Evidence**: Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the frpm and schools tables to access relevant data.\n\n** Calculate Eligible Free Rates: **\n1. Scan the frpm table: Start reading rows from the frpm table.\n2. Calculate eligible free rates: Compute the eligible free rate for students aged 5-17 using the formula `Free Meal Count (Ages 5-17) / Enrollment (Ages 5-17)`.\n3. Filter by continuation schools: Join with the schools table to filter records where the school type is 'Continuation School'.\n\n** Identify the Lowest Three Rates: **\n1. Order by calculated rates: Sort the computed eligible free rates in ascending order.\n2. Limit to the lowest three: Select only the top three rows based on the sorted eligible free rates.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final list of eligible free rates for presentation.\n2. Output the final result: Deliver the lowest three eligible free rates for students aged 5-17 in continuation schools.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT (T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)`) AS eligible_free_rate FROM frpm AS T1 WHERE T1.`School Type` = 'Continuation High Schools' ORDER BY eligible_free_rate ASC LIMIT 3 ",
+                "plan": "**Question**: Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.\n**Evidence**: Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the `frpm` table to access relevant data.\n\n** Calculate Eligible Free Rates: **\n1. Scan the `frpm` table: Start reading rows from the `frpm` table.\n2. Filter by School Type: Select only those rows where `School Type` is 'Continuation High Schools'.\n3. Compute the eligible free rate: For each row, calculate the eligible free rate using the formula `Free Meal Count (Ages 5-17) / Enrollment (Ages 5-17)`.\n\n** Sort and Retrieve the Lowest Three Rates: **\n1. Order the calculated rates: Sort the computed eligible free rates in ascending order.\n2. Limit the results: Select the lowest three rates from the sorted list.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final list of eligible free rates for presentation.\n2. Output the final result: Deliver the lowest three eligible free rates for students aged 5-17 in continuation schools.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)` AS eligible_free_rate FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.GSserved IN ('5-12') OR T2.School = 'Continuation School' AND T1.`Free Meal Count (Ages 5-17)` IS NOT NULL AND T1.`Enrollment (Ages 5-17)` IS NOT NULL ORDER BY eligible_free_rate ASC LIMIT 3 ",
+                "plan": "**Question**: Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.\n**Evidence**: Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the `frpm` and `schools` tables to access relevant data.\n\n** Calculate Eligible Free Rates: **\n1. Scan the `frpm` table: Start reading rows from the `frpm` table.\n2. Calculate eligible free rate: For each row, compute the eligible free rate using the formula `Free Meal Count (Ages 5-17) / Enrollment (Ages 5-17)`.\n3. Join with `schools` table: Match each row in `frpm` with the corresponding school by joining on `CDSCode`.\n\n** Filter Continuation Schools: **\n1. Identify continuation schools: Filter the joined results to include only those schools where `GSserved` or `School` indicates continuation schools.\n2. Ensure no NULL values: Use `JOIN` or `WHERE` clauses to exclude any rows with NULL values in relevant columns.\n\n** Order and Limit Results: **\n1. Sort the results: Order the filtered results by the calculated eligible free rate in ascending order.\n2. Limit to the lowest three rates: Use `LIMIT` to restrict the output to the lowest three eligible free rates.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final list of eligible free rates for presentation.\n2. Output the final result: Deliver the lowest three eligible free rates for students aged 5-17 in continuation schools.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)` AS eligible_free_rate FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.EducOpsName = 'Continuation School' ORDER BY eligible_free_rate ASC LIMIT 3 ",
+                "plan": "**Question**: Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.\n**Evidence**: Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the frpm and schools tables to access relevant data.\n\n** Calculate Eligible Free Rates: **\n1. Join frpm and schools tables: Merge the frpm and schools tables based on the CDSCode foreign key to link the free meal counts and enrollments to the school details.\n2. Filter by school type: Select only those records where the school type is 'Continuation School'.\n3. Calculate the eligible free rate: Compute the eligible free rate for students aged 5-17 using the formula `Free Meal Count (Ages 5-17) / Enrollment (Ages 5-17)`.\n\n** Sort and Limit the Results: **\n1. Order by calculated free rate: Sort the results by the calculated eligible free rate in ascending order to get the lowest rates first.\n2. Limit to top three: Select only the top three records with the lowest eligible free rates.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final list of eligible free rates for presentation.\n2. Output the final result: Deliver the lowest three eligible free rates for students aged 5-17 in continuation schools.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " WITH RankedRates AS (     SELECT          T1.`School Name`,         (T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)`) AS EligibleFreeRate,         RANK() OVER (ORDER BY (T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)`) ASC) AS RateRank     FROM          frpm AS T1     INNER JOIN          schools AS T2      ON          T1.CDSCode = T2.CDSCode     WHERE          T1.`School Type` = 'Continuation School' ) SELECT      `School Name`,     EligibleFreeRate FROM      RankedRates WHERE      RateRank <= 3 ",
+                "plan": "**Question**: Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.\n**Evidence**: Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the frpm and schools tables to access relevant data.\n\n** Calculate Eligible Free Rates: **\n1. Scan the frpm table: Start reading rows from the frpm table.\n2. Extract Free Meal Count (Ages 5-17) and Enrollment (Ages 5-17): For each row, retrieve the values from the `Free Meal Count (Ages 5-17)` and `Enrollment (Ages 5-17)` columns.\n3. Compute the eligible free rate: Calculate the eligible free rate using the formula `Free Meal Count (Ages 5-17) / Enrollment (Ages 5-17)`.\n4. Filter by School Type: Identify rows where the `School Type` is 'Continuation School'.\n5. Join with schools table: Match each row in frpm to the corresponding school by joining on `CDSCode`.\n\n** Rank and Select the Lowest Three Rates: **\n1. Rank the rates: Use the RANK() window function to rank the computed eligible free rates in ascending order.\n2. Select the top three rates: Filter the ranked results to select only the top three lowest eligible free rates.\n3. Include necessary details: Ensure to include the school name and the calculated eligible free rate in the final selection.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final list of the lowest three eligible free rates along with the corresponding school names.\n2. Output the final result: Deliver the names of the schools and their respective eligible free rates.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT DISTINCT T1.`Percent (%) Eligible Free (Ages 5-17)` FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`School Type` = 'Continuation High Schools' ORDER BY T1.`Percent (%) Eligible Free (Ages 5-17)` ASC LIMIT 3 ",
+                "plan": "**Question**: Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.\n**Evidence**: Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**Query Plan**:\n\n**Preparation Steps:**\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the `frpm` and `schools` tables to access relevant data.\n\n**Filter and Calculate Eligible Free Rates:**\n1. Scan the `frpm` table: Start reading rows from the `frpm` table.\n2. Filter by `School Type`: Select only those rows where `School Type` is 'Continuation High Schools'.\n3. Calculate the eligible free rate: For each row, compute the eligible free rate using the formula `Free Meal Count (Ages 5-17) / Enrollment (Ages 5-17)`.\n4. Join with `schools` table: Match each `frpm` entry to the corresponding school by joining on `CDSCode`.\n\n**Identify the Lowest Three Rates:**\n1. Order the calculated rates: Sort the computed eligible free rates in ascending order.\n2. Limit the results: Select only the top three lowest rates.\n3. Ensure distinct rates: Use `DISTINCT` to avoid duplicate rates.\n\n**Prepare and Deliver the Result:**\n1. Prepare the result for output: Format the final list of the lowest three eligible free rates.\n2. Output the final result: Deliver the lowest three eligible free rates for students aged 5-17 in continuation schools.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT `School Name`, `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` AS EligibleFreeRate FROM frpm WHERE `School Type` = 'Continuation High Schools' ORDER BY EligibleFreeRate ASC LIMIT 3 ",
+                "plan": "**Question**: Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.\n**Evidence**: Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the `frpm` and `satscores` tables to access relevant data.\n\n** Filter and Calculate Eligible Free Rates: **\n1. Scan the `frpm` table: Start reading rows from the `frpm` table.\n2. Filter by `School Type`: Select only those rows where `School Type` is 'Continuation High Schools'.\n3. Calculate the eligible free rate: For each row, compute the eligible free rate using the formula `Free Meal Count (Ages 5-17) / Enrollment (Ages 5-17)`.\n\n** Order and Select the Lowest Three Rates: **\n1. Order the calculated rates in ascending order: Arrange the computed eligible free rates in ascending order to identify the lowest rates.\n2. Select the lowest three rates: Retrieve the top three lowest eligible free rates along with their corresponding details.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final list of the lowest three eligible free rates for presentation.\n2. Output the final result: Deliver the lowest three eligible free rates as the query result.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)` AS eligible_free_rate FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.School = 'Continuation School' ORDER BY eligible_free_rate ASC LIMIT 3 ",
+                "plan": "**Question**: Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.\n**Evidence**: Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the frpm and schools tables to access relevant data.\n\n** Filter and Calculate Eligible Free Rates: **\n1. Scan the frpm table: Start reading rows from the frpm table.\n2. Join with schools table: Match each row in frpm with the corresponding school in the schools table based on CDSCode.\n3. Filter continuation schools: Select only those rows where the school type is 'Continuation School'.\n4. Calculate eligible free rates: Compute the eligible free rate using the formula `Free Meal Count (Ages 5-17) / Enrollment (Ages 5-17)`.\n\n** Sort and Select the Lowest Three Rates: **\n1. Order the results: Sort the calculated eligible free rates in ascending order.\n2. Limit the results: Select only the top three lowest eligible free rates.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final list of eligible free rates for presentation.\n2. Output the final result: Deliver the lowest three eligible free rates for students aged 5-17 in continuation schools.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            }
+        ],
+        "status": "success",
+        "execution_time": 1771.6
+    },
+    {
+        "tool_name": "revise",
+        "original_SQL_id": "generate_candidate",
+        "refined_SQL_id": "revise_1",
+        "candidates": [
+            {
+                "refined_query": " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm` AS `T1` WHERE `T1`.`School Type` = 'Continuation High Schools' AND `T1`.`Enrollment (Ages 5-17)` IS NOT NULL ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST LIMIT 3 "
+            },
+            {
+                "refined_query": " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm`  WHERE `School Type` = 'Continuation High Schools'  AND `Free Meal Count (Ages 5-17)` IS NOT NULL  AND `Enrollment (Ages 5-17)` IS NOT NULL  ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST  LIMIT 3; "
+            },
+            {
+                "refined_query": " SELECT `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` AS `eligible_free_rate` FROM `frpm` WHERE `School Type` = 'Continuation High Schools' ORDER BY `eligible_free_rate` ASC LIMIT 3 "
+            },
+            {
+                "refined_query": " SELECT `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` AS `eligible_free_rate`  FROM `frpm` AS `T1`  WHERE `T1`.`School Type` = 'Continuation High Schools'  AND `T1`.`Enrollment (Ages 5-17)` IS NOT NULL  AND `T1`.`Free Meal Count (Ages 5-17)` IS NOT NULL  ORDER BY `eligible_free_rate` ASC NULLS LAST  LIMIT 3 "
+            },
+            {
+                "refined_query": " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS `eligible_free_rate` FROM `frpm` WHERE `CDSCode` IN (SELECT `CDSCode` FROM `schools` WHERE `School Type` = 'Continuation High Schools') ORDER BY `eligible_free_rate` ASC NULLS LAST LIMIT 3 "
+            },
+            {
+                "refined_query": " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS `eligible_free_rate` FROM `frpm` AS `T1` WHERE `T1`.`School Type` = 'Continuation High Schools'   AND `T1`.`Enrollment (Ages 5-17)` IS NOT NULL   AND `T1`.`Free Meal Count (Ages 5-17)` IS NOT NULL ORDER BY `eligible_free_rate` ASC NULLS LAST LIMIT 3 "
+            },
+            {
+                "refined_query": " SELECT `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` AS `eligible_free_rate`  FROM `frpm`  WHERE `School Type` = 'Continuation High Schools'  ORDER BY `eligible_free_rate` ASC  LIMIT 3 "
+            },
+            {
+                "refined_query": " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS eligible_free_rate FROM `frpm` AS `T1` WHERE `T1`.`School Type` = 'Continuation High Schools' ORDER BY eligible_free_rate ASC NULLS LAST LIMIT 3 "
+            },
+            {
+                "refined_query": " SELECT `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` AS eligible_free_rate FROM `frpm` AS `T1` WHERE `T1.School_Type` = 'Continuation High Schools' AND `T1.Enrollment (Ages 5-17)` IS NOT NULL ORDER BY eligible_free_rate ASC NULLS LAST LIMIT 3 "
+            },
+            {
+                "refined_query": " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM frpm AS T1 WHERE T1.`School Type` = 'Continuation High Schools' AND `Enrollment (Ages 5-17)` IS NOT NULL ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST LIMIT 3 "
+            },
+            {
+                "refined_query": " SELECT T1.`School Name`, T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)` AS eligible_free_rate FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.SOCType = 'Continuation High Schools' ORDER BY eligible_free_rate ASC LIMIT 3 "
+            },
+            {
+                "refined_query": " SELECT T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)` AS eligible_free_rate FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`School Type` = 'Continuation High Schools' ORDER BY eligible_free_rate ASC LIMIT 3 "
+            },
+            {
+                "refined_query": " SELECT T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)` AS eligible_free_rate FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`School Type` = 'Continuation High Schools' ORDER BY eligible_free_rate ASC LIMIT 3 "
+            },
+            {
+                "refined_query": " SELECT (T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)`) AS eligible_free_rate FROM frpm AS T1 WHERE T1.`School Type` = 'Continuation High Schools' ORDER BY eligible_free_rate ASC LIMIT 3 "
+            },
+            {
+                "refined_query": " SELECT T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)` AS eligible_free_rate FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.GSserved IN ('5-12') OR T2.School = 'Continuation School' AND T1.`Free Meal Count (Ages 5-17)` IS NOT NULL AND T1.`Enrollment (Ages 5-17)` IS NOT NULL ORDER BY eligible_free_rate ASC LIMIT 3 "
+            },
+            {
+                "refined_query": " SELECT T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)` AS eligible_free_rate FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.EdOpsName = 'Continuation School' ORDER BY eligible_free_rate ASC LIMIT 3 "
+            },
+            {
+                "refined_query": " WITH RankedRates AS (SELECT T1.`School Name`, (T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)`) AS EligibleFreeRate, RANK() OVER (ORDER BY (T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)`) ASC) AS RateRank FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`School Type` = 'Continuation High Schools') SELECT `School Name`, EligibleFreeRate FROM RankedRates WHERE RateRank <= 3 "
+            },
+            {
+                "refined_query": " SELECT DISTINCT T1.`Percent (%) Eligible Free (Ages 5-17)` FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`School Type` = 'Continuation High Schools' ORDER BY T1.`Percent (%) Eligible Free (Ages 5-17)` ASC LIMIT 3 "
+            },
+            {
+                "refined_query": " SELECT `School Name`, `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` AS EligibleFreeRate FROM frpm WHERE `School Type` = 'Continuation High Schools' ORDER BY EligibleFreeRate ASC LIMIT 3 "
+            },
+            {
+                "refined_query": " SELECT T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)` AS eligible_free_rate FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.EdOpsName = 'Continuation School' ORDER BY eligible_free_rate ASC LIMIT 3 "
+            }
+        ],
+        "status": "success",
+        "execution_time": 477.2
+    },
+    {
+        "tool_name": "generate_unit_test",
+        "unit_tests": {
+            "unit_test_generation": [
+                "The answer SQL query should mention `School Type` = \"Continuation High Schools\" to correctly filter continuation schools.",
+                "The answer SQL query should state that the calculation of the eligible free rate uses the formula (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`).",
+                "The answer SQL query should use `WHERE` clause to exclude rows where `Enrollment (Ages 5-17)` or `Free Meal Count (Ages 5-17)` is null.",
+                "The answer SQL query should order the results by the calculated eligible free rate in ascending order.",
+                "The answer SQL query should use `LIMIT 3` to return only the lowest three eligible free rates.",
+                "The answer SQL query should not include unnecessary joins unless they are essential for filtering the correct school types.",
+                "The answer SQL query should not include columns other than the calculated eligible free rate if the question does not ask for additional information such as school names.",
+                "The answer SQL query should use an appropriate alias for the calculated eligible free rate to improve readability.",
+                "The answer SQL query should avoid using subqueries or complex clauses if simpler methods suffice.",
+                "The answer SQL query should handle null values correctly, ensuring no division by zero errors occur.",
+                "The answer SQL query should not rely on pre-calculated fields such as `Percent (%) Eligible Free (Ages 5-17)` when the question specifies the calculation method.",
+                "The answer SQL query should correctly handle the `NULLS LAST` clause to ensure null values are placed last in the ordering.",
+                "The answer SQL query should not include conditions unrelated to the filtering criteria, such as `GSserved IN (\"5-12\")` or `School = \"Continuation School\"`.",
+                "The answer SQL query should not produce duplicate results if multiple records have the same eligible free rate.",
+                "The answer SQL query should not produce null results for the eligible free rate calculation, indicating proper handling of null inputs.",
+                "The answer SQL query should not include unnecessary ranking functions if simple ordering and limiting suffices.",
+                "The answer SQL query should not return more than three results unless explicitly required by the question.",
+                "The answer SQL query should not include irrelevant columns in the result set, focusing solely on the eligible free rate.",
+                "The answer SQL query should not return incorrect or unexpected results due to improper handling of null values or invalid calculations.",
+                "The answer SQL query should demonstrate clear understanding of the requirement to list only the lowest three eligible free rates.",
+                "Only the best answer from the set of candidates that most accurately answers the question, given the database schema and hint should pass this test."
+            ]
+        },
+        "candidates": [
+            " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm` AS `T1` WHERE `T1`.`School Type` = 'Continuation High Schools' AND `T1`.`Enrollment (Ages 5-17)` IS NOT NULL ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST LIMIT 3 ",
+            " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm`  WHERE `School Type` = 'Continuation High Schools'  AND `Free Meal Count (Ages 5-17)` IS NOT NULL  AND `Enrollment (Ages 5-17)` IS NOT NULL  ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST  LIMIT 3; ",
+            " SELECT `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` AS `eligible_free_rate` FROM `frpm` WHERE `School Type` = 'Continuation High Schools' ORDER BY `eligible_free_rate` ASC LIMIT 3 ",
+            " SELECT `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` AS `eligible_free_rate`  FROM `frpm` AS `T1`  WHERE `T1`.`School Type` = 'Continuation High Schools'  AND `T1`.`Enrollment (Ages 5-17)` IS NOT NULL  AND `T1`.`Free Meal Count (Ages 5-17)` IS NOT NULL  ORDER BY `eligible_free_rate` ASC NULLS LAST  LIMIT 3 ",
+            " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS `eligible_free_rate` FROM `frpm` WHERE `CDSCode` IN (SELECT `CDSCode` FROM `schools` WHERE `School Type` = 'Continuation High Schools') ORDER BY `eligible_free_rate` ASC NULLS LAST LIMIT 3 ",
+            " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS `eligible_free_rate` FROM `frpm` AS `T1` WHERE `T1`.`School Type` = 'Continuation High Schools'   AND `T1`.`Enrollment (Ages 5-17)` IS NOT NULL   AND `T1`.`Free Meal Count (Ages 5-17)` IS NOT NULL ORDER BY `eligible_free_rate` ASC NULLS LAST LIMIT 3 ",
+            " SELECT `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` AS `eligible_free_rate`  FROM `frpm`  WHERE `School Type` = 'Continuation High Schools'  ORDER BY `eligible_free_rate` ASC  LIMIT 3 ",
+            " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS eligible_free_rate FROM `frpm` AS `T1` WHERE `T1`.`School Type` = 'Continuation High Schools' ORDER BY eligible_free_rate ASC NULLS LAST LIMIT 3 ",
+            " SELECT `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` AS eligible_free_rate FROM `frpm` AS `T1` WHERE `T1.School_Type` = 'Continuation High Schools' AND `T1.Enrollment (Ages 5-17)` IS NOT NULL ORDER BY eligible_free_rate ASC NULLS LAST LIMIT 3 ",
+            " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM frpm AS T1 WHERE T1.`School Type` = 'Continuation High Schools' AND `Enrollment (Ages 5-17)` IS NOT NULL ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST LIMIT 3 ",
+            " SELECT T1.`School Name`, T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)` AS eligible_free_rate FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.SOCType = 'Continuation High Schools' ORDER BY eligible_free_rate ASC LIMIT 3 ",
+            " SELECT T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)` AS eligible_free_rate FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`School Type` = 'Continuation High Schools' ORDER BY eligible_free_rate ASC LIMIT 3 ",
+            " SELECT T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)` AS eligible_free_rate FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`School Type` = 'Continuation High Schools' ORDER BY eligible_free_rate ASC LIMIT 3 ",
+            " SELECT (T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)`) AS eligible_free_rate FROM frpm AS T1 WHERE T1.`School Type` = 'Continuation High Schools' ORDER BY eligible_free_rate ASC LIMIT 3 ",
+            " SELECT T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)` AS eligible_free_rate FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.GSserved IN ('5-12') OR T2.School = 'Continuation School' AND T1.`Free Meal Count (Ages 5-17)` IS NOT NULL AND T1.`Enrollment (Ages 5-17)` IS NOT NULL ORDER BY eligible_free_rate ASC LIMIT 3 ",
+            " SELECT T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)` AS eligible_free_rate FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.EdOpsName = 'Continuation School' ORDER BY eligible_free_rate ASC LIMIT 3 ",
+            " WITH RankedRates AS (SELECT T1.`School Name`, (T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)`) AS EligibleFreeRate, RANK() OVER (ORDER BY (T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)`) ASC) AS RateRank FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`School Type` = 'Continuation High Schools') SELECT `School Name`, EligibleFreeRate FROM RankedRates WHERE RateRank <= 3 ",
+            " SELECT DISTINCT T1.`Percent (%) Eligible Free (Ages 5-17)` FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`School Type` = 'Continuation High Schools' ORDER BY T1.`Percent (%) Eligible Free (Ages 5-17)` ASC LIMIT 3 ",
+            " SELECT `School Name`, `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` AS EligibleFreeRate FROM frpm WHERE `School Type` = 'Continuation High Schools' ORDER BY EligibleFreeRate ASC LIMIT 3 ",
+            " SELECT T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)` AS eligible_free_rate FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.EdOpsName = 'Continuation School' ORDER BY eligible_free_rate ASC LIMIT 3 "
+        ],
+        "status": "success",
+        "execution_time": 276.8
+    },
+    {
+        "tool_name": "evaluate",
+        "scores": [
+            21,
+            16,
+            8,
+            21,
+            17,
+            21,
+            7,
+            21,
+            0,
+            21,
+            3,
+            5,
+            5,
+            6,
+            1,
+            5,
+            2,
+            2,
+            5,
+            5
+        ],
+        "comparison_matrix": [
+            [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+            ],
+            [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                0,
+                1,
+                1
+            ],
+            [
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            [
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            [
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            [
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            [
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1
+            ],
+            [
+                1,
+                0,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            [
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            [
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            [
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1,
+                1
+            ],
+            [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            [
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                1
+            ],
+            [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                1
+            ],
+            [
+                1,
+                0,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            [
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            [
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        ],
+        "candidates": [
+            " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm` AS `T1` WHERE `T1`.`School Type` = 'Continuation High Schools' AND `T1`.`Enrollment (Ages 5-17)` IS NOT NULL ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST LIMIT 3 ",
+            " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm`  WHERE `School Type` = 'Continuation High Schools'  AND `Free Meal Count (Ages 5-17)` IS NOT NULL  AND `Enrollment (Ages 5-17)` IS NOT NULL  ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST  LIMIT 3; ",
+            " SELECT `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` AS `eligible_free_rate` FROM `frpm` WHERE `School Type` = 'Continuation High Schools' ORDER BY `eligible_free_rate` ASC LIMIT 3 ",
+            " SELECT `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` AS `eligible_free_rate`  FROM `frpm` AS `T1`  WHERE `T1`.`School Type` = 'Continuation High Schools'  AND `T1`.`Enrollment (Ages 5-17)` IS NOT NULL  AND `T1`.`Free Meal Count (Ages 5-17)` IS NOT NULL  ORDER BY `eligible_free_rate` ASC NULLS LAST  LIMIT 3 ",
+            " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS `eligible_free_rate` FROM `frpm` WHERE `CDSCode` IN (SELECT `CDSCode` FROM `schools` WHERE `School Type` = 'Continuation High Schools') ORDER BY `eligible_free_rate` ASC NULLS LAST LIMIT 3 ",
+            " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS `eligible_free_rate` FROM `frpm` AS `T1` WHERE `T1`.`School Type` = 'Continuation High Schools'   AND `T1`.`Enrollment (Ages 5-17)` IS NOT NULL   AND `T1`.`Free Meal Count (Ages 5-17)` IS NOT NULL ORDER BY `eligible_free_rate` ASC NULLS LAST LIMIT 3 ",
+            " SELECT `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` AS `eligible_free_rate`  FROM `frpm`  WHERE `School Type` = 'Continuation High Schools'  ORDER BY `eligible_free_rate` ASC  LIMIT 3 ",
+            " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS eligible_free_rate FROM `frpm` AS `T1` WHERE `T1`.`School Type` = 'Continuation High Schools' ORDER BY eligible_free_rate ASC NULLS LAST LIMIT 3 ",
+            " SELECT `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` AS eligible_free_rate FROM `frpm` AS `T1` WHERE `T1.School_Type` = 'Continuation High Schools' AND `T1.Enrollment (Ages 5-17)` IS NOT NULL ORDER BY eligible_free_rate ASC NULLS LAST LIMIT 3 ",
+            " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM frpm AS T1 WHERE T1.`School Type` = 'Continuation High Schools' AND `Enrollment (Ages 5-17)` IS NOT NULL ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST LIMIT 3 ",
+            " SELECT T1.`School Name`, T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)` AS eligible_free_rate FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.SOCType = 'Continuation High Schools' ORDER BY eligible_free_rate ASC LIMIT 3 ",
+            " SELECT T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)` AS eligible_free_rate FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`School Type` = 'Continuation High Schools' ORDER BY eligible_free_rate ASC LIMIT 3 ",
+            " SELECT T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)` AS eligible_free_rate FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`School Type` = 'Continuation High Schools' ORDER BY eligible_free_rate ASC LIMIT 3 ",
+            " SELECT (T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)`) AS eligible_free_rate FROM frpm AS T1 WHERE T1.`School Type` = 'Continuation High Schools' ORDER BY eligible_free_rate ASC LIMIT 3 ",
+            " SELECT T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)` AS eligible_free_rate FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.GSserved IN ('5-12') OR T2.School = 'Continuation School' AND T1.`Free Meal Count (Ages 5-17)` IS NOT NULL AND T1.`Enrollment (Ages 5-17)` IS NOT NULL ORDER BY eligible_free_rate ASC LIMIT 3 ",
+            " SELECT T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)` AS eligible_free_rate FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.EdOpsName = 'Continuation School' ORDER BY eligible_free_rate ASC LIMIT 3 ",
+            " WITH RankedRates AS (SELECT T1.`School Name`, (T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)`) AS EligibleFreeRate, RANK() OVER (ORDER BY (T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)`) ASC) AS RateRank FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`School Type` = 'Continuation High Schools') SELECT `School Name`, EligibleFreeRate FROM RankedRates WHERE RateRank <= 3 ",
+            " SELECT DISTINCT T1.`Percent (%) Eligible Free (Ages 5-17)` FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`School Type` = 'Continuation High Schools' ORDER BY T1.`Percent (%) Eligible Free (Ages 5-17)` ASC LIMIT 3 ",
+            " SELECT `School Name`, `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` AS EligibleFreeRate FROM frpm WHERE `School Type` = 'Continuation High Schools' ORDER BY EligibleFreeRate ASC LIMIT 3 ",
+            " SELECT T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)` AS eligible_free_rate FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.EdOpsName = 'Continuation School' ORDER BY eligible_free_rate ASC LIMIT 3 "
+        ],
+        "selected_candidate": " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm` AS `T1` WHERE `T1`.`School Type` = 'Continuation High Schools' AND `T1`.`Enrollment (Ages 5-17)` IS NOT NULL ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST LIMIT 3 ",
+        "status": "success",
+        "execution_time": 1710.4
+    },
+    {
+        "tool_name": "execution_accuracy",
+        "generate_candidate": {
+            "exec_res": 1,
+            "exec_err": "--",
+            "Question": "Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.",
+            "Evidence": "Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`",
+            "GOLD_SQL": "SELECT `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` FROM frpm WHERE `Educational Option Type` = 'Continuation School' AND `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` IS NOT NULL ORDER BY `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` ASC LIMIT 3",
+            "PREDICTED_SQL": " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm` AS `T1` WHERE `T1`.`School Type` = 'Continuation High Schools' AND `T1`.`Enrollment (Ages 5-17)` IS NOT NULL ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST LIMIT 3 "
+        },
+        "revise_1": {
+            "exec_res": 1,
+            "exec_err": "--",
+            "Question": "Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.",
+            "Evidence": "Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`",
+            "GOLD_SQL": "SELECT `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` FROM frpm WHERE `Educational Option Type` = 'Continuation School' AND `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` IS NOT NULL ORDER BY `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` ASC LIMIT 3",
+            "PREDICTED_SQL": " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm` AS `T1` WHERE `T1`.`School Type` = 'Continuation High Schools' AND `T1`.`Enrollment (Ages 5-17)` IS NOT NULL ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST LIMIT 3 "
+        },
+        "evaluate_1": {
+            "exec_res": 1,
+            "exec_err": "--",
+            "Question": "Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.",
+            "Evidence": "Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`",
+            "GOLD_SQL": "SELECT `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` FROM frpm WHERE `Educational Option Type` = 'Continuation School' AND `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` IS NOT NULL ORDER BY `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` ASC LIMIT 3",
+            "PREDICTED_SQL": " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm` AS `T1` WHERE `T1`.`School Type` = 'Continuation High Schools' AND `T1`.`Enrollment (Ages 5-17)` IS NOT NULL ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST LIMIT 3 "
+        },
+        "final_SQL": {
+            "exec_res": 1,
+            "exec_err": "--",
+            "Question": "Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.",
+            "Evidence": "Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`",
+            "GOLD_SQL": "SELECT `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` FROM frpm WHERE `Educational Option Type` = 'Continuation School' AND `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` IS NOT NULL ORDER BY `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` ASC LIMIT 3",
+            "PREDICTED_SQL": " SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm` AS `T1` WHERE `T1`.`School Type` = 'Continuation High Schools' AND `T1`.`Enrollment (Ages 5-17)` IS NOT NULL ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST LIMIT 3 "
+        },
+        "status": "success",
+        "execution_time": 0.0
+    }
+]

@@ -1,0 +1,940 @@
+[
+    {
+        "tool_name": "extract_keywords",
+        "keywords": [
+            "zip code",
+            "charter schools",
+            "Fresno County Office of Education",
+            "Charter School (Y/N)",
+            "1"
+        ],
+        "status": "success",
+        "execution_time": 4.9
+    },
+    {
+        "tool_name": "retrieve_entity",
+        "similar_columns": {
+            "schools": [
+                "School",
+                "County",
+                "Charter",
+                "Zip"
+            ],
+            "frpm": [
+                "Charter School (Y/N)"
+            ]
+        },
+        "schema_with_examples": {
+            "schools": {
+                "School": [
+                    "Epic Charter School",
+                    "Fresno County Court",
+                    "Fresno County Court",
+                    "Epic Charter School",
+                    "Inspire Charter School"
+                ],
+                "City": [
+                    "Fresno"
+                ],
+                "MailCity": [
+                    "Fresno"
+                ],
+                "District": [
+                    "Fresno County Office of Education"
+                ],
+                "County": [
+                    "Fresno"
+                ],
+                "Ext": [
+                    "10"
+                ],
+                "GSserved": [
+                    "10"
+                ]
+            },
+            "satscores": {
+                "sname": [
+                    "ASA Charter"
+                ],
+                "dname": [
+                    "Fresno County Office of Education"
+                ],
+                "cname": [
+                    "Fresno"
+                ]
+            },
+            "frpm": {
+                "School Name": [
+                    "Fresno County Court",
+                    "Fresno County Court"
+                ],
+                "District Name": [
+                    "Fresno County Office of Education"
+                ],
+                "County Name": [
+                    "Fresno"
+                ]
+            }
+        },
+        "status": "success",
+        "execution_time": 300.3
+    },
+    {
+        "tool_name": "retrieve_context",
+        "schema_with_descriptions": {
+            "frpm": {
+                "charter school number": {
+                    "column_name": "",
+                    "column_description": "Charter School Number",
+                    "value_description": ""
+                },
+                "charter school (y/n)": {
+                    "column_name": "",
+                    "column_description": "Charter School (Y/N)",
+                    "value_description": "0: N; 1: Y"
+                }
+            },
+            "schools": {
+                "charternum": {
+                    "column_name": "",
+                    "column_description": "The charter school number,",
+                    "value_description": "4-digit number assigned to a charter school."
+                },
+                "charter": {
+                    "column_name": "",
+                    "column_description": "This field identifies a charter school.",
+                    "value_description": "The field is coded as follows:  \u00b7\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0 1 = The school is a charter  \u00b7\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0 0 = The school is not a charter"
+                },
+                "doc": {
+                    "column_name": "District Ownership Code",
+                    "column_description": "District Ownership Code",
+                    "value_description": "The District Ownership Code (DOC) is the numeric code used to identify the category of the Administrative Authority. \u2022       00 - County Office of Education \u2022       02 \u2013 State Board of Education \u2022       03 \u2013 Statewide Benefit Charter \u2022       31 \u2013 State Special Schools \u2022       34 \u2013 Non-school Location* \u2022       52 \u2013 Elementary School District \u2022       54 \u2013 Unified School District \u2022       56 \u2013 High School District \u2022       98 \u2013 Regional Occupational Center/Program (ROC/P)  *Only the California Education Authority has been included in the non-school location category."
+                },
+                "soc": {
+                    "column_name": "School Ownership Code",
+                    "column_description": "The School Ownership Code is a numeric code used to identify the type of school.",
+                    "value_description": "\u2022      08 - Preschool       \u2022       09 \u2013 Special Education Schools (Public) \u2022      11 \u2013 Youth Authority Facilities (CEA) \u2022       13 \u2013 Opportunity Schools \u2022       14 \u2013 Juvenile Court Schools \u2022       15 \u2013 Other County or District Programs \u2022       31 \u2013 State Special Schools \u2022       60 \u2013 Elementary School (Public) \u2022       61 \u2013 Elementary School in 1 School District (Public) \u2022       62 \u2013 Intermediate/Middle Schools (Public) \u2022       63 \u2013 Alternative Schools of Choice \u2022       64 \u2013 Junior High Schools (Public) \u2022       65 \u2013 K-12 Schools (Public) \u2022       66 \u2013 High Schools (Public) \u2022       67 \u2013 High Schools in 1 School District (Public) \u2022       68 \u2013 Continuation High Schools \u2022       69 \u2013 District Community Day Schools \u2022       70 \u2013 Adult Education Centers \u2022       98 \u2013 Regional Occupational Center/Program (ROC/P)"
+                },
+                "fundingtype": {
+                    "column_name": "",
+                    "column_description": "Indicates the charter school funding type",
+                    "value_description": "Values are as follows:  \u00b7\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0 Not in CS (California School) funding model  \u00b7\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0 Locally funded  \u00b7\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0 Directly funded"
+                }
+            }
+        },
+        "status": "success",
+        "execution_time": 102.1
+    },
+    {
+        "tool_name": "generate_candidate",
+        "node_type": "generate_candidate",
+        "generation_based_candidates": [
+            {
+                "template_name": "generate_candidate_one",
+                "candidates": [
+                    " SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T2.`District Name` = 'Fresno County Office of Education' ",
+                    " SELECT T3.Zip FROM frpm AS T1 INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T3.District = 'Fresno County Office of Education' ",
+                    " SELECT T1.zip  FROM schools AS T1  INNER JOIN frpm AS T2 ON T1.CDSCode = T2.School_Code  WHERE T1.Charter = 1 AND T1.District = 'Fresno County Office of Education'; ",
+                    " SELECT T3.Zip FROM frpm AS T1 INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T1.`District Name` = 'Fresno County Office of Education' ",
+                    " SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.District = 'Fresno County Office of Education' ",
+                    " SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.District = 'Fresno County Office of Education' ",
+                    " SELECT T2.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.District = 'Fresno County Office of Education' ",
+                    " SELECT T3.MailZip FROM schools AS T3 INNER JOIN frpm AS T2 ON T3.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T2.`District Name` = 'Fresno County Office of Education' ",
+                    " SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.District = 'Fresno County Office of Education' ",
+                    " SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.DOC = 'Fresno County Office of Education' "
+                ]
+            },
+            {
+                "template_name": "generate_candidate_two",
+                "candidates": [
+                    " SELECT T2.Zip  FROM frpm AS T1  INNER JOIN schools AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T1.`Charter School (Y/N)` = 1 AND T1.`District Name` = 'Fresno County Office of Education' ",
+                    " SELECT DISTINCT T1.MailZip  FROM schools AS T1  INNER JOIN frpm AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T2.`Charter School (Y/N)` = 1 AND T1.District = 'Fresno County Office of Education' AND T1.MailZip IS NOT NULL ",
+                    " SELECT T3.Zip FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T2.District = 'Fresno County Office of Education' ",
+                    " SELECT DISTINCT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.DOCType = 'Fresno County Office of Education' ",
+                    " SELECT DISTINCT T2.Zip FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T1.`District Name` = 'Fresno County Office of Education' ",
+                    " SELECT DISTINCT T3.Zip FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T3 ON T2.cds = T3.cds WHERE T1.`District Name` = 'Fresno County Office of Education' AND T1.`Charter School (Y/N)` = 1 ",
+                    " SELECT DISTINCT T1.Zip  FROM schools AS T1  INNER JOIN frpm AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T1.DOCType = 'County Office of Education (COE)'  AND T2.`Charter School (Y/N)` = 1 ",
+                    " SELECT DISTINCT T3.Zip  FROM frpm AS T1  INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode  WHERE T1.`Charter School (Y/N)` = 1 AND T2.District = 'Fresno County Office of Education' ",
+                    " SELECT DISTINCT T3.MailZip FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T3 ON T2.CDSCode = T3.cds WHERE T1.`Charter School (Y/N)` = 1 AND T2.District = 'Fresno County Office of Education' ",
+                    " SELECT DISTINCT T1.Zip  FROM schools AS T1  INNER JOIN frpm AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T2.`Charter School (Y/N)` = 1 AND T1.DOCType = 'County Office of Education (COE)' "
+                ]
+            }
+        ],
+        "candidates": [
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T2.`District Name` = 'Fresno County Office of Education' ",
+                "plan": "**Question:** Please list the zip code of all the charter schools in Fresno County Office of Education.\n**Evidence:** Charter schools refers to `Charter School (Y/N)` = 1 in the table `frpm`.\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the zip code of all the charter schools in Fresno County Office of Education.\n    * **Analysis:** We need to find the `zip` codes of charter schools in the `schools` table. We know that charter schools are identified by `Charter School (Y/N) = 1` in the `frpm` table. We also need to filter by `District Name = 'Fresno County Office of Education'` in the `frpm` table.\n    * **Pseudo SQL:** SELECT `T2`.`Zip` FROM `schools` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE <charter schools> AND <Fresno County Office of Education>\n\n    * **Sub-question 1:** charter schools\n        * **Analysis:** We need to filter the `frpm` table to include only those entries where `Charter School (Y/N) = 1`.\n        * **Pseudo SQL:** `T2`.`Charter School (Y/N)` = 1\n\n    * **Sub-question 2:** Fresno County Office of Education\n        * **Analysis:** We need to filter the `frpm` table to include only those entries where `District Name = 'Fresno County Office of Education'`.\n        * **Pseudo SQL:** `T2`.`District Name` = 'Fresno County Office of Education'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (charter schools):**\n    * **SQL:** `T2`.`Charter School (Y/N)` = 1\n\n* **Sub-question 2 (Fresno County Office of Education):**\n    * **SQL:** `T2`.`District Name` = 'Fresno County Office of Education'\n\n* **Main Question (zip codes of charter schools):**\n    * **SQL:** SELECT `T1`.`Zip` FROM `schools` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T2`.`Charter School (Y/N)` = 1 AND `T2`.`District Name` = 'Fresno County Office of Education'\n\n**3. Simplification and Optimization:**\n\n* The query in step 2 is already quite optimized. We are using `INNER JOIN` to combine `schools` and `frpm` tables based on the `CDSCode` foreign key relationship.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T3.Zip FROM frpm AS T1 INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T3.District = 'Fresno County Office of Education' ",
+                "plan": "**Question:** Please list the zip code of all the charter schools in Fresno County Office of Education.\n**Evidence:** Charter schools refers to `Charter School (Y/N)` = 1 in the table frpm\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the zip code of all the charter schools in Fresno County Office of Education.\n    * **Analysis:** The question asks for the `zip` codes of charter schools that belong to the \"Fresno County Office of Education\" district. We need to join the `frpm` and `schools` tables on `CDSCode` to get the relevant information and filter based on the `Charter School (Y/N)` column and the `District` column.\n    * **Pseudo SQL:** SELECT `T3`.`Zip` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T3` ON `T1`.`CDSCode` = `T3`.`CDSCode` WHERE <charter schools> AND <Fresno County Office of Education>\n\n    * **Sub-question 1:** charter schools\n        * **Analysis:** We need to filter the `frpm` table to include only those rows where `Charter School (Y/N)` = 1.\n        * **Pseudo SQL:** `T1`.`Charter School (Y/N)` = 1\n\n    * **Sub-question 2:** Fresno County Office of Education\n        * **Analysis:** We need to filter the `schools` table to include only those rows where `District` = 'Fresno County Office of Education'.\n        * **Pseudo SQL:** `T3`.`District` = 'Fresno County Office of Education'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (charter schools):**\n    * **SQL:** `T1`.`Charter School (Y/N)` = 1\n\n* **Sub-question 2 (Fresno County Office of Education):**\n    * **SQL:** `T3`.`District` = 'Fresno County Office of Education'\n\n* **Main Question (zip codes of charter schools):**\n    * **SQL:** SELECT `T3`.`Zip` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T3` ON `T1`.`CDSCode` = `T3`.`CDSCode` WHERE `T1`.`Charter School (Y/N)` = 1 AND `T3`.`District` = 'Fresno County Office of Education'\n\n**3. Simplification and Optimization:**\n\n* The final SQL query from step 2 is already quite efficient and does not require further optimization.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T1.zip  FROM schools AS T1  INNER JOIN frpm AS T2 ON T1.CDSCode = T2.School_Code  WHERE T1.Charter = 1 AND T1.District = 'Fresno County Office of Education'; ",
+                "plan": "**Question:** Please list the zip code of all the charter schools in Fresno County Office of Education.\n**Evidence:** Charter schools refers to `Charter School (Y/N)` = 1 in the table frpm.\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the zip code of all the charter schools in Fresno County Office of Education.\n    * **Analysis:** The question asks for the `zip` codes of charter schools. We need to filter the `schools` table to get the `zip` codes of schools that are charter schools and belong to the \"Fresno County Office of Education\".\n    * **Pseudo SQL:** SELECT `T1`.`zip` FROM `schools` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`CDSCode` = `T2`.`School Code` WHERE <charter schools> AND <Fresno County Office of Education>\n\n    * **Sub-question 1:** charter schools\n        * **Analysis:** We need to filter the `schools` table to only include charter schools, which can be identified by the `Charter` column being equal to 1 in the `schools` table.\n        * **Pseudo SQL:** `T1`.`Charter` = 1\n\n    * **Sub-question 2:** Fresno County Office of Education\n        * **Analysis:** We need to filter the `schools` table to only include schools that belong to the \"Fresno County Office of Education\", which can be identified by the `District` column in the `schools` table.\n        * **Pseudo SQL:** `T1`.`District` = 'Fresno County Office of Education'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (charter schools):**\n    * **SQL:** `T1`.`Charter` = 1\n\n* **Sub-question 2 (Fresno County Office of Education):**\n    * **SQL:** `T1`.`District` = 'Fresno County Office of Education'\n\n* **Main Question (list zip codes):**\n    * **SQL:** SELECT `T1`.`zip` FROM `schools` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`CDSCode` = `T2`.`School Code` WHERE `T1`.`Charter` = 1 AND `T1`.`District` = 'Fresno County Office of Education'\n\n**3. Simplification and Optimization:**\n\n* The query in step 2 is already quite optimized. We are joining the `schools` and `frpm` tables based on `CDSCode` and applying the necessary filters.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T3.Zip FROM frpm AS T1 INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T1.`District Name` = 'Fresno County Office of Education' ",
+                "plan": "**Question:** Please list the zip code of all the charter schools in Fresno County Office of Education.\n**Evidence:** Charter schools refers to `Charter School (Y/N)` = 1 in the table frpm\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the zip code of all the charter schools in Fresno County Office of Education.\n    * **Analysis:** We need to find the zip codes of schools that are charter schools and belong to the Fresno County Office of Education. We will use the `frpm` and `schools` tables to get the required information. The `schools` table contains the `zip` column and the `frpm` table contains the `Charter School (Y/N)` column.\n    * **Pseudo SQL:** SELECT `T3`.`Zip` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T3` ON `T1`.`CDSCode` = `T3`.`CDSCode` WHERE <charter schools> AND <Fresno County Office of Education>\n\n    * **Sub-question 1:** charter schools\n        * **Analysis:** We need to filter the `frpm` table to only include rows where `Charter School (Y/N)` = 1.\n        * **Pseudo SQL:** `T1`.`Charter School (Y/N)` = 1\n\n    * **Sub-question 2:** Fresno County Office of Education\n        * **Analysis:** We need to filter the `schools` table to only include rows where `District Name` = 'Fresno County Office of Education'. However, this information is in the `frpm` table, so we need to filter on `T1`.`District Name` = 'Fresno County Office of Education'.\n        * **Pseudo SQL:** `T1`.`District Name` = 'Fresno County Office of Education'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (charter schools):**\n    * **SQL:** `T1`.`Charter School (Y/N)` = 1\n\n* **Sub-question 2 (Fresno County Office of Education):**\n    * **SQL:** `T1`.`District Name` = 'Fresno County Office of Education'\n\n* **Main Question (zip codes of charter schools):**\n    * **SQL:** SELECT `T3`.`Zip` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T3` ON `T1`.`CDSCode` = `T3`.`CDSCode` WHERE `T1`.`Charter School (Y/N)` = 1 AND `T1`.`District Name` = 'Fresno County Office of Education'\n\n**3. Simplification and Optimization:**\n\n* The final SQL query from step 2 is already quite efficient. It uses `INNER JOIN` to combine the `frpm` and `schools` tables based on the `CDSCode` column, and applies the necessary filters to get the desired result.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.District = 'Fresno County Office of Education' ",
+                "plan": "**Question:** Please list the zip code of all the charter schools in Fresno County Office of Education.\n**Evidence:** Charter schools refers to `Charter School (Y/N)` = 1 in the table `frpm`.\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the zip code of all the charter schools in Fresno County Office of Education.\n    * **Analysis:** The question asks for the `Zip` codes of charter schools. We need to filter the `schools` table to only include those that are charter schools and belong to the \"Fresno County Office of Education\".\n    * **Pseudo SQL:** SELECT `T1`.`Zip` FROM `schools` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE <charter schools> AND <Fresno County Office of Education>\n\n    * **Sub-question 1:** charter schools\n        * **Analysis:** This condition is specified in the `frpm` table where `Charter School (Y/N)` = 1.\n        * **Pseudo SQL:** `T2`.`Charter School (Y/N)` = 1\n\n    * **Sub-question 2:** Fresno County Office of Education\n        * **Analysis:** This condition is specified in the `schools` table where `District` = 'Fresno County Office of Education'.\n        * **Pseudo SQL:** `T1`.`District` = 'Fresno County Office of Education'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (charter schools):**\n    * **SQL:** `T2`.`Charter School (Y/N)` = 1\n\n* **Sub-question 2 (Fresno County Office of Education):**\n    * **SQL:** `T1`.`District` = 'Fresno County Office of Education'\n\n* **Main Question (zip codes of charter schools):**\n    * **SQL:** SELECT `T1`.`Zip` FROM `schools` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T2`.`Charter School (Y/N)` = 1 AND `T1`.`District` = 'Fresno County Office of Education'\n\n**3. Simplification and Optimization:**\n\n* The query is already quite straightforward and doesn't require further optimization.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.District = 'Fresno County Office of Education' ",
+                "plan": "**Question:** Please list the zip code of all the charter schools in Fresno County Office of Education.\n**Evidence:** Charter schools refers to `Charter School (Y/N)` = 1 in the table `frpm`.\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the zip code of all the charter schools in Fresno County Office of Education.\n    * **Analysis:** The question requires us to retrieve the `Zip` column from the `schools` table. We need to filter the schools to only include those that are charter schools and belong to the \"Fresno County Office of Education\".\n    * **Pseudo SQL:** SELECT `T1`.`Zip` FROM `schools` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE <charter schools> AND <Fresno County Office of Education>\n\n    * **Sub-question 1:** charter schools\n        * **Analysis:** This condition can be checked against the `Charter School (Y/N)` column in the `frpm` table.\n        * **Pseudo SQL:** `T2`.`Charter School (Y/N)` = 1\n\n    * **Sub-question 2:** Fresno County Office of Education\n        * **Analysis:** This condition can be checked against the `District` column in the `schools` table.\n        * **Pseudo SQL:** `T1`.`District` = 'Fresno County Office of Education'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (charter schools):**\n    * **SQL:** `T2`.`Charter School (Y/N)` = 1\n\n* **Sub-question 2 (Fresno County Office of Education):**\n    * **SQL:** `T1`.`District` = 'Fresno County Office of Education'\n\n* **Main Question (zip codes):**\n    * **SQL:** SELECT `T1`.`Zip` FROM `schools` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T2`.`Charter School (Y/N)` = 1 AND `T1`.`District` = 'Fresno County Office of Education'\n\n**3. Simplification and Optimization:**\n\n* The SQL query from step 2 is already quite efficient. It uses `INNER JOIN` to combine the `schools` and `frpm` tables based on the `CDSCode` foreign key, and applies the necessary filters in the `WHERE` clause.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T2.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.District = 'Fresno County Office of Education' ",
+                "plan": "**Question:** Please list the zip code of all the charter schools in Fresno County Office of Education.\n**Evidence:** Charter schools refers to `Charter School (Y/N)` = 1 in the table `frpm`.\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the zip code of all the charter schools in Fresno County Office of Education.\n    * **Analysis:** The question is asking for the `Zip` column from the `schools` table, filtered by `Charter School (Y/N)` = 1 in the `frpm` table and `District` = 'Fresno County Office of Education' in the `schools` table. We need to join `schools` and `frpm` tables on `CDSCode` to link the data.\n    * **Pseudo SQL:** SELECT `T2`.`Zip` FROM `schools` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE <charter school> AND <Fresno County Office of Education>\n\n    * **Sub-question 1:** charter school\n        * **Analysis:** This condition is specified in the `frpm` table using the `Charter School (Y/N)` column.\n        * **Pseudo SQL:** `T2`.`Charter School (Y/N)` = 1\n\n    * **Sub-question 2:** Fresno County Office of Education\n        * **Analysis:** This condition is specified in the `schools` table using the `District` column.\n        * **Pseudo SQL:** `T1`.`District` = 'Fresno County Office of Education'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (charter school):**\n    * **SQL:** `T2`.`Charter School (Y/N)` = 1\n\n* **Sub-question 2 (Fresno County Office of Education):**\n    * **SQL:** `T1`.`District` = 'Fresno County Office of Education'\n\n* **Main Question (zip codes of charter schools):**\n    * **SQL:** SELECT `T2`.`Zip` FROM `schools` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T2`.`Charter School (Y/N)` = 1 AND `T1`.`District` = 'Fresno County Office of Education'\n\n**3. Simplification and Optimization:**\n\n* The SQL query from step 2 is already quite efficient. It correctly joins the necessary tables and applies the appropriate filters.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T3.MailZip FROM schools AS T3 INNER JOIN frpm AS T2 ON T3.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T2.`District Name` = 'Fresno County Office of Education' ",
+                "plan": "**Question:** Please list the zip code of all the charter schools in Fresno County Office of Education.\n**Evidence:** Charter schools refers to `Charter School (Y/N)` = 1 in the table `frpm`.\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the zip code of all the charter schools in Fresno County Office of Education.\n    * **Analysis:** We need to retrieve the `MailZip` column from the `schools` table. The `schools` table needs to be joined with the `frpm` table to filter for charter schools and to match the district name \"Fresno County Office of Education\".\n    * **Pseudo SQL:** SELECT `T3`.`MailZip` FROM `schools` AS `T3` INNER JOIN `frpm` AS `T2` ON `T3`.`CDSCode` = `T2`.`CDSCode` WHERE <charter schools> AND <Fresno County Office of Education>\n\n    * **Sub-question 1:** charter schools\n        * **Analysis:** This is a simple filter on the `frpm` table where `Charter School (Y/N)` equals 1.\n        * **Pseudo SQL:** `T2`.`Charter School (Y/N)` = 1\n\n    * **Sub-question 2:** Fresno County Office of Education\n        * **Analysis:** This is a simple filter on the `frpm` table where `District Name` equals \"Fresno County Office of Education\".\n        * **Pseudo SQL:** `T2`.`District Name` = 'Fresno County Office of Education'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (charter schools):**\n    * **SQL:** `T2`.`Charter School (Y/N)` = 1\n\n* **Sub-question 2 (Fresno County Office of Education):**\n    * **SQL:** `T2`.`District Name` = 'Fresno County Office of Education'\n\n* **Main Question (zip codes of charter schools):**\n    * **SQL:** SELECT `T3`.`MailZip` FROM `schools` AS `T3` INNER JOIN `frpm` AS `T2` ON `T3`.`CDSCode` = `T2`.`CDSCode` WHERE `T2`.`Charter School (Y/N)` = 1 AND `T2`.`District Name` = 'Fresno County Office of Education'\n\n**3. Simplification and Optimization:**\n\n* The query in step 2 is already quite optimized. It uses a `JOIN` to combine the `schools` and `frpm` tables and applies the necessary filters to retrieve the desired zip codes.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.District = 'Fresno County Office of Education' ",
+                "plan": "**Question:** Please list the zip code of all the charter schools in Fresno County Office of Education.\n**Evidence:** Charter schools refers to `Charter School (Y/N)` = 1 in the table `frpm`.\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the zip code of all the charter schools in Fresno County Office of Education.\n    * **Analysis:** The question is asking for the `Zip` column from the `schools` table, filtered by `Charter School (Y/N)` = 1 in the `frpm` table and `District` = 'Fresno County Office of Education' in the `schools` table.\n    * **Pseudo SQL:** SELECT `T1`.`Zip` FROM `schools` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE <charter school> AND <Fresno County Office of Education>\n\n    * **Sub-question 1:** charter school\n        * **Analysis:** This is a simple filter on the `frpm` table where `Charter School (Y/N)` = 1.\n        * **Pseudo SQL:** `T2`.`Charter School (Y/N)` = 1\n\n    * **Sub-question 2:** Fresno County Office of Education\n        * **Analysis:** This is a simple filter on the `schools` table where `District` = 'Fresno County Office of Education'.\n        * **Pseudo SQL:** `T1`.`District` = 'Fresno County Office of Education'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (charter school):**\n    * **SQL:** `T2`.`Charter School (Y/N)` = 1\n\n* **Sub-question 2 (Fresno County Office of Education):**\n    * **SQL:** `T1`.`District` = 'Fresno County Office of Education'\n\n* **Main Question (zip codes of charter schools):**\n    * **SQL:** SELECT `T1`.`Zip` FROM `schools` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T2`.`Charter School (Y/N)` = 1 AND `T1`.`District` = 'Fresno County Office of Education'\n\n**3. Simplification and Optimization:**\n\n* The SQL query from step 2 is already quite efficient. We're using `INNER JOIN` to combine the `schools` and `frpm` tables based on the `CDSCode` foreign key relationship and applying the necessary filters.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.DOC = 'Fresno County Office of Education' ",
+                "plan": "**Question:** Please list the zip code of all the charter schools in Fresno County Office of Education.\n**Evidence:** Charter schools refers to `Charter School (Y/N)` = 1 in the table `frpm`.\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Please list the zip code of all the charter schools in Fresno County Office of Education.\n    * **Analysis:** The question asks for the `Zip` codes of charter schools that belong to the \"Fresno County Office of Education.\" We need to join the `schools` and `frpm` tables on `CDSCode` and filter by `Charter School (Y/N)` = 1 and `DOC` = 'Fresno County Office of Education'.\n    * **Pseudo SQL:** SELECT `T1`.`Zip` FROM `schools` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE <charter schools> AND <Fresno County Office of Education>\n\n    * **Sub-question 1:** charter schools\n        * **Analysis:** We need to filter the `frpm` table to include only those rows where `Charter School (Y/N)` = 1.\n        * **Pseudo SQL:** `T2`.`Charter School (Y/N)` = 1\n\n    * **Sub-question 2:** Fresno County Office of Education\n        * **Analysis:** We need to filter the `schools` table to include only those rows where `DOC` = 'Fresno County Office of Education'.\n        * **Pseudo SQL:** `T1`.`DOC` = 'Fresno County Office of Education'\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (charter schools):**\n    * **SQL:** `T2`.`Charter School (Y/N)` = 1\n\n* **Sub-question 2 (Fresno County Office of Education):**\n    * **SQL:** `T1`.`DOC` = 'Fresno County Office of Education'\n\n* **Main Question (zip codes of charter schools):**\n    * **SQL:** SELECT `T1`.`Zip` FROM `schools` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T2`.`Charter School (Y/N)` = 1 AND `T1`.`DOC` = 'Fresno County Office of Education'\n\n**3. Simplification and Optimization:**\n\n* The SQL query is already straightforward and does not require further optimization.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T2.Zip  FROM frpm AS T1  INNER JOIN schools AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T1.`Charter School (Y/N)` = 1 AND T1.`District Name` = 'Fresno County Office of Education' ",
+                "plan": "**Question**: Please list the zip code of all the charter schools in Fresno County Office of Education.\n**Evidence**: Charter schools refers to `Charter School (Y/N)` = 1 in the table frpm\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the frpm and schools tables to access relevant data.\n\n** Identify Charter Schools in Fresno County Office of Education: **\n1. Scan the frpm table: Start reading rows from the frpm table.\n2. Filter by Charter School (Y/N) = 1: Select only those rows where the `Charter School (Y/N)` column is 1, indicating that the school is a charter school.\n3. Join with schools table: Use the CDSCode column to join the frpm table with the schools table to get additional details about the schools.\n4. Filter by District Name: Ensure that the `District Name` column in the frpm table is 'Fresno County Office of Education'.\n5. Extract Zip Codes: From the joined records, retrieve the Zip codes from the schools table.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final list of zip codes for presentation.\n2. Output the final result: Deliver the zip codes of the charter schools in Fresno County Office of Education.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT DISTINCT T1.MailZip  FROM schools AS T1  INNER JOIN frpm AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T2.`Charter School (Y/N)` = 1 AND T1.District = 'Fresno County Office of Education' AND T1.MailZip IS NOT NULL ",
+                "plan": "**Question**: Please list the zip code of all the charter schools in Fresno County Office of Education.\n**Evidence**: Charter schools refers to `Charter School (Y/N)` = 1 in the table `frpm`.\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the `schools`, `frpm`, and `satscores` tables to access relevant data.\n\n** Identify Charter Schools in Fresno County Office of Education: **\n1. Scan the `frpm` table: Start reading rows from the `frpm` table.\n2. Filter by Charter School (Y/N) = 1: Select only those rows where `Charter School (Y/N)` is 1, indicating that the school is a charter school.\n3. Join with `schools` table: Match each charter school to the corresponding school by joining on `CDSCode`.\n4. Filter by District: Select only those rows where `District` is 'Fresno County Office of Education'.\n\n** Extract Zip Codes: **\n1. Extract the `MailZip` column: For each matching row, retrieve the value from the `MailZip` column in the `schools` table.\n2. Ensure distinct zip codes: Use `SELECT DISTINCT` to avoid duplicate zip codes in the final result.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final list of zip codes for presentation.\n2. Output the final result: Deliver the list of zip codes of charter schools in Fresno County Office of Education.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T3.Zip FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T2.District = 'Fresno County Office of Education' ",
+                "plan": "**Question**: Please list the zip code of all the charter schools in Fresno County Office of Education.\n**Evidence**: Charter schools refers to `Charter School (Y/N)` = 1 in the table frpm\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment for query execution, including initializing variables and temporary storage.\n2. Open required tables: Access the frpm, schools, and satscores tables to retrieve relevant data.\n\n** Identify Charter Schools in Fresno County Office of Education: **\n1. Scan the frpm table: Start reading rows from the frpm table.\n2. Filter by Charter School (Y/N): Select only those rows where `Charter School (Y/N)` equals 1, indicating that the school is a charter school.\n3. Join with schools table: Use the CDSCode foreign key to join the frpm table with the schools table to access additional details about the schools.\n4. Filter by District Name: Select only those rows where `District Name` equals 'Fresno County Office of Education'.\n5. Extract Zip Codes: From the matched rows, retrieve the Zip column from the schools table.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final list of zip codes for presentation.\n2. Output the final result: Deliver the list of zip codes of the charter schools in Fresno County Office of Education.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT DISTINCT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.DOCType = 'Fresno County Office of Education' ",
+                "plan": "**Question**: Please list the zip code of all the charter schools in Fresno County Office of Education.\n**Evidence**: Charter schools refers to `Charter School (Y/N)` = 1 in the table frpm\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the schools and frpm tables to access relevant data.\n\n** Filter and Identify Charter Schools: **\n1. Scan the frpm table: Start reading rows from the frpm table.\n2. Filter by Charter School (Y/N) = 1: Select only those rows where the `Charter School (Y/N)` column is equal to 1, indicating that the school is a charter school.\n3. Join with schools table: Match each charter school to its corresponding entry in the schools table based on the CDSCode field.\n\n** Filter by Administrative Authority: **\n1. Filter by DOCType: In the schools table, select only those rows where the `DOCType` column is equal to 'Fresno County Office of Education'.\n\n** Extract Zip Codes: **\n1. Extract the Zip codes: From the matched rows in the schools table, retrieve the Zip column values.\n2. Ensure distinct Zip codes: Use `SELECT DISTINCT` to ensure that each Zip code appears only once in the result set.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final list of Zip codes for presentation.\n2. Output the final result: Deliver the Zip codes of the charter schools in Fresno County Office of Education.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT DISTINCT T2.Zip FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T1.`District Name` = 'Fresno County Office of Education' ",
+                "plan": "**Question**: Please list the zip code of all the charter schools in Fresno County Office of Education.\n**Evidence**: Charter schools refers to `Charter School (Y/N)` = 1 in the table frpm\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the frpm, schools, and satscores tables to access relevant data.\n\n** Identify Charter Schools: **\n1. Scan the frpm table: Start reading rows from the frpm table.\n2. Filter by Charter School (Y/N): Select only those rows where `Charter School (Y/N)` equals 1, indicating that the school is a charter school.\n3. Join with schools table: Match each charter school to its corresponding entry in the schools table using the CDSCode as the common key.\n\n** Filter by District: **\n1. Extract the district name: For each matched school, retrieve the `District Name` from the frpm table.\n2. Filter by Fresno County Office of Education: Select only those rows where the `District Name` is 'Fresno County Office of Education'.\n\n** Retrieve Zip Codes: **\n1. Extract the zip code: From the matched schools, retrieve the `Zip` column from the schools table.\n2. Ensure distinct zip codes: Use `SELECT DISTINCT` to avoid duplicate zip codes in the result set.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final list of zip codes for presentation.\n2. Output the final result: Deliver the zip codes of the charter schools in Fresno County Office of Education.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT DISTINCT T3.Zip FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T3 ON T2.cds = T3.cds WHERE T1.`District Name` = 'Fresno County Office of Education' AND T1.`Charter School (Y/N)` = 1 ",
+                "plan": "**Question**: Please list the zip code of all the charter schools in Fresno County Office of Education.\n**Evidence**: Charter schools refers to `Charter School (Y/N)` = 1 in the table `frpm`\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the `frpm`, `schools`, and `satscores` tables to access relevant data.\n\n** Identify Charter Schools in Fresno County Office of Education: **\n1. Scan the `frpm` table: Start reading rows from the `frpm` table.\n2. Filter by Charter School (Y/N): Select only those rows where `Charter School (Y/N)` equals 1, indicating that the school is a charter school.\n3. Join with `schools` table: Match each charter school to its corresponding record in the `schools` table using the `CDSCode` foreign key.\n4. Filter by District Name: Ensure that the `District Name` in the `frpm` table is 'Fresno County Office of Education'.\n5. Join with `satscores` table: Match each charter school to its corresponding record in the `satscores` table using the `cds` foreign key.\n\n** Extract Zip Codes: **\n1. Extract the `Zip` column: Retrieve the `Zip` column from the `schools` table for each matching charter school.\n2. Ensure distinct zip codes: Use `SELECT DISTINCT` to avoid duplicate zip codes in the final result.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final list of zip codes for presentation.\n2. Output the final result: Deliver the zip codes of the charter schools in Fresno County Office of Education.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT DISTINCT T1.Zip  FROM schools AS T1  INNER JOIN frpm AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T1.DOCType = 'County Office of Education (COE)'  AND T2.`Charter School (Y/N)` = 1 ",
+                "plan": "**Question**: Please list the zip code of all the charter schools in Fresno County Office of Education.\n**Evidence**: Charter schools refers to `Charter School (Y/N)` = 1 in the table frpm\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the schools and frpm tables to access relevant data.\n\n** Identify Charter Schools in Fresno County Office of Education: **\n1. Join schools and frpm tables: Merge records from the schools and frpm tables based on the CDSCode foreign key.\n2. Filter by DOC: Use the DOC column in the schools table to identify records where DOCType is 'County Office of Education (COE)'.\n3. Filter by Charter School: Use the `Charter School (Y/N)` column in the frpm table to identify records where the value is 1, indicating a charter school.\n4. Extract Zip Codes: For each matching record, retrieve the Zip column from the schools table.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final list of zip codes for presentation.\n2. Output the final result: Deliver the list of zip codes of charter schools in Fresno County Office of Education.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT DISTINCT T3.Zip  FROM frpm AS T1  INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode  WHERE T1.`Charter School (Y/N)` = 1 AND T2.District = 'Fresno County Office of Education' ",
+                "plan": "**Question**: Please list the zip code of all the charter schools in Fresno County Office of Education.\n**Evidence**: Charter schools refers to `Charter School (Y/N)` = 1 in the table frpm\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the frpm, schools, and satscores tables to access relevant data.\n\n** Identify Charter Schools in Fresno County Office of Education: **\n1. Scan the frpm table: Start reading rows from the frpm table.\n2. Filter by Charter School (Y/N): Select only those rows where `Charter School (Y/N)` equals 1, indicating that the school is a charter school.\n3. Join with schools table: Use the CDSCode to join the frpm table with the schools table to get additional details about the schools.\n4. Filter by District: Select only those rows where `District` in the schools table is 'Fresno County Office of Education'.\n5. Extract Zip codes: From the schools table, retrieve the Zip column for the charter schools in the specified district.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final list of zip codes for presentation.\n2. Output the final result: Deliver the list of zip codes as the query result.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT DISTINCT T3.MailZip FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T3 ON T2.CDSCode = T3.cds WHERE T1.`Charter School (Y/N)` = 1 AND T2.District = 'Fresno County Office of Education' ",
+                "plan": "**Question:** Please list the zip code of all the charter schools in Fresno County Office of Education.\n**Evidence:** Charter schools refers to `Charter School (Y/N)` = 1 in the table frpm.\n\n**Query Plan:**\n\n**Preparation Steps:**\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the frpm, schools, and satscores tables to access relevant data.\n\n**Identify Charter Schools in Fresno County Office of Education:**\n1. Scan the frpm table: Start reading rows from the frpm table.\n2. Filter by Charter School (Y/N): Select only those rows where `Charter School (Y/N)` is equal to 1, indicating that the school is a charter school.\n3. Join with schools table: Match each charter school to its corresponding entry in the schools table based on the `CDSCode` foreign key relationship.\n4. Filter by District Name: Ensure that the district name is 'Fresno County Office of Education'.\n5. Extract Zip Codes: Retrieve the `MailZip` column from the schools table for each matching charter school.\n\n**Count and Finalize the Results:**\n1. Collect unique zip codes: Ensure that each zip code is listed only once, even if multiple schools share the same zip code.\n2. Store and prepare the result: Once all zip codes have been processed, store the result and prepare it for output.\n\n**Deliver the Final Result:**\n1. Prepare the result for output: Format the final list of zip codes for presentation.\n2. Output the final result: Deliver the list of zip codes for all charter schools in Fresno County Office of Education.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT DISTINCT T1.Zip  FROM schools AS T1  INNER JOIN frpm AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T2.`Charter School (Y/N)` = 1 AND T1.DOCType = 'County Office of Education (COE)' ",
+                "plan": "**Question**: Please list the zip code of all the charter schools in Fresno County Office of Education.\n**Evidence**: Charter schools refers to `Charter School (Y/N)` = 1 in the table `frpm`\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the `schools` and `frpm` tables to access relevant data.\n\n** Identify Charter Schools in Fresno County Office of Education: **\n1. Scan the `frpm` table: Start reading rows from the `frpm` table.\n2. Filter by `Charter School (Y/N)` = 1: Select only those rows where the `Charter School (Y/N)` field is 1, indicating that the school is a charter school.\n3. Join with `schools` table: Match each charter school to the corresponding entry in the `schools` table using the `CDSCode` foreign key.\n4. Filter by `DOCType` = 'County Office of Education (COE)': Ensure that the school belongs to the Fresno County Office of Education by checking the `DOCType` field in the `schools` table.\n\n** Extract Zip Codes: **\n1. Extract the `Zip` field: For each matching row, retrieve the `Zip` field from the `schools` table.\n2. Ensure distinct zip codes: Use `SELECT DISTINCT` to avoid duplicate zip codes in the final result.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final list of zip codes for presentation.\n2. Output the final result: Deliver the zip codes of the charter schools in Fresno County Office of Education.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            }
+        ],
+        "status": "success",
+        "execution_time": 1736.3
+    },
+    {
+        "tool_name": "revise",
+        "original_SQL_id": "generate_candidate",
+        "refined_SQL_id": "revise_1",
+        "candidates": [
+            {
+                "refined_query": " SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T2.`District Name` = 'Fresno County Office of Education' "
+            },
+            {
+                "refined_query": " SELECT T3.Zip FROM frpm AS T1 INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T3.District = 'Fresno County Office of Education' "
+            },
+            {
+                "refined_query": " SELECT T1.zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.Charter = 1 AND T1.District = 'Fresno County Office of Education'; "
+            },
+            {
+                "refined_query": " SELECT T3.Zip FROM frpm AS T1 INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T1.`District Name` = 'Fresno County Office of Education' "
+            },
+            {
+                "refined_query": " SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.District = 'Fresno County Office of Education' "
+            },
+            {
+                "refined_query": " SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.District = 'Fresno County Office of Education' "
+            },
+            {
+                "refined_query": " SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.District = 'Fresno County Office of Education' "
+            },
+            {
+                "refined_query": " SELECT T3.MailZip FROM schools AS T3 INNER JOIN frpm AS T2 ON T3.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T2.`District Name` = 'Fresno County Office of Education' "
+            },
+            {
+                "refined_query": " SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.District = 'Fresno County Office of Education' "
+            },
+            {
+                "refined_query": " SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.District = 'Fresno County Office of Education' "
+            },
+            {
+                "refined_query": " SELECT T2.Zip  FROM frpm AS T1  INNER JOIN schools AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T1.`Charter School (Y/N)` = 1 AND T1.`District Name` = 'Fresno County Office of Education' "
+            },
+            {
+                "refined_query": " SELECT DISTINCT T1.MailZip  FROM schools AS T1  INNER JOIN frpm AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T2.`Charter School (Y/N)` = 1 AND T1.District = 'Fresno County Office of Education' AND T1.MailZip IS NOT NULL "
+            },
+            {
+                "refined_query": " SELECT T2.Zip FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T2.District = 'Fresno County Office of Education' "
+            },
+            {
+                "refined_query": " SELECT DISTINCT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T3 ON T1.cds = T3.cds WHERE T2.`Charter School (Y/N)` = 1 AND T3.dname = 'Fresno County Office of Education' "
+            },
+            {
+                "refined_query": " SELECT DISTINCT T2.Zip FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T1.`District Name` = 'Fresno County Office of Education' "
+            },
+            {
+                "refined_query": " SELECT DISTINCT T2.Zip FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T3 ON T2.cds = T3.cds WHERE T1.`District Name` = 'Fresno County Office of Education' AND T1.`Charter School (Y/N)` = 1 "
+            },
+            {
+                "refined_query": " SELECT DISTINCT T1.Zip  FROM schools AS T1  INNER JOIN frpm AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T1.DOCType = 'County Office of Education (COE)'  AND T2.`Charter School (Y/N)` = 1 "
+            },
+            {
+                "refined_query": " SELECT DISTINCT T2.Zip FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T2.District = 'Fresno County Office of Education' "
+            },
+            {
+                "refined_query": " SELECT DISTINCT T2.MailZip FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T2.District = 'Fresno County Office of Education' "
+            },
+            {
+                "refined_query": " SELECT DISTINCT T1.Zip  FROM schools AS T1  INNER JOIN frpm AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T2.`Charter School (Y/N)` = 1 AND T1.DOCType = 'County Office of Education (COE)' "
+            }
+        ],
+        "status": "success",
+        "execution_time": 503.8
+    },
+    {
+        "tool_name": "generate_unit_test",
+        "unit_tests": {
+            "unit_test_generation": [
+                "The answer SQL query should mention `schools` table with an alias.",
+                "The answer SQL query should mention `frpm` table with an alias.",
+                "The answer SQL query should use `INNER JOIN` on `CDSCode` field between `schools` and `frpm` tables.",
+                "The answer SQL query should filter `frpm` table's `Charter School (Y/N)` field for value 1.",
+                "The answer SQL query should filter `schools` table's `District` field for value 'Fresno County Office of Education'.",
+                "The answer SQL query should select `schools` table's `Zip` field.",
+                "The answer SQL query should not select `schools` table's `MailZip` field.",
+                "The answer SQL query should not filter `frpm` table's `District Name` field.",
+                "The answer SQL query should not use `DISTINCT` keyword unless necessary.",
+                "The answer SQL query should not filter `schools` table's `DOCType` field.",
+                "The answer SQL query should not have unnecessary conditions beyond those specified in the question.",
+                "The answer SQL query should not include any fields from the `satscores` table.",
+                "The answer SQL query should return rows matching the expected output of zip codes associated with charter schools in Fresno County Office of Education.",
+                "The answer SQL query should not return rows with null `Zip` values.",
+                "The answer SQL query should return rows where the `District` field matches 'Fresno County Office of Education'.",
+                "The answer SQL query should not return duplicate zip codes if they exist.",
+                "The answer SQL query should not return rows where `Charter School (Y/N)` is not 1.",
+                "The answer SQL query should return the exact number of rows corresponding to the correct zip codes.",
+                "The answer SQL query should not include any additional filtering criteria beyond what is required to answer the question.",
+                "The answer SQL query should efficiently join and filter the tables without unnecessary operations.",
+                "Only the best answer from the set of candidates that most accurately answers the question, given the database schema and hint should pass this test."
+            ]
+        },
+        "candidates": [
+            " SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T2.`District Name` = 'Fresno County Office of Education' ",
+            " SELECT T3.Zip FROM frpm AS T1 INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T3.District = 'Fresno County Office of Education' ",
+            " SELECT T1.zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.Charter = 1 AND T1.District = 'Fresno County Office of Education'; ",
+            " SELECT T3.Zip FROM frpm AS T1 INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T1.`District Name` = 'Fresno County Office of Education' ",
+            " SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.District = 'Fresno County Office of Education' ",
+            " SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.District = 'Fresno County Office of Education' ",
+            " SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.District = 'Fresno County Office of Education' ",
+            " SELECT T3.MailZip FROM schools AS T3 INNER JOIN frpm AS T2 ON T3.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T2.`District Name` = 'Fresno County Office of Education' ",
+            " SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.District = 'Fresno County Office of Education' ",
+            " SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.District = 'Fresno County Office of Education' ",
+            " SELECT T2.Zip  FROM frpm AS T1  INNER JOIN schools AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T1.`Charter School (Y/N)` = 1 AND T1.`District Name` = 'Fresno County Office of Education' ",
+            " SELECT DISTINCT T1.MailZip  FROM schools AS T1  INNER JOIN frpm AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T2.`Charter School (Y/N)` = 1 AND T1.District = 'Fresno County Office of Education' AND T1.MailZip IS NOT NULL ",
+            " SELECT T2.Zip FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T2.District = 'Fresno County Office of Education' ",
+            " SELECT DISTINCT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T3 ON T1.cds = T3.cds WHERE T2.`Charter School (Y/N)` = 1 AND T3.dname = 'Fresno County Office of Education' ",
+            " SELECT DISTINCT T2.Zip FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T1.`District Name` = 'Fresno County Office of Education' ",
+            " SELECT DISTINCT T2.Zip FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T3 ON T2.cds = T3.cds WHERE T1.`District Name` = 'Fresno County Office of Education' AND T1.`Charter School (Y/N)` = 1 ",
+            " SELECT DISTINCT T1.Zip  FROM schools AS T1  INNER JOIN frpm AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T1.DOCType = 'County Office of Education (COE)'  AND T2.`Charter School (Y/N)` = 1 ",
+            " SELECT DISTINCT T2.Zip FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T2.District = 'Fresno County Office of Education' ",
+            " SELECT DISTINCT T2.MailZip FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T2.District = 'Fresno County Office of Education' ",
+            " SELECT DISTINCT T1.Zip  FROM schools AS T1  INNER JOIN frpm AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T2.`Charter School (Y/N)` = 1 AND T1.DOCType = 'County Office of Education (COE)' "
+        ],
+        "status": "success",
+        "execution_time": 277.0
+    },
+    {
+        "tool_name": "evaluate",
+        "scores": [
+            21,
+            8,
+            18,
+            8,
+            21,
+            21,
+            21,
+            4,
+            21,
+            21,
+            20,
+            10,
+            21,
+            2,
+            20,
+            1,
+            2,
+            21,
+            5,
+            2
+        ],
+        "comparison_matrix": [
+            [
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1,
+                1,
+                0
+            ],
+            [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1,
+                0,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1,
+                0,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1,
+                0,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1,
+                0,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1
+            ],
+            [
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                0,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1,
+                0,
+                0
+            ],
+            [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1,
+                1,
+                0
+            ],
+            [
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1,
+                1,
+                0
+            ],
+            [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1
+            ],
+            [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1,
+                0,
+                0
+            ],
+            [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1,
+                0,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1,
+                0,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1,
+                0,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1,
+                0,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1,
+                0,
+                0
+            ],
+            [
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1,
+                0,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1,
+                0,
+                0
+            ],
+            [
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1,
+                0,
+                0
+            ]
+        ],
+        "candidates": [
+            " SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T2.`District Name` = 'Fresno County Office of Education' ",
+            " SELECT T3.Zip FROM frpm AS T1 INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T3.District = 'Fresno County Office of Education' ",
+            " SELECT T1.zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.Charter = 1 AND T1.District = 'Fresno County Office of Education'; ",
+            " SELECT T3.Zip FROM frpm AS T1 INNER JOIN schools AS T3 ON T1.CDSCode = T3.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T1.`District Name` = 'Fresno County Office of Education' ",
+            " SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.District = 'Fresno County Office of Education' ",
+            " SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.District = 'Fresno County Office of Education' ",
+            " SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.District = 'Fresno County Office of Education' ",
+            " SELECT T3.MailZip FROM schools AS T3 INNER JOIN frpm AS T2 ON T3.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T2.`District Name` = 'Fresno County Office of Education' ",
+            " SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.District = 'Fresno County Office of Education' ",
+            " SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.District = 'Fresno County Office of Education' ",
+            " SELECT T2.Zip  FROM frpm AS T1  INNER JOIN schools AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T1.`Charter School (Y/N)` = 1 AND T1.`District Name` = 'Fresno County Office of Education' ",
+            " SELECT DISTINCT T1.MailZip  FROM schools AS T1  INNER JOIN frpm AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T2.`Charter School (Y/N)` = 1 AND T1.District = 'Fresno County Office of Education' AND T1.MailZip IS NOT NULL ",
+            " SELECT T2.Zip FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T2.District = 'Fresno County Office of Education' ",
+            " SELECT DISTINCT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T3 ON T1.cds = T3.cds WHERE T2.`Charter School (Y/N)` = 1 AND T3.dname = 'Fresno County Office of Education' ",
+            " SELECT DISTINCT T2.Zip FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T1.`District Name` = 'Fresno County Office of Education' ",
+            " SELECT DISTINCT T2.Zip FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode INNER JOIN satscores AS T3 ON T2.cds = T3.cds WHERE T1.`District Name` = 'Fresno County Office of Education' AND T1.`Charter School (Y/N)` = 1 ",
+            " SELECT DISTINCT T1.Zip  FROM schools AS T1  INNER JOIN frpm AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T1.DOCType = 'County Office of Education (COE)'  AND T2.`Charter School (Y/N)` = 1 ",
+            " SELECT DISTINCT T2.Zip FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T2.District = 'Fresno County Office of Education' ",
+            " SELECT DISTINCT T2.MailZip FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 AND T2.District = 'Fresno County Office of Education' ",
+            " SELECT DISTINCT T1.Zip  FROM schools AS T1  INNER JOIN frpm AS T2  ON T1.CDSCode = T2.CDSCode  WHERE T2.`Charter School (Y/N)` = 1 AND T1.DOCType = 'County Office of Education (COE)' "
+        ],
+        "selected_candidate": " SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T2.`District Name` = 'Fresno County Office of Education' ",
+        "status": "success",
+        "execution_time": 1377.4
+    },
+    {
+        "tool_name": "execution_accuracy",
+        "generate_candidate": {
+            "exec_res": 1,
+            "exec_err": "--",
+            "Question": "Please list the zip code of all the charter schools in Fresno County Office of Education.",
+            "Evidence": "Charter schools refers to `Charter School (Y/N)` = 1 in the table fprm",
+            "GOLD_SQL": "SELECT T2.Zip FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`District Name` = 'Fresno County Office of Education' AND T1.`Charter School (Y/N)` = 1",
+            "PREDICTED_SQL": " SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T2.`District Name` = 'Fresno County Office of Education' "
+        },
+        "revise_1": {
+            "exec_res": 1,
+            "exec_err": "--",
+            "Question": "Please list the zip code of all the charter schools in Fresno County Office of Education.",
+            "Evidence": "Charter schools refers to `Charter School (Y/N)` = 1 in the table fprm",
+            "GOLD_SQL": "SELECT T2.Zip FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`District Name` = 'Fresno County Office of Education' AND T1.`Charter School (Y/N)` = 1",
+            "PREDICTED_SQL": " SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T2.`District Name` = 'Fresno County Office of Education' "
+        },
+        "evaluate_1": {
+            "exec_res": 1,
+            "exec_err": "--",
+            "Question": "Please list the zip code of all the charter schools in Fresno County Office of Education.",
+            "Evidence": "Charter schools refers to `Charter School (Y/N)` = 1 in the table fprm",
+            "GOLD_SQL": "SELECT T2.Zip FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`District Name` = 'Fresno County Office of Education' AND T1.`Charter School (Y/N)` = 1",
+            "PREDICTED_SQL": " SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T2.`District Name` = 'Fresno County Office of Education' "
+        },
+        "final_SQL": {
+            "exec_res": 1,
+            "exec_err": "--",
+            "Question": "Please list the zip code of all the charter schools in Fresno County Office of Education.",
+            "Evidence": "Charter schools refers to `Charter School (Y/N)` = 1 in the table fprm",
+            "GOLD_SQL": "SELECT T2.Zip FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`District Name` = 'Fresno County Office of Education' AND T1.`Charter School (Y/N)` = 1",
+            "PREDICTED_SQL": " SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T2.`District Name` = 'Fresno County Office of Education' "
+        },
+        "status": "success",
+        "execution_time": 0.0
+    }
+]

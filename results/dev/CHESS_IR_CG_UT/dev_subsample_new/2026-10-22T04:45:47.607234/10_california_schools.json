@@ -1,0 +1,923 @@
+[
+    {
+        "tool_name": "extract_keywords",
+        "keywords": [
+            "highest average score",
+            "Reading",
+            "SAT test",
+            "FRPM count",
+            "students aged 5-17"
+        ],
+        "status": "success",
+        "execution_time": 4.8
+    },
+    {
+        "tool_name": "retrieve_entity",
+        "similar_columns": {
+            "schools": [
+                "County"
+            ]
+        },
+        "schema_with_examples": {
+            "schools": {
+                "GSserved": [
+                    "5-11",
+                    "5-12"
+                ],
+                "GSoffered": [
+                    "5-12"
+                ],
+                "AdmLName1": [
+                    "Reading"
+                ]
+            }
+        },
+        "status": "success",
+        "execution_time": 422.8
+    },
+    {
+        "tool_name": "retrieve_context",
+        "schema_with_descriptions": {
+            "satscores": {
+                "avgscrread": {
+                    "column_name": "average scores in Reading",
+                    "column_description": "average scores in Reading",
+                    "value_description": "average scores in Reading"
+                },
+                "numge1500": {
+                    "column_name": "Number of Test Takers Whose Total SAT Scores Are Greater or Equal to 1500",
+                    "column_description": "Number of Test Takers Whose Total SAT Scores Are Greater or Equal to 1500",
+                    "value_description": "Number of Test Takers Whose Total SAT Scores Are Greater or Equal to 1500    Excellence Rate = NumGE1500 / NumTstTakr"
+                },
+                "avgscrmath": {
+                    "column_name": "average scores in Math",
+                    "column_description": "average scores in Math",
+                    "value_description": "average scores in Math"
+                },
+                "numtsttakr": {
+                    "column_name": "Number of Test Takers",
+                    "column_description": "Number of Test Takers in this school",
+                    "value_description": "number of test takers in each school"
+                },
+                "enroll12": {
+                    "column_name": "enrollment (1st-12nd grade)",
+                    "column_description": "enrollment (1st-12nd grade)",
+                    "value_description": ""
+                }
+            },
+            "schools": {
+                "school": {
+                    "column_name": "",
+                    "column_description": "School",
+                    "value_description": ""
+                },
+                "phone": {
+                    "column_name": "",
+                    "column_description": "Phone",
+                    "value_description": ""
+                }
+            },
+            "frpm": {
+                "frpm count (k-12)": {
+                    "column_name": "",
+                    "column_description": "Free or Reduced Price Meal Count (K-12)",
+                    "value_description": "eligible FRPM rate = FRPM / Enrollment"
+                },
+                "free meal count (k-12)": {
+                    "column_name": "",
+                    "column_description": "Free Meal Count (K-12)",
+                    "value_description": "eligible free rate = Free Meal Count / Enrollment"
+                },
+                "free meal count (ages 5-17)": {
+                    "column_name": "",
+                    "column_description": "Free Meal Count (Ages 5-17)",
+                    "value_description": "eligible free rate = Free Meal Count / Enrollment"
+                },
+                "enrollment (ages 5-17)": {
+                    "column_name": "",
+                    "column_description": "Enrollment (Ages 5-17)",
+                    "value_description": ""
+                },
+                "educational option type": {
+                    "column_name": "",
+                    "column_description": "Educational Option Type",
+                    "value_description": ""
+                }
+            }
+        },
+        "status": "success",
+        "execution_time": 33.6
+    },
+    {
+        "tool_name": "generate_candidate",
+        "node_type": "generate_candidate",
+        "generation_based_candidates": [
+            {
+                "template_name": "generate_candidate_one",
+                "candidates": [
+                    " SELECT `FRPM Count (Ages 5-17)` FROM `frpm` WHERE `CDSCode` = (SELECT `cds` FROM `satscores` ORDER BY `AvgScrRead` DESC LIMIT 1) ",
+                    " SELECT T2.`FRPM Count (Ages 5-17)`  FROM `satscores` AS T1  INNER JOIN `frpm` AS T2 ON T1.cds = T2.CDSCode  WHERE T1.AvgScrRead = (SELECT MAX(AvgScrRead) FROM satscores) ",
+                    " SELECT `T3`.`FRPM Count (Ages 5-17)`  FROM `satscores` AS `T1`  INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode`  WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`) ",
+                    " SELECT `T3`.`Free Meal Count (Ages 5-17)` FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T3` ON `T1`.`cds` = `T3`.`CDSCode` WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`) ",
+                    " SELECT T2.`FRPM Count (Ages 5-17)`  FROM satscores AS T1  INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode  WHERE T1.AvgScrRead = (SELECT MAX(AvgScrRead) FROM satscores) ",
+                    " SELECT `Free Meal Count (Ages 5-17)` FROM `frpm` WHERE `CDSCode` = (SELECT `cds` FROM `satscores` WHERE `AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)) ",
+                    " SELECT T3.`FRPM Count (Ages 5-17)`  FROM `satscores` AS T1  INNER JOIN `schools` AS T2 ON T1.cds = T2.CDSCode  INNER JOIN `frpm` AS T3 ON T2.CDSCode = T3.CDSCode  WHERE T1.AvgScrRead = (SELECT MAX(AvgScrRead) FROM `satscores`) ",
+                    " SELECT T2.`FRPM Count (Ages 5-17)`  FROM `satscores` AS T1  INNER JOIN `frpm` AS T2 ON T1.cds = T2.CDSCode  WHERE T1.AvgScrRead = (SELECT MAX(AvgScrRead) FROM `satscores`) ",
+                    " SELECT T2.`FRPM Count (Ages 5-17)`  FROM `satscores` AS T1  INNER JOIN `frpm` AS T2 ON T1.cds = T2.CDSCode  WHERE T1.AvgScrRead = (SELECT MAX(AvgScrRead) FROM `satscores`) ",
+                    " SELECT `T2`.`FRPM Count (Ages 5-17)` FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`) "
+                ]
+            },
+            {
+                "template_name": "generate_candidate_two",
+                "candidates": [
+                    " WITH MaxReadingScore AS (     SELECT cds, AVG(AvgScrRead) AS max_reading_score     FROM satscores     GROUP BY cds     ORDER BY max_reading_score DESC     LIMIT 1 ) SELECT T2.`FRPM Count (Ages 5-17)` FROM MaxReadingScore AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode ",
+                    " WITH MaxReadingScore AS (     SELECT cds, MAX(AvgScrRead) AS MaxScore     FROM satscores     GROUP BY cds ) SELECT T3.`FRPM Count (Ages 5-17)` FROM satscores AS T1 JOIN schools AS T2 ON T1.cds = T2.CDSCode JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode WHERE T1.AvgScrRead = (SELECT MaxScore FROM MaxReadingScore WHERE T1.cds = MaxReadingScore.cds) ",
+                    " WITH TopReadingSchool AS (     SELECT cds     FROM satscores     ORDER BY AvgScrRead DESC     LIMIT 1 ) SELECT T3.`FRPM Count (Ages 5-17)` FROM TopReadingSchool AS T1 JOIN schools AS T2 ON T1.cds = T2.CDSCode JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode ",
+                    " WITH MaxAvgScr AS (     SELECT cds, MAX(AvgScrRead) AS max_avg_scr     FROM satscores     GROUP BY cds ) SELECT T3.`FRPM Count (Ages 5-17)` FROM MaxAvgScr AS T1 JOIN satscores AS T2 ON T1.cds = T2.cds AND T1.max_avg_scr = T2.AvgScrRead JOIN frpm AS T3 ON T2.cds = T3.CDSCode ",
+                    " WITH MaxReadingScore AS (     SELECT cds, MAX(AvgScrRead) AS MaxAvgScrRead     FROM satscores     GROUP BY cds ) SELECT T3.`FRPM Count (Ages 5-17)` FROM MaxReadingScore AS T1 JOIN satscores AS T2 ON T1.cds = T2.cds AND T1.MaxAvgScrRead = T2.AvgScrRead JOIN frpm AS T3 ON T2.cds = T3.CDSCode ",
+                    " SELECT T2.`FRPM Count (Ages 5-17)` FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrRead = (SELECT MAX(AvgScrRead) FROM satscores WHERE AvgScrRead IS NOT NULL) ",
+                    " WITH MaxReadingScore AS (     SELECT cds, AvgScrRead     FROM satscores     ORDER BY AvgScrRead DESC     LIMIT 1 ) SELECT T3.`FRPM Count (Ages 5-17)` FROM MaxReadingScore AS T1 JOIN schools AS T2 ON T1.cds = T2.CDSCode JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode ",
+                    " WITH TopReadingScore AS (     SELECT cds, AVG(AvgScrRead) AS AvgReadingScore     FROM satscores     GROUP BY cds     ORDER BY AvgReadingScore DESC     LIMIT 1 ) SELECT T3.`FRPM Count (Ages 5-17)` FROM TopReadingScore AS T1 JOIN schools AS T2 ON T1.cds = T2.CDSCode JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode ",
+                    " WITH TopReadingScore AS (     SELECT cds, AVG(AvgScrRead) AS AvgScrRead     FROM satscores     GROUP BY cds     ORDER BY AvgScrRead DESC     LIMIT 1 ) SELECT T4.`Free Meal Count (Ages 5-17)` FROM TopReadingScore AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode INNER JOIN frpm AS T4 ON T2.CDSCode = T4.CDSCode ",
+                    " WITH TopReadingScore AS (     SELECT T1.cds     FROM satscores AS T1     WHERE T1.AvgScrRead IS NOT NULL     ORDER BY T1.AvgScrRead DESC     LIMIT 1 ) SELECT T3.`FRPM Count (Ages 5-17)` FROM TopReadingScore AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode INNER JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode "
+                ]
+            }
+        ],
+        "candidates": [
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT `FRPM Count (Ages 5-17)` FROM `frpm` WHERE `CDSCode` = (SELECT `cds` FROM `satscores` ORDER BY `AvgScrRead` DESC LIMIT 1) ",
+                "plan": "**Question:** For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?\n\n**1. Divide and Conquer:**\n\n* **Main Question:** For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?\n    * **Analysis:** The question asks for the `FRPM Count (Ages 5-17)` from the `frpm` table for the school with the highest average reading score from the `satscores` table. We need to first find the school with the highest average reading score and then retrieve the FRPM count for that school.\n    * **Pseudo SQL:** SELECT `T3`.`FRPM Count (Ages 5-17)` FROM `frpm` AS `T3` WHERE `T3`.`CDSCode` = (SELECT `T2`.`cds` FROM `satscores` AS `T2` ORDER BY `AvgScrRead` DESC LIMIT 1)\n\n    * **Sub-question 1:** Find the CDSCode of the school with the highest average reading score\n        * **Analysis:** We need to find the `cds` (which corresponds to `CDSCode` in the `schools` table) from the `satscores` table where the `AvgScrRead` is the maximum.\n        * **Pseudo SQL:** SELECT `cds` FROM `satscores` ORDER BY `AvgScrRead` DESC LIMIT 1\n\n    * **Sub-question 2:** Retrieve the FRPM count for the school with the highest average reading score\n        * **Analysis:** Using the `CDSCode` from sub-question 1, we can retrieve the `FRPM Count (Ages 5-17)` from the `frpm` table.\n        * **Pseudo SQL:** SELECT `FRPM Count (Ages 5-17)` FROM `frpm` WHERE `CDSCode` = <CDSCode of the school with the highest average reading score>\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (Find the CDSCode of the school with the highest average reading score):**\n    * **SQL:** SELECT `cds` FROM `satscores` ORDER BY `AvgScrRead` DESC LIMIT 1\n\n* **Sub-question 2 (Retrieve the FRPM count for the school with the highest average reading score):**\n    * **SQL:** SELECT `FRPM Count (Ages 5-17)` FROM `frpm` WHERE `CDSCode` = (SELECT `cds` FROM `satscores` ORDER BY `AvgScrRead` DESC LIMIT 1)\n\n**3. Simplification and Optimization:**\n\n* The nested query in step 2 is already quite efficient. It ensures that we are getting the correct `CDSCode` before querying the `frpm` table for the FRPM count.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T2.`FRPM Count (Ages 5-17)`  FROM `satscores` AS T1  INNER JOIN `frpm` AS T2 ON T1.cds = T2.CDSCode  WHERE T1.AvgScrRead = (SELECT MAX(AvgScrRead) FROM satscores) ",
+                "plan": "**Question:** For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?\n\n**1. Divide and Conquer:**\n\n* **Main Question:** For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?\n    * **Analysis:** We need to find the FRPM count for students aged 5-17 for the school that has the highest average score in Reading. This involves identifying the school with the highest `AvgScrRead` from the `satscores` table and then finding the corresponding `FRPM Count (Ages 5-17)` from the `frpm` table.\n    * **Pseudo SQL:** SELECT `T2`.`FRPM Count (Ages 5-17)` FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\n\n    * **Sub-question 1:** Find the CDSCode of the school with the highest average score in Reading\n        * **Analysis:** We need to find the `cds` (CDSCode) of the school that has the highest `AvgScrRead` in the `satscores` table.\n        * **Pseudo SQL:** SELECT `cds` FROM `satscores` WHERE `AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\n\n    * **Sub-question 2:** Find the FRPM Count (Ages 5-17) for the school identified in sub-question 1\n        * **Analysis:** We need to find the `FRPM Count (Ages 5-17)` for the school identified in sub-question 1 from the `frpm` table.\n        * **Pseudo SQL:** SELECT `FRPM Count (Ages 5-17)` FROM `frpm` WHERE `CDSCode` = (SELECT `cds` FROM `satscores` WHERE `AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`))\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (Find the CDSCode of the school with the highest average score in Reading):**\n    * **SQL:** SELECT `cds` FROM `satscores` WHERE `AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\n\n* **Sub-question 2 (Find the FRPM Count (Ages 5-17) for the school identified in sub-question 1):**\n    * **SQL:** SELECT `FRPM Count (Ages 5-17)` FROM `frpm` WHERE `CDSCode` = (SELECT `cds` FROM `satscores` WHERE `AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`))\n\n* **Main Question (FRPM count for students aged 5-17 for the school with the highest average score in Reading):**\n    * **SQL:** SELECT `T2`.`FRPM Count (Ages 5-17)` FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\n\n**3. Simplification and Optimization:**\n\n* The query can be simplified by combining the sub-queries into a single query to improve readability and performance.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT `T3`.`FRPM Count (Ages 5-17)`  FROM `satscores` AS `T1`  INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode`  WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`) ",
+                "plan": "**Question:** For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?\n\n**1. Divide and Conquer:**\n\n* **Main Question:** For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?\n    * **Analysis:** The question requires us to find the FRPM count for students aged 5-17 for the school with the highest average score in Reading. We need to join `satscores` and `frpm` tables based on `cds` and `CDSCode` respectively, and then filter and aggregate the data accordingly.\n    * **Pseudo SQL:** SELECT `T3`.`FRPM Count (Ages 5-17)` FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\n\n    * **Sub-question 1:** Find the school with the highest average score in Reading\n        * **Analysis:** We need to find the maximum `AvgScrRead` from the `satscores` table.\n        * **Pseudo SQL:** SELECT MAX(`AvgScrRead`) FROM `satscores`\n\n    * **Sub-question 2:** Get the FRPM count for students aged 5-17 for the school with the highest average score in Reading\n        * **Analysis:** After identifying the school with the highest average score in Reading, we need to join `satscores` and `frpm` tables and retrieve the `FRPM Count (Ages 5-17)` for that school.\n        * **Pseudo SQL:** SELECT `T3`.`FRPM Count (Ages 5-17)` FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrRead` = <highest AvgScrRead>\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (Find the school with the highest average score in Reading):**\n    * **SQL:** SELECT MAX(`AvgScrRead`) FROM `satscores`\n\n* **Sub-question 2 (Get the FRPM count for students aged 5-17 for the school with the highest average score in Reading):**\n    * **SQL:** SELECT `T3`.`FRPM Count (Ages 5-17)` FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\n\n**3. Simplification and Optimization:**\n\n* The nested query can be directly incorporated into the main query without further simplification.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT `T3`.`Free Meal Count (Ages 5-17)` FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T3` ON `T1`.`cds` = `T3`.`CDSCode` WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`) ",
+                "plan": "**Question:** For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?\n\n**1. Divide and Conquer:**\n\n* **Main Question:** For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?\n    * **Analysis:** We need to find the school with the highest average score in Reading from the `satscores` table and then retrieve the FRPM count for students aged 5-17 from the `frpm` table for that school.\n    * **Pseudo SQL:** SELECT `T3`.`Free Meal Count (Ages 5-17)` FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T3` ON `T1`.`cds` = `T3`.`CDSCode` WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\n\n    * **Sub-question 1:** school with the highest average score in Reading\n        * **Analysis:** We need to find the `cds` (primary key) of the school with the maximum `AvgScrRead` from the `satscores` table.\n        * **Pseudo SQL:** SELECT `cds` FROM `satscores` WHERE `AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\n\n    * **Sub-question 2:** FRPM count for students aged 5-17\n        * **Analysis:** We need to retrieve the `Free Meal Count (Ages 5-17)` from the `frpm` table for the school identified in sub-question 1.\n        * **Pseudo SQL:** SELECT `Free Meal Count (Ages 5-17)` FROM `frpm` WHERE `CDSCode` = (SELECT `cds` FROM `satscores` WHERE `AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`))\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (school with the highest average score in Reading):**\n    * **SQL:** SELECT `cds` FROM `satscores` WHERE `AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\n\n* **Sub-question 2 (FRPM count for students aged 5-17):**\n    * **SQL:** SELECT `Free Meal Count (Ages 5-17)` FROM `frpm` WHERE `CDSCode` = (SELECT `cds` FROM `satscores` WHERE `AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`))\n\n* **Main Question (FRPM count for the school with the highest average score in Reading):**\n    * **SQL:** SELECT `T3`.`Free Meal Count (Ages 5-17)` FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T3` ON `T1`.`cds` = `T3`.`CDSCode` WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\n\n**3. Simplification and Optimization:**\n\n* The final SQL query from step 2 is already quite efficient. We're using a nested query to find the school with the highest average score in Reading and then joining with the `frpm` table to get the FRPM count for students aged 5-17.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T2.`FRPM Count (Ages 5-17)`  FROM satscores AS T1  INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode  WHERE T1.AvgScrRead = (SELECT MAX(AvgScrRead) FROM satscores) ",
+                "plan": "**Question:** For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?\n\n**1. Divide and Conquer:**\n\n* **Main Question:** For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?\n    * **Analysis:** The question requires us to find the FRPM count for the school with the highest average score in Reading. We need to first identify the school with the highest `AvgScrRead` from the `satscores` table and then find the corresponding `FRPM Count (Ages 5-17)` from the `frpm` table.\n    * **Pseudo SQL:** SELECT `T2`.`FRPM Count (Ages 5-17)` FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\n\n    * **Sub-question 1:** Find the school with the highest average score in Reading\n        * **Analysis:** We need to find the `cds` of the school with the maximum `AvgScrRead` from the `satscores` table.\n        * **Pseudo SQL:** SELECT `cds` FROM `satscores` WHERE `AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\n\n    * **Sub-question 2:** Find the FRPM count for students aged 5-17 for the identified school\n        * **Analysis:** We need to join `satscores` and `frpm` tables on `cds` and `CDSCode` respectively, and filter by the `cds` obtained from sub-question 1.\n        * **Pseudo SQL:** SELECT `FRPM Count (Ages 5-17)` FROM `frpm` WHERE `CDSCode` = (SELECT `cds` FROM `satscores` WHERE `AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`))\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (Find the school with the highest average score in Reading):**\n    * **SQL:** SELECT `cds` FROM `satscores` WHERE `AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\n\n* **Sub-question 2 (Find the FRPM count for students aged 5-17 for the identified school):**\n    * **SQL:** SELECT `FRPM Count (Ages 5-17)` FROM `frpm` WHERE `CDSCode` = (SELECT `cds` FROM `satscores` WHERE `AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`))\n\n* **Main Question (FRPM count for the school with the highest average score in Reading):**\n    * **SQL:** SELECT `T2`.`FRPM Count (Ages 5-17)` FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\n\n**3. Simplification and Optimization:**\n\n* The main query can be simplified by combining the nested queries directly into the main query without intermediate sub-queries.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT `Free Meal Count (Ages 5-17)` FROM `frpm` WHERE `CDSCode` = (SELECT `cds` FROM `satscores` WHERE `AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)) ",
+                "plan": "**Question:** For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?\n\n**1. Divide and Conquer:**\n\n* **Main Question:** For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?\n    * **Analysis:** The question requires finding the FRPM count for students aged 5-17 for the school that has the highest average score in Reading from the SAT test. We need to find the school first based on the highest average reading score and then retrieve the corresponding FRPM count from the `frpm` table.\n    * **Pseudo SQL:** SELECT `T3`.`Free Meal Count (Ages 5-17)` FROM `satscores` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` INNER JOIN `frpm` AS `T3` ON `T2`.`CDSCode` = `T3`.`CDSCode` WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\n\n    * **Sub-question 1:** Find the school with the highest average score in Reading\n        * **Analysis:** We need to find the maximum value of `AvgScrRead` in the `satscores` table and then join it with the `schools` and `frpm` tables to get the FRPM count.\n        * **Pseudo SQL:** SELECT `cds` FROM `satscores` WHERE `AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\n\n    * **Sub-question 2:** Get the FRPM count for students aged 5-17\n        * **Analysis:** After identifying the school with the highest average score in Reading, we need to join the `schools` and `frpm` tables to get the FRPM count for students aged 5-17.\n        * **Pseudo SQL:** SELECT `Free Meal Count (Ages 5-17)` FROM `frpm` WHERE `CDSCode` = (SELECT `cds` FROM `satscores` WHERE `AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`))\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (Find the school with the highest average score in Reading):**\n    * **SQL:** SELECT `cds` FROM `satscores` WHERE `AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\n\n* **Sub-question 2 (Get the FRPM count for students aged 5-17):**\n    * **SQL:** SELECT `Free Meal Count (Ages 5-17)` FROM `frpm` WHERE `CDSCode` = (SELECT `cds` FROM `satscores` WHERE `AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`))\n\n* **Main Question (FRPM count for the school with the highest average score in Reading):**\n    * **SQL:** SELECT `T3`.`Free Meal Count (Ages 5-17)` FROM `satscores` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` INNER JOIN `frpm` AS `T3` ON `T2`.`CDSCode` = `T3`.`CDSCode` WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\n\n**3. Simplification and Optimization:**\n\n* The query can be simplified by removing the unnecessary joins and directly referencing the `frpm` table with the CDSCode from the `satscores` table.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T3.`FRPM Count (Ages 5-17)`  FROM `satscores` AS T1  INNER JOIN `schools` AS T2 ON T1.cds = T2.CDSCode  INNER JOIN `frpm` AS T3 ON T2.CDSCode = T3.CDSCode  WHERE T1.AvgScrRead = (SELECT MAX(AvgScrRead) FROM `satscores`) ",
+                "plan": "**Question:** For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?\n\n**1. Divide and Conquer:**\n\n* **Main Question:** For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?\n    * **Analysis:** We need to find the school with the highest average score in Reading and then retrieve its FRPM count for students aged 5-17. This involves two main parts: finding the school with the highest average score in Reading and then getting the FRPM count for that school from the `frpm` table.\n    * **Pseudo SQL:** SELECT `T3`.`FRPM Count (Ages 5-17)` FROM `satscores` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` INNER JOIN `frpm` AS `T3` ON `T2`.`CDSCode` = `T3`.`CDSCode` WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`) \n\n    * **Sub-question 1:** school with the highest average score in Reading\n        * **Analysis:** We need to find the `cds` (or `CDSCode`) of the school with the highest `AvgScrRead` in the `satscores` table.\n        * **Pseudo SQL:** SELECT `cds` FROM `satscores` WHERE `AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\n\n    * **Sub-question 2:** FRPM count for students aged 5-17\n        * **Analysis:** We need to retrieve the `FRPM Count (Ages 5-17)` from the `frpm` table for the school identified in sub-question 1.\n        * **Pseudo SQL:** `T3`.`FRPM Count (Ages 5-17)` FROM `frpm` AS `T3` WHERE `T3`.`CDSCode` = (SELECT `cds` FROM `satscores` WHERE `AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`))\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (school with the highest average score in Reading):**\n    * **SQL:** SELECT `cds` FROM `satscores` WHERE `AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\n\n* **Sub-question 2 (FRPM count for students aged 5-17):**\n    * **SQL:** `T3`.`FRPM Count (Ages 5-17)` FROM `frpm` AS `T3` WHERE `T3`.`CDSCode` = (SELECT `cds` FROM `satscores` WHERE `AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`))\n\n* **Main Question (FRPM count for the school with the highest average score in Reading):**\n    * **SQL:** SELECT `T3`.`FRPM Count (Ages 5-17)` FROM `satscores` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` INNER JOIN `frpm` AS `T3` ON `T2`.`CDSCode` = `T3`.`CDSCode` WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\n\n**3. Simplification and Optimization:**\n\n* The final SQL query is already quite optimized. It uses `INNER JOIN` to connect the relevant tables and filters based on the maximum average reading score.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T2.`FRPM Count (Ages 5-17)`  FROM `satscores` AS T1  INNER JOIN `frpm` AS T2 ON T1.cds = T2.CDSCode  WHERE T1.AvgScrRead = (SELECT MAX(AvgScrRead) FROM `satscores`) ",
+                "plan": "**Question:** For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?\n\n**1. Divide and Conquer:**\n\n* **Main Question:** For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?\n    * **Analysis:** The question requires us to find the FRPM count for students aged 5-17 for the school with the highest average score in Reading from the SAT tests. This involves identifying the school with the highest `AvgScrRead` from the `satscores` table and then finding the corresponding `FRPM Count (Ages 5-17)` from the `frpm` table.\n    * **Pseudo SQL:** SELECT `T2`.`FRPM Count (Ages 5-17)` FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\n\n    * **Sub-question 1:** school with the highest average score in Reading\n        * **Analysis:** We need to find the `cds` (which corresponds to `CDSCode` in the `frpm` table) of the school with the maximum `AvgScrRead` from the `satscores` table.\n        * **Pseudo SQL:** SELECT `cds` FROM `satscores` WHERE `AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\n\n    * **Sub-question 2:** FRPM count for students aged 5-17\n        * **Analysis:** Once we have identified the `CDSCode` of the school with the highest average score in Reading, we can retrieve the corresponding `FRPM Count (Ages 5-17)` from the `frpm` table.\n        * **Pseudo SQL:** SELECT `FRPM Count (Ages 5-17)` FROM `frpm` WHERE `CDSCode` = <CDSCode of the school with the highest AvgScrRead>\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (school with the highest average score in Reading):**\n    * **SQL:** SELECT `cds` FROM `satscores` WHERE `AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\n\n* **Sub-question 2 (FRPM count for students aged 5-17):**\n    * **SQL:** SELECT `FRPM Count (Ages 5-17)` FROM `frpm` WHERE `CDSCode` = (SELECT `cds` FROM `satscores` WHERE `AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`))\n\n* **Main Question (FRPM count for the school with the highest average score in Reading):**\n    * **SQL:** SELECT `T2`.`FRPM Count (Ages 5-17)` FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\n\n**3. Simplification and Optimization:**\n\n* The SQL query from step 2 is already quite efficient. It correctly identifies the school with the highest average score in Reading and retrieves the corresponding FRPM count for students aged 5-17.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T2.`FRPM Count (Ages 5-17)`  FROM `satscores` AS T1  INNER JOIN `frpm` AS T2 ON T1.cds = T2.CDSCode  WHERE T1.AvgScrRead = (SELECT MAX(AvgScrRead) FROM `satscores`) ",
+                "plan": "**Question:** For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?\n\n**1. Divide and Conquer:**\n\n* **Main Question:** For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?\n    * **Analysis:** We need to find the `FRPM Count (Ages 5-17)` for the school with the highest `AvgScrRead` from the `satscores` table. This requires joining the `satscores` and `frpm` tables on `CDSCode`.\n    * **Pseudo SQL:** SELECT `T2`.`FRPM Count (Ages 5-17)` FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\n\n    * **Sub-question 1:** Find the CDSCode of the school with the highest average score in Reading\n        * **Analysis:** We need to find the `CDSCode` corresponding to the maximum `AvgScrRead` in the `satscores` table.\n        * **Pseudo SQL:** SELECT `cds` FROM `satscores` WHERE `AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\n\n    * **Sub-question 2:** Find the FRPM Count (Ages 5-17) for the school with the highest average score in Reading\n        * **Analysis:** Using the `CDSCode` from sub-question 1, we can join the `satscores` and `frpm` tables to retrieve the `FRPM Count (Ages 5-17)` from the `frpm` table.\n        * **Pseudo SQL:** SELECT `FRPM Count (Ages 5-17)` FROM `frpm` WHERE `CDSCode` = (SELECT `cds` FROM `satscores` WHERE `AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`))\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (Find the CDSCode of the school with the highest average score in Reading):**\n    * **SQL:** SELECT `cds` FROM `satscores` WHERE `AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\n\n* **Sub-question 2 (Find the FRPM Count (Ages 5-17) for the school with the highest average score in Reading):**\n    * **SQL:** SELECT `FRPM Count (Ages 5-17)` FROM `frpm` WHERE `CDSCode` = (SELECT `cds` FROM `satscores` WHERE `AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`))\n\n* **Main Question (FRPM Count for the school with the highest average score in Reading):**\n    * **SQL:** SELECT `T2`.`FRPM Count (Ages 5-17)` FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\n\n**3. Simplification and Optimization:**\n\n* The query in step 2 is already quite optimized. We are using nested queries to find the `CDSCode` of the school with the highest `AvgScrRead` and then joining the `satscores` and `frpm` tables to get the `FRPM Count (Ages 5-17)`.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT `T2`.`FRPM Count (Ages 5-17)` FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`) ",
+                "plan": "**Question:** For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?\n**Evidence:** None provided.\n\n**1. Divide and Conquer:**\n\n* **Main Question:** For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?\n    * **Analysis:** The question asks for the FRPM count for students aged 5-17 for the school with the highest average score in Reading. We need to first identify the school with the highest average score in Reading from the `satscores` table and then find the corresponding FRPM count from the `frpm` table.\n    * **Pseudo SQL:** SELECT `T2`.`FRPM Count (Ages 5-17)` FROM `satscores` AS `T1` INNER JOIN `schools` AS `T3` ON `T1`.`cds` = `T3`.`CDSCode` INNER JOIN `frpm` AS `T2` ON `T3`.`CDSCode` = `T2`.`CDSCode` WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\n\n    * **Sub-question 1:** school with the highest average score in Reading\n        * **Analysis:** We need to find the school with the maximum value in the `AvgScrRead` column from the `satscores` table.\n        * **Pseudo SQL:** SELECT `cds` FROM `satscores` WHERE `AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\n\n    * **Sub-question 2:** FRPM count for students aged 5-17\n        * **Analysis:** We need to find the `FRPM Count (Ages 5-17)` from the `frpm` table for the identified school.\n        * **Pseudo SQL:** SELECT `FRPM Count (Ages 5-17)` FROM `frpm` WHERE `CDSCode` = <school with the highest average score in Reading>\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (school with the highest average score in Reading):**\n    * **SQL:** SELECT `cds` FROM `satscores` WHERE `AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\n\n* **Sub-question 2 (FRPM count for students aged 5-17):**\n    * **SQL:** SELECT `FRPM Count (Ages 5-17)` FROM `frpm` WHERE `CDSCode` = (SELECT `cds` FROM `satscores` WHERE `AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`))\n\n* **Main Question (FRPM count for the school with the highest average score in Reading):**\n    * **SQL:** SELECT `T2`.`FRPM Count (Ages 5-17)` FROM `satscores` AS `T1` INNER JOIN `schools` AS `T3` ON `T1`.`cds` = `T3`.`CDSCode` INNER JOIN `frpm` AS `T2` ON `T3`.`CDSCode` = `T2`.`CDSCode` WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\n\n**3. Simplification and Optimization:**\n\n* The final SQL query can be simplified by removing unnecessary joins since we only need the `FRPM Count (Ages 5-17)` from the `frpm` table for the school with the highest `AvgScrRead`.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " WITH MaxReadingScore AS (     SELECT cds, AVG(AvgScrRead) AS max_reading_score     FROM satscores     GROUP BY cds     ORDER BY max_reading_score DESC     LIMIT 1 ) SELECT T2.`FRPM Count (Ages 5-17)` FROM MaxReadingScore AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode ",
+                "plan": "**Question**: For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?\n**Evidence**: None provided.\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the satscores and frpm tables to access relevant data.\n\n** Identify the School with the Highest Average Score in Reading: **\n1. Scan the satscores table: Start reading rows from the satscores table.\n2. Extract the average scores in Reading: For each row, retrieve the value from the AvgScrRead column.\n3. Determine the maximum average score in Reading: Identify the highest value in the AvgScrRead column.\n4. Identify the school with the highest average score: Retrieve the cds code of the school with the highest average score in Reading.\n\n** Join with FRPM Table: **\n1. Use the cds code to join the frpm table: Match the school with the highest average score in Reading to the corresponding record in the frpm table.\n2. Extract the FRPM Count (Ages 5-17): Retrieve the FRPM Count (Ages 5-17) from the frpm table for the identified school.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the FRPM count for presentation.\n2. Output the final FRPM count: Deliver the FRPM count as the query result.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " WITH MaxReadingScore AS (     SELECT cds, MAX(AvgScrRead) AS MaxScore     FROM satscores     GROUP BY cds ) SELECT T3.`FRPM Count (Ages 5-17)` FROM satscores AS T1 JOIN schools AS T2 ON T1.cds = T2.CDSCode JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode WHERE T1.AvgScrRead = (SELECT MaxScore FROM MaxReadingScore WHERE T1.cds = MaxReadingScore.cds) ",
+                "plan": "**Question**: For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?\n\n** Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the `satscores`, `schools`, and `frpm` tables to access relevant data.\n\n** Identify the School with the Highest Average Reading Score: **\n1. Scan the `satscores` table: Retrieve the average scores in Reading (AvgScrRead) for each school.\n2. Find the maximum AvgScrRead: Identify the maximum value of AvgScrRead to find the school with the highest average score in Reading.\n3. Join with `schools` table: Use the cds code to join the `satscores` table with the `schools` table to get the school details.\n4. Join with `frpm` table: Use the CDSCode to join the `schools` table with the `frpm` table to get the FRPM count for students aged 5-17.\n\n** Retrieve the FRPM Count: **\n1. Extract the FRPM Count (Ages 5-17): From the joined `frpm` table, retrieve the FRPM Count (Ages 5-17) for the school with the highest average score in Reading.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the FRPM count for presentation.\n2. Output the final FRPM count: Deliver the FRPM count as the query result, indicating the FRPM count for the school with the highest average score in Reading.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " WITH TopReadingSchool AS (     SELECT cds     FROM satscores     ORDER BY AvgScrRead DESC     LIMIT 1 ) SELECT T3.`FRPM Count (Ages 5-17)` FROM TopReadingSchool AS T1 JOIN schools AS T2 ON T1.cds = T2.CDSCode JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode ",
+                "plan": "**Question:** For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?\n\n**Query Plan:**\n\n**Preparation Steps:**\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the `satscores`, `frpm`, and `schools` tables to access relevant data.\n\n**Identify the School with the Highest Average Score in Reading:**\n1. Scan the `satscores` table: Start reading rows from the `satscores` table.\n2. Extract the `AvgScrRead` column: For each row, retrieve the value from the `AvgScrRead` column.\n3. Identify the maximum `AvgScrRead`: Find the row with the highest value in the `AvgScrRead` column.\n4. Retrieve the `cds` code: Extract the `cds` code for the school with the highest `AvgScrRead`.\n\n**Join Tables to Get FRPM Count:**\n1. Join `frpm` with `schools` on `CDSCode`: Use the `cds` code to join the `frpm` table with the `schools` table.\n2. Filter by age group: Ensure that the `frpm` data corresponds to students aged 5-17.\n3. Extract the `FRPM Count (Ages 5-17)` column: Retrieve the FRPM count for students aged 5-17 from the `frpm` table.\n\n**Finalize and Deliver the Result:**\n1. Prepare the result for output: Format the FRPM count for presentation.\n2. Output the final FRPM count: Deliver the count as the query result, indicating the FRPM count for the school with the highest average score in Reading.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " WITH MaxAvgScr AS (     SELECT cds, MAX(AvgScrRead) AS max_avg_scr     FROM satscores     GROUP BY cds ) SELECT T3.`FRPM Count (Ages 5-17)` FROM MaxAvgScr AS T1 JOIN satscores AS T2 ON T1.cds = T2.cds AND T1.max_avg_scr = T2.AvgScrRead JOIN frpm AS T3 ON T2.cds = T3.CDSCode ",
+                "plan": "**Question:** For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?\n**Evidence:** None provided, but based on the question, we infer that we need to find the school with the highest AvgScrRead in the satscores table and then find the corresponding FRPM Count (Ages 5-17) from the frpm table.\n\n**Query Plan:**\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the satscores and frpm tables to access relevant data.\n\n** Identify the School with the Highest Average Score in Reading: **\n1. Scan the satscores table: Start reading rows from the satscores table.\n2. Extract the AvgScrRead column: For each row, retrieve the value from the AvgScrRead column.\n3. Determine the maximum AvgScrRead: Identify the maximum value in the AvgScrRead column.\n4. Retrieve the cds code: Get the CDSCode of the school with the highest AvgScrRead.\n\n** Join Tables to Find the Corresponding FRPM Count: **\n1. Join the frpm table: Use the CDSCode to join the satscores table with the frpm table.\n2. Extract the FRPM Count (Ages 5-17): Retrieve the value from the `FRPM Count (Ages 5-17)` column in the frpm table.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the FRPM count for presentation.\n2. Output the final FRPM count: Deliver the FRPM count as the query result.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " WITH MaxReadingScore AS (     SELECT cds, MAX(AvgScrRead) AS MaxAvgScrRead     FROM satscores     GROUP BY cds ) SELECT T3.`FRPM Count (Ages 5-17)` FROM MaxReadingScore AS T1 JOIN satscores AS T2 ON T1.cds = T2.cds AND T1.MaxAvgScrRead = T2.AvgScrRead JOIN frpm AS T3 ON T2.cds = T3.CDSCode ",
+                "plan": "**Question:** For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?\n**Evidence:** None provided.\n\n**Query Plan:**\n\n**Preparation Steps:**\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the `schools`, `satscores`, and `frpm` tables to access relevant data.\n\n**Identify the School with the Highest Average Score in Reading:**\n1. Scan the `satscores` table: Start reading rows from the `satscores` table.\n2. Extract the `AvgScrRead` column: For each row, retrieve the value from the `AvgScrRead` column.\n3. Identify the maximum `AvgScrRead`: Determine the maximum value of `AvgScrRead` to find the school with the highest average score in Reading.\n4. Join with `schools` table: Use the `cds` field in `satscores` to join with the `CDSCode` field in `schools` to get the school details.\n\n**Retrieve the FRPM Count for Students Aged 5-17:**\n1. Join the `schools` table with the `frpm` table: Use the `CDSCode` field in `schools` to join with the `CDSCode` field in `frpm`.\n2. Extract the `FRPM Count (Ages 5-17)` column: For the identified school, retrieve the value from the `FRPM Count (Ages 5-17)` column in the `frpm` table.\n\n**Finalize and Deliver the Result:**\n1. Prepare the result for output: Format the FRPM count for presentation.\n2. Output the final FRPM count: Deliver the count as the query result, indicating the FRPM count for the school with the highest average score in Reading.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT T2.`FRPM Count (Ages 5-17)` FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrRead = (SELECT MAX(AvgScrRead) FROM satscores WHERE AvgScrRead IS NOT NULL) ",
+                "plan": "**Question:** For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?\n**Evidence:** None provided, but based on the context, we need to find the school with the highest AvgScrRead from the satscores table and then find the corresponding FRPM Count (Ages 5-17) from the frpm table.\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the satscores and frpm tables to access relevant data.\n\n** Identify the School with the Highest Average Score in Reading: **\n1. Scan the satscores table: Start reading rows from the satscores table.\n2. Filter by non-null AvgScrRead: Ensure that the AvgScrRead column is not null.\n3. Order by AvgScrRead in descending order: Arrange the data so that the highest average score in reading appears first.\n4. Limit to one row: Retrieve only the top row with the highest average score in reading.\n\n** Join with frpm Table: **\n1. Join the satscores table with the frpm table: Match the CDSCode from both tables to link the school data with its FRPM details.\n2. Ensure the join is done on the CDSCode column: This ensures that we are linking the correct school with its FRPM count.\n\n** Retrieve the FRPM Count for Students Aged 5-17: **\n1. Select the FRPM Count (Ages 5-17) column from the frpm table: This is the final piece of information we need to retrieve.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final FRPM count for presentation.\n2. Output the final FRPM count: Deliver the count as the query result, indicating the FRPM count for the school with the highest average score in reading.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " WITH MaxReadingScore AS (     SELECT cds, AvgScrRead     FROM satscores     ORDER BY AvgScrRead DESC     LIMIT 1 ) SELECT T3.`FRPM Count (Ages 5-17)` FROM MaxReadingScore AS T1 JOIN schools AS T2 ON T1.cds = T2.CDSCode JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode ",
+                "plan": "**Question:** For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?\n**Evidence:** None provided.\n\n**Query Plan:**\n\n**Preparation Steps:**\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the `satscores`, `frpm`, and `schools` tables to access relevant data.\n\n**Identify the School with the Highest Average Score in Reading:**\n1. Scan the `satscores` table: Start reading rows from the `satscores` table.\n2. Extract the average score in Reading: For each row, retrieve the value from the `AvgScrRead` column.\n3. Determine the maximum average score in Reading: Identify the highest value in the `AvgScrRead` column.\n4. Retrieve the CDSCode of the school with the highest average score in Reading: Use the `cds` column to get the CDSCode of the school with the highest average score.\n\n**Retrieve the FRPM Count for Students Aged 5-17:**\n1. Join the `frpm` table with the `satscores` table on the `CDSCode` column: This ensures that the FRPM data corresponds to the school with the highest average score in Reading.\n2. Extract the FRPM count for students aged 5-17: Retrieve the value from the `FRPM Count (Ages 5-17)` column in the `frpm` table.\n\n**Finalize and Deliver the Result:**\n1. Prepare the result for output: Format the final FRPM count for presentation.\n2. Output the final FRPM count: Deliver the count as the query result, indicating the FRPM count for students aged 5-17 for the school with the highest average score in Reading.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " WITH TopReadingScore AS (     SELECT cds, AVG(AvgScrRead) AS AvgReadingScore     FROM satscores     GROUP BY cds     ORDER BY AvgReadingScore DESC     LIMIT 1 ) SELECT T3.`FRPM Count (Ages 5-17)` FROM TopReadingScore AS T1 JOIN schools AS T2 ON T1.cds = T2.CDSCode JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode ",
+                "plan": "**Question**: For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?\n\n**Query Plan**:\n\n**Preparation Steps:**\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the satscores, schools, and frpm tables to access relevant data.\n\n**Identify the School with the Highest Average Score in Reading:**\n1. Scan the satscores table: Retrieve all records from the satscores table to analyze average reading scores.\n2. Extract the average reading scores: For each row, retrieve the value from the AvgScrRead column.\n3. Determine the highest average reading score: Identify the maximum value in the AvgScrRead column.\n4. Store the corresponding cds code: Record the cds code associated with the highest average reading score for further processing.\n\n**Retrieve FRPM Count for Students Aged 5-17:**\n1. Join the frpm table with the schools table: Use the cds code to join the frpm table with the schools table on the CDSCode field.\n2. Filter by the stored cds code: Select only those rows where the cds code matches the one identified as having the highest average reading score.\n3. Extract the FRPM Count (Ages 5-17): Retrieve the value from the `FRPM Count (Ages 5-17)` column for the matching school.\n\n**Finalize and Deliver the Result:**\n1. Prepare the result for output: Format the FRPM count for presentation.\n2. Output the final FRPM count: Deliver the count as the query result, indicating the FRPM count for the school with the highest average reading score.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " WITH TopReadingScore AS (     SELECT cds, AVG(AvgScrRead) AS AvgScrRead     FROM satscores     GROUP BY cds     ORDER BY AvgScrRead DESC     LIMIT 1 ) SELECT T4.`Free Meal Count (Ages 5-17)` FROM TopReadingScore AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode INNER JOIN frpm AS T4 ON T2.CDSCode = T4.CDSCode ",
+                "plan": "**Question**: For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the satscores, schools, and frpm tables to access relevant data.\n\n** Identify the School with the Highest Average Score in Reading: **\n1. Scan the satscores table: Retrieve records from the satscores table to find the highest average score in Reading.\n2. Extract the cds code: For each row, retrieve the cds code which uniquely identifies the school.\n3. Determine the highest AvgScrRead: Compare the AvgScrRead values to identify the maximum score.\n4. Store the cds code of the school with the highest score: Record the cds code of the school that achieved the highest average score in Reading.\n\n** Join Tables to Retrieve FRPM Count: **\n1. Join satscores with schools on cds code: Use the cds code to join the satscores table with the schools table to get additional details about the school.\n2. Join the result with frpm on CDSCode: Use the cds code again to join the combined result with the frpm table to retrieve the FRPM count for students aged 5-17.\n\n** Retrieve the FRPM Count: **\n1. Extract the FRPM Count (Ages 5-17): From the frpm table, retrieve the FRPM Count (Ages 5-17) for the identified school.\n2. Prepare the result: Format the FRPM count for presentation.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final FRPM count for presentation.\n2. Output the final FRPM count: Deliver the FRPM count as the query result.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " WITH TopReadingScore AS (     SELECT T1.cds     FROM satscores AS T1     WHERE T1.AvgScrRead IS NOT NULL     ORDER BY T1.AvgScrRead DESC     LIMIT 1 ) SELECT T3.`FRPM Count (Ages 5-17)` FROM TopReadingScore AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode INNER JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode ",
+                "plan": "**Question:** For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?\n\n**Query Plan:**\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the satscores, frpm, and schools tables to access relevant data.\n\n** Identify the School with the Highest Average Score in Reading: **\n1. Scan the satscores table: Start reading rows from the satscores table.\n2. Filter by non-null AvgScrRead: Ensure that the AvgScrRead column is not null.\n3. Order by AvgScrRead in descending order: Sort the rows based on AvgScrRead in descending order to identify the highest score.\n4. Limit to one row: Retrieve only the top row with the highest AvgScrRead to identify the school with the highest average score in Reading.\n\n** Join with Other Tables to Get FRPM Count: **\n1. Join with schools table: Use the cds code from the satscores table to join with the schools table to get the CDSCode.\n2. Join with frpm table: Use the CDSCode from the schools table to join with the frpm table to get the FRPM count for students aged 5-17.\n\n** Retrieve the FRPM Count: **\n1. Select the FRPM Count (Ages 5-17) column from the frpm table: Extract the FRPM count for students aged 5-17 for the identified school.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the final FRPM count for presentation.\n2. Output the final count: Deliver the FRPM count as the query result, indicating the FRPM count for students aged 5-17 for the school with the highest average score in Reading.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            }
+        ],
+        "status": "success",
+        "execution_time": 1936.0
+    },
+    {
+        "tool_name": "revise",
+        "original_SQL_id": "generate_candidate",
+        "refined_SQL_id": "revise_1",
+        "candidates": [
+            {
+                "refined_query": " SELECT T2.`FRPM Count (Ages 5-17)` FROM `satscores` AS T1 INNER JOIN `frpm` AS T2 ON T1.cds = T2.CDSCode WHERE T2.CDSCode = (SELECT `cds` FROM `satscores` ORDER BY `AvgScrRead` DESC LIMIT 1) "
+            },
+            {
+                "refined_query": " SELECT T2.`FRPM Count (Ages 5-17)` FROM `satscores` AS T1 INNER JOIN `frpm` AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrRead = (SELECT MAX(AvgScrRead) FROM `satscores` WHERE cds = T1.cds) "
+            },
+            {
+                "refined_query": " SELECT `T2`.`FRPM Count (Ages 5-17)` FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`) "
+            },
+            {
+                "refined_query": " SELECT T3.`Free Meal Count (Ages 5-17)` FROM satscores AS T1 INNER JOIN frpm AS T3 ON T1.cds = T3.CDSCode WHERE T1.AvgScrRead = (SELECT MAX(AvgScrRead) FROM satscores) "
+            },
+            {
+                "refined_query": " SELECT T2.`FRPM Count (Ages 5-17)` FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrRead = (SELECT MAX(AvgScrRead) FROM satscores AS T3 WHERE T3.cds = T1.cds) "
+            },
+            {
+                "refined_query": " SELECT `Free Meal Count (Ages 5-17)` FROM `frpm` AS T1 INNER JOIN `satscores` AS T2 ON T1.CDSCode = T2.cds WHERE T2.AvgScrRead = (SELECT MAX(AvgScrRead) FROM `satscores`) "
+            },
+            {
+                "refined_query": " SELECT T3.`FRPM Count (Ages 5-17)` FROM `satscores` AS T1 INNER JOIN `schools` AS T2 ON T1.cds = T2.CDSCode INNER JOIN `frpm` AS T3 ON T2.CDSCode = T3.CDSCode WHERE T1.AvgScrRead = (SELECT MAX(AvgScrRead) FROM `satscores` WHERE cds = T1.cds) "
+            },
+            {
+                "refined_query": " SELECT T2.`FRPM Count (Ages 5-17)` FROM `satscores` AS T1 INNER JOIN `frpm` AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrRead = (SELECT MAX(AvgScrRead) FROM `satscores`) "
+            },
+            {
+                "refined_query": " SELECT T2.`FRPM Count (Ages 5-17)` FROM `satscores` AS T1 INNER JOIN `frpm` AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrRead = (SELECT MAX(AvgScrRead) FROM `satscores`) "
+            },
+            {
+                "refined_query": " SELECT `T2`.`FRPM Count (Ages 5-17)` FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`) "
+            },
+            {
+                "refined_query": " WITH MaxReadingScore AS (SELECT cds, AvgScrRead FROM satscores GROUP BY cds ORDER BY AvgScrRead DESC LIMIT 1) SELECT T2.`FRPM Count (Ages 5-17)` FROM MaxReadingScore AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode "
+            },
+            {
+                "refined_query": " WITH MaxReadingScore AS (     SELECT cds, MAX(AvgScrRead) AS MaxScore     FROM satscores     GROUP BY cds ) SELECT T3.`FRPM Count (Ages 5-17)` FROM satscores AS T1 JOIN schools AS T2 ON T1.cds = T2.CDSCode JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode WHERE T1.AvgScrRead = (SELECT MaxScore FROM MaxReadingScore WHERE T1.cds = MaxReadingScore.cds) "
+            },
+            {
+                "refined_query": " WITH TopReadingSchool AS (SELECT cds FROM satscores ORDER BY AvgScrRead DESC LIMIT 1) SELECT T3.`FRPM Count (Ages 5-17)` FROM TopReadingSchool AS T1 JOIN schools AS T2 ON T1.cds = T2.CDSCode JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode "
+            },
+            {
+                "refined_query": " WITH MaxAvgScr AS (     SELECT cds, MAX(AvgScrRead) AS max_avg_scr     FROM satscores     GROUP BY cds ) SELECT T3.`FRPM Count (Ages 5-17)` FROM MaxAvgScr AS T1 JOIN satscores AS T2 ON T1.cds = T2.cds AND T1.max_avg_scr = T2.AvgScrRead JOIN frpm AS T3 ON T2.cds = T3.CDSCode "
+            },
+            {
+                "refined_query": " WITH MaxReadingScore AS (     SELECT cds, MAX(AvgScrRead) AS MaxAvgScrRead     FROM satscores     GROUP BY cds ) SELECT T3.`FRPM Count (Ages 5-17)` FROM MaxReadingScore AS T1 JOIN satscores AS T2 ON T1.cds = T2.cds AND T1.MaxAvgScrRead = T2.AvgScrRead JOIN frpm AS T3 ON T2.cds = T3.CDSCode "
+            },
+            {
+                "refined_query": " SELECT T2.`FRPM Count (Ages 5-17)` FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrRead = (SELECT MAX(AvgScrRead) FROM satscores WHERE AvgScrRead IS NOT NULL) "
+            },
+            {
+                "refined_query": " WITH MaxReadingScore AS (SELECT cds, AvgScrRead FROM satscores ORDER BY AvgScrRead DESC LIMIT 1) SELECT T3.`FRPM Count (Ages 5-17)` FROM MaxReadingScore AS T1 JOIN schools AS T2 ON T1.cds = T2.CDSCode JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode "
+            },
+            {
+                "refined_query": " WITH TopReadingScore AS (SELECT cds, AVG(AvgScrRead) AS AvgReadingScore FROM satscores GROUP BY cds ORDER BY AvgReadingScore DESC LIMIT 1) SELECT T3.`FRPM Count (Ages 5-17)` FROM TopReadingScore AS T1 JOIN schools AS T2 ON T1.cds = T2.CDSCode JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode "
+            },
+            {
+                "refined_query": " WITH TopReadingScore AS (SELECT cds, AVG(AvgScrRead) AS AvgScrRead FROM satscores GROUP BY cds ORDER BY AvgScrRead DESC LIMIT 1) SELECT T4.`Free Meal Count (Ages 5-17)` FROM TopReadingScore AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode INNER JOIN frpm AS T4 ON T2.CDSCode = T4.CDSCode "
+            },
+            {
+                "refined_query": " WITH TopReadingScore AS (SELECT cds FROM satscores WHERE AvgScrRead IS NOT NULL ORDER BY AvgScrRead DESC LIMIT 1) SELECT T3.`FRPM Count (Ages 5-17)` FROM TopReadingScore AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode INNER JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode "
+            }
+        ],
+        "status": "success",
+        "execution_time": 388.4
+    },
+    {
+        "tool_name": "generate_unit_test",
+        "unit_tests": {
+            "unit_test_generation": [
+                "The answer SQL query should use a subquery to find the maximum value of `AvgScrRead` in the `satscores` table.",
+                "The answer SQL query should join the `satscores` and `frpm` tables using the `cds` field as the common key.",
+                "The answer SQL query should select the `FRPM Count (Ages 5-17)` column from the `frpm` table.",
+                "The answer SQL query should filter the rows where the `AvgScrRead` equals the maximum value found in the subquery.",
+                "The answer SQL query should not use a group by clause unnecessarily.",
+                "The answer SQL query should not use an aggregate function on `AvgScrRead` within the main query.",
+                "The answer SQL query should not select the wrong column such as `Free Meal Count (Ages 5-17)` instead of `FRPM Count (Ages 5-17)`.",
+                "The answer SQL query should not include unnecessary joins with the `schools` table unless required.",
+                "The answer SQL query should correctly handle null values in the `AvgScrRead` field when finding the maximum value.",
+                "The answer SQL query should not use a subquery that finds the maximum `AvgScrRead` for each individual school record.",
+                "The answer SQL query should use a single subquery to find the maximum `AvgScrRead` across all records.",
+                "The answer SQL query should not filter the subquery with the condition `cds = T1.cds`.",
+                "The answer SQL query should not use a common table expression (CTE) if not necessary for identifying the school with the highest `AvgScrRead`.",
+                "The answer SQL query should use a CTE if it helps in simplifying the query while ensuring the correct identification of the school.",
+                "The answer SQL query should not perform additional operations like averaging `AvgScrRead` in the CTE.",
+                "The answer SQL query should ensure that the subquery used to find the maximum `AvgScrRead` does not introduce any duplicates.",
+                "The answer SQL query should not use a group by clause inside the subquery unless it is essential for finding the maximum `AvgScrRead`.",
+                "The answer SQL query should ensure that the join operation links the correct columns between the `satscores` and `frpm` tables.",
+                "The answer SQL query should not include unnecessary columns in the final select statement.",
+                "The answer SQL query should ensure that the final result set contains exactly one row corresponding to the school with the highest `AvgScrRead`.",
+                "Only the best answer from the set of candidates that most accurately answers the question, given the database schema and hint should pass this test."
+            ]
+        },
+        "candidates": [
+            " SELECT T2.`FRPM Count (Ages 5-17)` FROM `satscores` AS T1 INNER JOIN `frpm` AS T2 ON T1.cds = T2.CDSCode WHERE T2.CDSCode = (SELECT `cds` FROM `satscores` ORDER BY `AvgScrRead` DESC LIMIT 1) ",
+            " SELECT T2.`FRPM Count (Ages 5-17)` FROM `satscores` AS T1 INNER JOIN `frpm` AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrRead = (SELECT MAX(AvgScrRead) FROM `satscores` WHERE cds = T1.cds) ",
+            " SELECT `T2`.`FRPM Count (Ages 5-17)` FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`) ",
+            " SELECT T3.`Free Meal Count (Ages 5-17)` FROM satscores AS T1 INNER JOIN frpm AS T3 ON T1.cds = T3.CDSCode WHERE T1.AvgScrRead = (SELECT MAX(AvgScrRead) FROM satscores) ",
+            " SELECT T2.`FRPM Count (Ages 5-17)` FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrRead = (SELECT MAX(AvgScrRead) FROM satscores AS T3 WHERE T3.cds = T1.cds) ",
+            " SELECT `Free Meal Count (Ages 5-17)` FROM `frpm` AS T1 INNER JOIN `satscores` AS T2 ON T1.CDSCode = T2.cds WHERE T2.AvgScrRead = (SELECT MAX(AvgScrRead) FROM `satscores`) ",
+            " SELECT T3.`FRPM Count (Ages 5-17)` FROM `satscores` AS T1 INNER JOIN `schools` AS T2 ON T1.cds = T2.CDSCode INNER JOIN `frpm` AS T3 ON T2.CDSCode = T3.CDSCode WHERE T1.AvgScrRead = (SELECT MAX(AvgScrRead) FROM `satscores` WHERE cds = T1.cds) ",
+            " SELECT T2.`FRPM Count (Ages 5-17)` FROM `satscores` AS T1 INNER JOIN `frpm` AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrRead = (SELECT MAX(AvgScrRead) FROM `satscores`) ",
+            " SELECT T2.`FRPM Count (Ages 5-17)` FROM `satscores` AS T1 INNER JOIN `frpm` AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrRead = (SELECT MAX(AvgScrRead) FROM `satscores`) ",
+            " SELECT `T2`.`FRPM Count (Ages 5-17)` FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`) ",
+            " WITH MaxReadingScore AS (SELECT cds, AvgScrRead FROM satscores GROUP BY cds ORDER BY AvgScrRead DESC LIMIT 1) SELECT T2.`FRPM Count (Ages 5-17)` FROM MaxReadingScore AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode ",
+            " WITH MaxReadingScore AS (     SELECT cds, MAX(AvgScrRead) AS MaxScore     FROM satscores     GROUP BY cds ) SELECT T3.`FRPM Count (Ages 5-17)` FROM satscores AS T1 JOIN schools AS T2 ON T1.cds = T2.CDSCode JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode WHERE T1.AvgScrRead = (SELECT MaxScore FROM MaxReadingScore WHERE T1.cds = MaxReadingScore.cds) ",
+            " WITH TopReadingSchool AS (SELECT cds FROM satscores ORDER BY AvgScrRead DESC LIMIT 1) SELECT T3.`FRPM Count (Ages 5-17)` FROM TopReadingSchool AS T1 JOIN schools AS T2 ON T1.cds = T2.CDSCode JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode ",
+            " WITH MaxAvgScr AS (     SELECT cds, MAX(AvgScrRead) AS max_avg_scr     FROM satscores     GROUP BY cds ) SELECT T3.`FRPM Count (Ages 5-17)` FROM MaxAvgScr AS T1 JOIN satscores AS T2 ON T1.cds = T2.cds AND T1.max_avg_scr = T2.AvgScrRead JOIN frpm AS T3 ON T2.cds = T3.CDSCode ",
+            " WITH MaxReadingScore AS (     SELECT cds, MAX(AvgScrRead) AS MaxAvgScrRead     FROM satscores     GROUP BY cds ) SELECT T3.`FRPM Count (Ages 5-17)` FROM MaxReadingScore AS T1 JOIN satscores AS T2 ON T1.cds = T2.cds AND T1.MaxAvgScrRead = T2.AvgScrRead JOIN frpm AS T3 ON T2.cds = T3.CDSCode ",
+            " SELECT T2.`FRPM Count (Ages 5-17)` FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrRead = (SELECT MAX(AvgScrRead) FROM satscores WHERE AvgScrRead IS NOT NULL) ",
+            " WITH MaxReadingScore AS (SELECT cds, AvgScrRead FROM satscores ORDER BY AvgScrRead DESC LIMIT 1) SELECT T3.`FRPM Count (Ages 5-17)` FROM MaxReadingScore AS T1 JOIN schools AS T2 ON T1.cds = T2.CDSCode JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode ",
+            " WITH TopReadingScore AS (SELECT cds, AVG(AvgScrRead) AS AvgReadingScore FROM satscores GROUP BY cds ORDER BY AvgReadingScore DESC LIMIT 1) SELECT T3.`FRPM Count (Ages 5-17)` FROM TopReadingScore AS T1 JOIN schools AS T2 ON T1.cds = T2.CDSCode JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode ",
+            " WITH TopReadingScore AS (SELECT cds, AVG(AvgScrRead) AS AvgScrRead FROM satscores GROUP BY cds ORDER BY AvgScrRead DESC LIMIT 1) SELECT T4.`Free Meal Count (Ages 5-17)` FROM TopReadingScore AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode INNER JOIN frpm AS T4 ON T2.CDSCode = T4.CDSCode ",
+            " WITH TopReadingScore AS (SELECT cds FROM satscores WHERE AvgScrRead IS NOT NULL ORDER BY AvgScrRead DESC LIMIT 1) SELECT T3.`FRPM Count (Ages 5-17)` FROM TopReadingScore AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode INNER JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode "
+        ],
+        "status": "success",
+        "execution_time": 168.2
+    },
+    {
+        "tool_name": "evaluate",
+        "scores": [
+            15,
+            1,
+            16,
+            1,
+            16,
+            2,
+            9,
+            8,
+            7,
+            8,
+            8,
+            7,
+            5,
+            9,
+            9,
+            6,
+            5,
+            2,
+            1,
+            5
+        ],
+        "comparison_matrix": [
+            [
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1,
+                1,
+                0,
+                1,
+                1
+            ],
+            [
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1,
+                1,
+                0,
+                0,
+                1
+            ],
+            [
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1
+            ],
+            [
+                0,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1
+            ],
+            [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            [
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                1
+            ],
+            [
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                1,
+                1,
+                0,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        ],
+        "candidates": [
+            " SELECT T2.`FRPM Count (Ages 5-17)` FROM `satscores` AS T1 INNER JOIN `frpm` AS T2 ON T1.cds = T2.CDSCode WHERE T2.CDSCode = (SELECT `cds` FROM `satscores` ORDER BY `AvgScrRead` DESC LIMIT 1) ",
+            " SELECT T2.`FRPM Count (Ages 5-17)` FROM `satscores` AS T1 INNER JOIN `frpm` AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrRead = (SELECT MAX(AvgScrRead) FROM `satscores` WHERE cds = T1.cds) ",
+            " SELECT `T2`.`FRPM Count (Ages 5-17)` FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`) ",
+            " SELECT T3.`Free Meal Count (Ages 5-17)` FROM satscores AS T1 INNER JOIN frpm AS T3 ON T1.cds = T3.CDSCode WHERE T1.AvgScrRead = (SELECT MAX(AvgScrRead) FROM satscores) ",
+            " SELECT T2.`FRPM Count (Ages 5-17)` FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrRead = (SELECT MAX(AvgScrRead) FROM satscores AS T3 WHERE T3.cds = T1.cds) ",
+            " SELECT `Free Meal Count (Ages 5-17)` FROM `frpm` AS T1 INNER JOIN `satscores` AS T2 ON T1.CDSCode = T2.cds WHERE T2.AvgScrRead = (SELECT MAX(AvgScrRead) FROM `satscores`) ",
+            " SELECT T3.`FRPM Count (Ages 5-17)` FROM `satscores` AS T1 INNER JOIN `schools` AS T2 ON T1.cds = T2.CDSCode INNER JOIN `frpm` AS T3 ON T2.CDSCode = T3.CDSCode WHERE T1.AvgScrRead = (SELECT MAX(AvgScrRead) FROM `satscores` WHERE cds = T1.cds) ",
+            " SELECT T2.`FRPM Count (Ages 5-17)` FROM `satscores` AS T1 INNER JOIN `frpm` AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrRead = (SELECT MAX(AvgScrRead) FROM `satscores`) ",
+            " SELECT T2.`FRPM Count (Ages 5-17)` FROM `satscores` AS T1 INNER JOIN `frpm` AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrRead = (SELECT MAX(AvgScrRead) FROM `satscores`) ",
+            " SELECT `T2`.`FRPM Count (Ages 5-17)` FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`) ",
+            " WITH MaxReadingScore AS (SELECT cds, AvgScrRead FROM satscores GROUP BY cds ORDER BY AvgScrRead DESC LIMIT 1) SELECT T2.`FRPM Count (Ages 5-17)` FROM MaxReadingScore AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode ",
+            " WITH MaxReadingScore AS (     SELECT cds, MAX(AvgScrRead) AS MaxScore     FROM satscores     GROUP BY cds ) SELECT T3.`FRPM Count (Ages 5-17)` FROM satscores AS T1 JOIN schools AS T2 ON T1.cds = T2.CDSCode JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode WHERE T1.AvgScrRead = (SELECT MaxScore FROM MaxReadingScore WHERE T1.cds = MaxReadingScore.cds) ",
+            " WITH TopReadingSchool AS (SELECT cds FROM satscores ORDER BY AvgScrRead DESC LIMIT 1) SELECT T3.`FRPM Count (Ages 5-17)` FROM TopReadingSchool AS T1 JOIN schools AS T2 ON T1.cds = T2.CDSCode JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode ",
+            " WITH MaxAvgScr AS (     SELECT cds, MAX(AvgScrRead) AS max_avg_scr     FROM satscores     GROUP BY cds ) SELECT T3.`FRPM Count (Ages 5-17)` FROM MaxAvgScr AS T1 JOIN satscores AS T2 ON T1.cds = T2.cds AND T1.max_avg_scr = T2.AvgScrRead JOIN frpm AS T3 ON T2.cds = T3.CDSCode ",
+            " WITH MaxReadingScore AS (     SELECT cds, MAX(AvgScrRead) AS MaxAvgScrRead     FROM satscores     GROUP BY cds ) SELECT T3.`FRPM Count (Ages 5-17)` FROM MaxReadingScore AS T1 JOIN satscores AS T2 ON T1.cds = T2.cds AND T1.MaxAvgScrRead = T2.AvgScrRead JOIN frpm AS T3 ON T2.cds = T3.CDSCode ",
+            " SELECT T2.`FRPM Count (Ages 5-17)` FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrRead = (SELECT MAX(AvgScrRead) FROM satscores WHERE AvgScrRead IS NOT NULL) ",
+            " WITH MaxReadingScore AS (SELECT cds, AvgScrRead FROM satscores ORDER BY AvgScrRead DESC LIMIT 1) SELECT T3.`FRPM Count (Ages 5-17)` FROM MaxReadingScore AS T1 JOIN schools AS T2 ON T1.cds = T2.CDSCode JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode ",
+            " WITH TopReadingScore AS (SELECT cds, AVG(AvgScrRead) AS AvgReadingScore FROM satscores GROUP BY cds ORDER BY AvgReadingScore DESC LIMIT 1) SELECT T3.`FRPM Count (Ages 5-17)` FROM TopReadingScore AS T1 JOIN schools AS T2 ON T1.cds = T2.CDSCode JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode ",
+            " WITH TopReadingScore AS (SELECT cds, AVG(AvgScrRead) AS AvgScrRead FROM satscores GROUP BY cds ORDER BY AvgScrRead DESC LIMIT 1) SELECT T4.`Free Meal Count (Ages 5-17)` FROM TopReadingScore AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode INNER JOIN frpm AS T4 ON T2.CDSCode = T4.CDSCode ",
+            " WITH TopReadingScore AS (SELECT cds FROM satscores WHERE AvgScrRead IS NOT NULL ORDER BY AvgScrRead DESC LIMIT 1) SELECT T3.`FRPM Count (Ages 5-17)` FROM TopReadingScore AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode INNER JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode "
+        ],
+        "selected_candidate": " SELECT `T2`.`FRPM Count (Ages 5-17)` FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`) ",
+        "status": "success",
+        "execution_time": 2982.7
+    },
+    {
+        "tool_name": "execution_accuracy",
+        "generate_candidate": {
+            "exec_res": 0,
+            "exec_err": "incorrect answer",
+            "Question": "For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?",
+            "Evidence": "",
+            "GOLD_SQL": "SELECT T2.`FRPM Count (Ages 5-17)` FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode ORDER BY T1.AvgScrRead DESC LIMIT 1",
+            "PREDICTED_SQL": " SELECT `FRPM Count (Ages 5-17)` FROM `frpm` WHERE `CDSCode` = (SELECT `cds` FROM `satscores` ORDER BY `AvgScrRead` DESC LIMIT 1) "
+        },
+        "revise_1": {
+            "exec_res": 0,
+            "exec_err": "incorrect answer",
+            "Question": "For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?",
+            "Evidence": "",
+            "GOLD_SQL": "SELECT T2.`FRPM Count (Ages 5-17)` FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode ORDER BY T1.AvgScrRead DESC LIMIT 1",
+            "PREDICTED_SQL": " SELECT T2.`FRPM Count (Ages 5-17)` FROM `satscores` AS T1 INNER JOIN `frpm` AS T2 ON T1.cds = T2.CDSCode WHERE T2.CDSCode = (SELECT `cds` FROM `satscores` ORDER BY `AvgScrRead` DESC LIMIT 1) "
+        },
+        "evaluate_1": {
+            "exec_res": 0,
+            "exec_err": "incorrect answer",
+            "Question": "For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?",
+            "Evidence": "",
+            "GOLD_SQL": "SELECT T2.`FRPM Count (Ages 5-17)` FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode ORDER BY T1.AvgScrRead DESC LIMIT 1",
+            "PREDICTED_SQL": " SELECT `T2`.`FRPM Count (Ages 5-17)` FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`) "
+        },
+        "final_SQL": {
+            "exec_res": 0,
+            "exec_err": "incorrect answer",
+            "Question": "For the school with the highest average score in Reading in the SAT test, what is its FRPM count for students aged 5-17?",
+            "Evidence": "",
+            "GOLD_SQL": "SELECT T2.`FRPM Count (Ages 5-17)` FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode ORDER BY T1.AvgScrRead DESC LIMIT 1",
+            "PREDICTED_SQL": " SELECT `T2`.`FRPM Count (Ages 5-17)` FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`) "
+        },
+        "status": "success",
+        "execution_time": 0.0
+    }
+]

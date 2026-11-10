@@ -1,0 +1,17 @@
+{
+    "0": "SELECT MAX(`T1`.`Free Meal Count (K-12)` / `T1`.`Enrollment (K-12)`) AS `eligible_free_rate` FROM `frpm` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`CDSCode` = `T2`.`CDSCode` WHERE `T2`.`County` = 'Alameda'\t----- bird -----\tcalifornia_schools",
+    "1": "SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm` AS `T1` WHERE `T1`.`School Type` = 'Continuation High Schools' AND `T1`.`Enrollment (Ages 5-17)` IS NOT NULL ORDER BY (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) ASC NULLS LAST LIMIT 3\t----- bird -----\tcalifornia_schools",
+    "2": "SELECT T1.Zip FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T2.`District Name` = 'Fresno County Office of Education'\t----- bird -----\tcalifornia_schools",
+    "3": "SELECT T2.MailStreet FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1)\t----- bird -----\tcalifornia_schools",
+    "4": "--error--\t----- bird -----\tcalifornia_schools",
+    "5": "SELECT COUNT(*) FROM `schools` AS `T1` INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds` WHERE `T2`.`AvgScrMath` > 400 AND `T1`.`Virtual` = 'F';\t----- bird -----\tcalifornia_schools",
+    "6": "SELECT T1.sname FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T1.NumTstTakr > 500 AND T2.Magnet = 1\t----- bird -----\tcalifornia_schools",
+    "7": "--error--\t----- bird -----\tcalifornia_schools",
+    "8": "SELECT T2.NumTstTakr FROM frpm AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds WHERE T1.CDSCode = (SELECT CDSCode FROM frpm ORDER BY `FRPM Count (K-12)` DESC LIMIT 1)\t----- bird -----\tcalifornia_schools",
+    "9": "SELECT COUNT(T1.CDSCode) FROM schools AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds INNER JOIN frpm AS T3 ON T1.CDSCode = T3.CDSCode WHERE T2.AvgScrMath > 560 AND T3.`Charter Funding Type` = 'Directly funded'\t----- bird -----\tcalifornia_schools",
+    "10": "SELECT `T2`.`FRPM Count (Ages 5-17)` FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`AvgScrRead` = (SELECT MAX(`AvgScrRead`) FROM `satscores`)\t----- bird -----\tcalifornia_schools",
+    "11": "SELECT `T1`.`CDSCode` FROM `frpm` AS `T1` WHERE `T1`.`Enrollment (K-12)` + `T1`.`Enrollment (Ages 5-17)` > 500\t----- bird -----\tcalifornia_schools",
+    "12": "SELECT MAX(T2.`Free Meal Count (Ages 5-17)` / T2.`Enrollment (Ages 5-17)`)  FROM satscores AS T1  INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode  WHERE T1.NumGE1500 / T1.NumTstTakr > 0.3\t----- bird -----\tcalifornia_schools",
+    "13": "WITH TopExcellenceRate AS (SELECT `cds`, `NumGE1500` * 1.0 / NULLIF(`NumTstTakr`, 0) AS `excellence_rate` FROM `satscores` WHERE `NumTstTakr` > 0 ORDER BY `excellence_rate` DESC LIMIT 3) SELECT `T1`.`Phone` FROM `schools` AS `T1` INNER JOIN `TopExcellenceRate` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds`\t----- bird -----\tcalifornia_schools",
+    "14": "SELECT T1.NCESSchool FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode ORDER BY T2.`Enrollment (Ages 5-17)` DESC LIMIT 5\t----- bird -----\tcalifornia_schools",
+}

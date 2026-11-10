@@ -1,0 +1,715 @@
+[
+    {
+        "tool_name": "extract_keywords",
+        "keywords": [
+            "SAT excellence rate",
+            "over 0.3",
+            "highest eligible free rate",
+            "students aged 5-17",
+            "NumGE1500",
+            "NumTstTakr",
+            "Free Meal Count (Ages 5-17)",
+            "Enrollment (Ages 5-17)"
+        ],
+        "status": "success",
+        "execution_time": 28.1
+    },
+    {
+        "tool_name": "retrieve_entity",
+        "similar_columns": {
+            "schools": [
+                "County"
+            ],
+            "satscores": [
+                "NumTstTakr",
+                "NumGE1500"
+            ],
+            "frpm": [
+                "Free Meal Count (Ages 5-17)",
+                "Enrollment (Ages 5-17)"
+            ]
+        },
+        "schema_with_examples": {
+            "schools": {
+                "GSserved": [
+                    "5-11",
+                    "5-12"
+                ],
+                "GSoffered": [
+                    "5-12"
+                ],
+                "School": [
+                    "Academy for Academic Excellence"
+                ],
+                "AdmLName1": [
+                    "Free"
+                ]
+            },
+            "frpm": {
+                "School Name": [
+                    "Academy for Academic Excellence"
+                ]
+            },
+            "satscores": {
+                "sname": [
+                    "Academy for Academic Excellence"
+                ]
+            }
+        },
+        "status": "success",
+        "execution_time": 253.9
+    },
+    {
+        "tool_name": "retrieve_context",
+        "schema_with_descriptions": {
+            "satscores": {
+                "numge1500": {
+                    "column_name": "Number of Test Takers Whose Total SAT Scores Are Greater or Equal to 1500",
+                    "column_description": "Number of Test Takers Whose Total SAT Scores Are Greater or Equal to 1500",
+                    "value_description": "Number of Test Takers Whose Total SAT Scores Are Greater or Equal to 1500    Excellence Rate = NumGE1500 / NumTstTakr"
+                },
+                "enroll12": {
+                    "column_name": "enrollment (1st-12nd grade)",
+                    "column_description": "enrollment (1st-12nd grade)",
+                    "value_description": ""
+                }
+            },
+            "frpm": {
+                "enrollment (ages 5-17)": {
+                    "column_name": "",
+                    "column_description": "Enrollment (Ages 5-17)",
+                    "value_description": ""
+                },
+                "free meal count (k-12)": {
+                    "column_name": "",
+                    "column_description": "Free Meal Count (K-12)",
+                    "value_description": "eligible free rate = Free Meal Count / Enrollment"
+                },
+                "free meal count (ages 5-17)": {
+                    "column_name": "",
+                    "column_description": "Free Meal Count (Ages 5-17)",
+                    "value_description": "eligible free rate = Free Meal Count / Enrollment"
+                },
+                "frpm count (k-12)": {
+                    "column_name": "",
+                    "column_description": "Free or Reduced Price Meal Count (K-12)",
+                    "value_description": "eligible FRPM rate = FRPM / Enrollment"
+                }
+            },
+            "schools": {
+                "gsserved": {
+                    "column_name": "grade span served.",
+                    "column_description": "It is the lowest grade and the highest grade of student enrollment as reported in the most recent certified CALPADS Fall 1 data collection. Only K\u201312 enrollment is reported through CALPADS. This field may differ from the grade span offered.",
+                    "value_description": "1.\u00a0\u00a0\u00a0\u00a0 Only K\u201312 enrollment is reported through CALPADS  2.\u00a0\u00a0\u00a0\u00a0 Note: Special programs at independent study, alternative education, and special education schools will often exceed the typical grade span for schools of that type"
+                }
+            }
+        },
+        "status": "success",
+        "execution_time": 72.6
+    },
+    {
+        "tool_name": "generate_candidate",
+        "node_type": "generate_candidate",
+        "generation_based_candidates": [
+            {
+                "template_name": "generate_candidate_one",
+                "candidates": [
+                    " SELECT MAX(`T1`.`Percent (%) Eligible Free (Ages 5-17)`)  FROM `frpm` AS `T1`  INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds`  WHERE CAST(T2.NumGE1500 AS REAL) / CAST(T2.NumTstTakr AS REAL) > 0.3 ",
+                    " SELECT MAX(`T1`.`eligible_free_rate`) FROM `frpm` AS `T1` INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds` WHERE (`T2`.`NumGE1500` / `T2`.`NumTstTakr`) > 0.3 AND `T1`.`eligible_free_rate` = `T1`.`Free Meal Count (Ages 5-17)` / `T1`.`Enrollment (Ages 5-17)` ",
+                    " SELECT MAX(T2.`Free Meal Count (Ages 5-17)` / T2.`Enrollment (Ages 5-17)`)  FROM satscores AS T1  INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode  WHERE T1.NumGE1500 / T1.NumTstTakr > 0.3 ",
+                    " SELECT MAX(`T1`.`Percent (%) Eligible Free (Ages 5-17)`)  FROM `frpm` AS `T1`  INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds`  WHERE CAST(T2.NumGE1500 AS REAL) / CAST(T2.NumTstTakr AS REAL) > 0.3 ",
+                    " SELECT MAX(T3.`Free Meal Count (Ages 5-17)` / T3.`Enrollment (Ages 5-17)`)  FROM `satscores` AS T1  INNER JOIN `frpm` AS T3 ON T1.cds = T3.CDSCode  WHERE T1.NumGE1500 / T1.NumTstTakr > 0.3 ",
+                    " SELECT MAX(`T3`.`Free Meal Count (Ages 5-17)` / `T3`.`Enrollment (Ages 5-17)`) AS `eligible_free_rate` FROM `satscores` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` INNER JOIN `frpm` AS `T3` ON `T2`.`CDSCode` = `T3`.`CDSCode` WHERE `T1`.`NumGE1500` / `T1`.`NumTstTakr` > 0.3 ",
+                    " SELECT MAX(T2.`Free Meal Count (Ages 5-17)` / T2.`Enrollment (Ages 5-17)`) AS eligible_free_rate FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.NumGE1500 / T1.NumTstTakr > 0.3 ",
+                    " SELECT MAX(`T1`.`Free Meal Count (Ages 5-17)` / `T1`.`Enrollment (Ages 5-17)`)  FROM `frpm` AS `T1`  INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds`  WHERE CAST(`T2`.`NumGE1500` AS REAL) / CAST(`T2`.`NumTstTakr` AS REAL) > 0.3 ",
+                    " SELECT MAX(T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)`)  FROM `frpm` AS T1  INNER JOIN `satscores` AS T2  ON T1.CDSCode = T2.cds  WHERE T2.NumGE1500 / T2.NumTstTakr > 0.3 ",
+                    " SELECT MAX((`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS `Eligible Free Rate`) FROM `frpm` WHERE CDSCode IN (SELECT cds FROM `satscores` WHERE (`NumGE1500` / `NumTstTakr`) > 0.3) "
+                ]
+            },
+            {
+                "template_name": "generate_candidate_two",
+                "candidates": [
+                    " WITH filtered_schools AS (     SELECT T1.CDSCode, (T1.NumGE1500 * 1.0 / T1.NumTstTakr) AS excellence_rate     FROM satscores AS T1     WHERE (T1.NumGE1500 * 1.0 / T1.NumTstTakr) > 0.3 ), eligible_free_rates AS (     SELECT T1.CDSCode, (T2.`Free Meal Count (Ages 5-17)` * 1.0 / T2.`Enrollment (Ages 5-17)`) AS eligible_free_rate     FROM filtered_schools AS T1     INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode ) SELECT MAX(eligible_free_rate) FROM eligible_free_rates ",
+                    " SELECT MAX(T1.`Percent (%) Eligible Free (Ages 5-17)`) FROM frpm AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds WHERE (T2.NumGE1500 * 1.0 / T2.NumTstTakr) > 0.3 ",
+                    " WITH ranked_schools AS (     SELECT          T1.CDSCode,         T1.NumGE1500,         T1.NumTstTakr,         T2.`Free Meal Count (Ages 5-17)`,         T2.`Enrollment (Ages 5-17)`     FROM          satscores AS T1     INNER JOIN          frpm AS T2 ON T1.cds = T2.CDSCode     WHERE          CAST(T1.NumGE1500 AS REAL) / T1.NumTstTakr > 0.3 ) SELECT      MAX(`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS max_eligible_free_rate FROM      ranked_schools ",
+                    " WITH eligible_schools AS (     SELECT T1.cds, T1.NumGE1500, T1.NumTstTakr     FROM satscores AS T1     WHERE CAST(T1.NumGE1500 AS REAL) / T1.NumTstTakr > 0.3 ), free_rates AS (     SELECT T1.CDSCode, T1.`Free Meal Count (Ages 5-17)`, T1.`Enrollment (Ages 5-17)`     FROM frpm AS T1     INNER JOIN eligible_schools AS T2 ON T1.CDSCode = T2.cds ) SELECT MAX(`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS max_eligible_free_rate FROM free_rates ",
+                    " WITH eligible_schools AS (     SELECT T1.cds, T1.NumGE1500, T1.NumTstTakr, T2.CDSCode     FROM satscores AS T1     INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode     WHERE (T1.NumGE1500 * 1.0 / T1.NumTstTakr) > 0.3 ), free_rates AS (     SELECT T1.cds, T2.`Free Meal Count (Ages 5-17)`, T2.`Enrollment (Ages 5-17)`     FROM eligible_schools AS T1     INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode     WHERE T2.`Free Meal Count (Ages 5-17)` IS NOT NULL AND T2.`Enrollment (Ages 5-17)` IS NOT NULL ) SELECT MAX(`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS max_free_rate FROM free_rates ",
+                    " SELECT MAX(T4.`Percent (%) Eligible Free (Ages 5-17)`) AS max_eligible_free_rate FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode INNER JOIN frpm AS T4 ON T2.CDSCode = T4.CDSCode WHERE (T1.NumGE1500 * 1.0 / T1.NumTstTakr) > 0.3 ",
+                    " WITH eligible_schools AS (     SELECT T1.CDSCode, (T1.NumGE1500::REAL / T1.NumTstTakr) AS excellence_rate     FROM satscores AS T1     WHERE (T1.NumGE1500::REAL / T1.NumTstTakr) > 0.3 ) SELECT MAX(T2.`Percent (%) Eligible Free (Ages 5-17)`) FROM eligible_schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode ",
+                    " WITH ExcellenceRateFiltered AS (     SELECT T1.cds, T1.NumGE1500, T1.NumTstTakr     FROM satscores AS T1     WHERE CAST(T1.NumGE1500 AS REAL) / T1.NumTstTakr > 0.3 ), EligibleFreeRate AS (     SELECT T3.cds, (T3.`Free Meal Count (Ages 5-17)` / T3.`Enrollment (Ages 5-17)`) AS eligible_free_rate     FROM ExcellenceRateFiltered AS T1     INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode     INNER JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode ) SELECT MAX(eligible_free_rate) FROM EligibleFreeRate ",
+                    " SELECT MAX(T3.`Percent (%) Eligible FRPM (Ages 5-17)`) FROM satscores AS T1 INNER JOIN frpm AS T3 ON T1.cds = T3.CDSCode WHERE (T1.NumGE1500 * 1.0 / T1.NumTstTakr) > 0.3 ",
+                    " SELECT MAX(T3.`Free Meal Count (Ages 5-17)` / T3.`Enrollment (Ages 5-17)`) AS max_eligible_free_rate FROM schools AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds INNER JOIN frpm AS T3 ON T1.CDSCode = T3.CDSCode WHERE (T2.NumGE1500 / T2.NumTstTakr) > 0.3 "
+                ]
+            }
+        ],
+        "candidates": [
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT MAX(`T1`.`Percent (%) Eligible Free (Ages 5-17)`)  FROM `frpm` AS `T1`  INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds`  WHERE CAST(T2.NumGE1500 AS REAL) / CAST(T2.NumTstTakr AS REAL) > 0.3 ",
+                "plan": "**Question:** Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?\n**Evidence:** Excellence rate = NumGE1500 / NumTstTakr; Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?\n    * **Analysis:** We need to find the maximum eligible free rate for students aged 5-17 among schools with an SAT excellence rate greater than 0.3. The eligible free rate is calculated as `Free Meal Count (Ages 5-17)` divided by `Enrollment (Ages 5-17)`. The SAT excellence rate is derived from the `NumGE1500` and `NumTstTakr` columns in the `satscores` table.\n    * **Pseudo SQL:** SELECT MAX(`T1`.`Percent (%) Eligible Free (Ages 5-17)`) FROM `frpm` AS `T1` INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds` WHERE <SAT excellence rate > 0.3>\n\n    * **Sub-question 1:** SAT excellence rate > 0.3\n        * **Analysis:** We need to calculate the SAT excellence rate using the formula `NumGE1500 / NumTstTakr` and filter for those greater than 0.3.\n        * **Pseudo SQL:** `CAST(T2.NumGE1500 AS REAL) / CAST(T2.NumTstTakr AS REAL) > 0.3`\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (SAT excellence rate > 0.3):**\n    * **SQL:** `CAST(T2.NumGE1500 AS REAL) / CAST(T2.NumTstTakr AS REAL) > 0.3`\n\n* **Main Question (highest eligible free rate):**\n    * **SQL:** SELECT MAX(`T1`.`Percent (%) Eligible Free (Ages 5-17)`) FROM `frpm` AS `T1` INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds` WHERE CAST(T2.NumGE1500 AS REAL) / CAST(T2.NumTstTakr AS REAL) > 0.3\n\n**3. Simplification and Optimization:**\n\n* The SQL query from step 2 is already quite efficient. We are using a direct calculation for the SAT excellence rate and filtering accordingly.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT MAX(`T1`.`eligible_free_rate`) FROM `frpm` AS `T1` INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds` WHERE (`T2`.`NumGE1500` / `T2`.`NumTstTakr`) > 0.3 AND `T1`.`eligible_free_rate` = `T1`.`Free Meal Count (Ages 5-17)` / `T1`.`Enrollment (Ages 5-17)` ",
+                "plan": "**Question:** Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?\n**Evidence:** Excellence rate = NumGE1500 / NumTstTakr; Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?\n    * **Analysis:** The question asks for the maximum eligible free rate among schools with an SAT excellence rate greater than 0.3. We need to calculate the eligible free rate from the `frpm` table and filter schools based on the SAT excellence rate from the `satscores` table.\n    * **Pseudo SQL:** SELECT MAX(`T1`.`eligible_free_rate`) FROM `frpm` AS `T1` INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds` WHERE <SAT excellence rate > 0.3>\n\n    * **Sub-question 1:** SAT excellence rate > 0.3\n        * **Analysis:** This involves calculating the SAT excellence rate from the `satscores` table and filtering based on this calculation.\n        * **Pseudo SQL:** `T2`.`excellence_rate` > 0.3 WHERE `T2`.`excellence_rate` = `T2`.`NumGE1500` / `T2`.`NumTstTakr`\n\n    * **Sub-question 2:** eligible free rate for students aged 5-17\n        * **Analysis:** This involves calculating the eligible free rate from the `frpm` table using the formula `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`.\n        * **Pseudo SQL:** `T1`.`eligible_free_rate` = `T1`.`Free Meal Count (Ages 5-17)` / `T1`.`Enrollment (Ages 5-17)`\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (SAT excellence rate > 0.3):**\n    * **SQL:** `T2`.`excellence_rate` > 0.3 WHERE `T2`.`excellence_rate` = `T2`.`NumGE1500` / `T2`.`NumTstTakr`\n\n* **Sub-question 2 (eligible free rate for students aged 5-17):**\n    * **SQL:** `T1`.`eligible_free_rate` = `T1`.`Free Meal Count (Ages 5-17)` / `T1`.`Enrollment (Ages 5-17)`\n\n* **Main Question (highest eligible free rate):**\n    * **SQL:** SELECT MAX(`T1`.`eligible_free_rate`) FROM `frpm` AS `T1` INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds` WHERE `T2`.`excellence_rate` > 0.3 AND `T1`.`eligible_free_rate` = `T1`.`Free Meal Count (Ages 5-17)` / `T1`.`Enrollment (Ages 5-17)`\n\n**3. Simplification and Optimization:**\n\n* The query in step 2 is already quite optimized. We are calculating the necessary rates directly in the `WHERE` and `SELECT` clauses.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT MAX(T2.`Free Meal Count (Ages 5-17)` / T2.`Enrollment (Ages 5-17)`)  FROM satscores AS T1  INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode  WHERE T1.NumGE1500 / T1.NumTstTakr > 0.3 ",
+                "plan": "**Question:** Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?\n**Evidence:** Excellence rate = NumGE1500 / NumTstTakr; Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?\n    * **Analysis:** The question requires us to calculate the eligible free rate for students aged 5-17 and find the maximum value among the schools with an SAT excellence rate greater than 0.3. We need to join the `satscores` and `frpm` tables on `CDSCode` and calculate the required rates.\n    * **Pseudo SQL:** SELECT MAX(`eligible_free_rate`) FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE <excellence rate > 0.3>\n\n    * **Sub-question 1:** excellence rate > 0.3\n        * **Analysis:** We need to calculate the excellence rate using `NumGE1500` and `NumTstTakr` columns from the `satscores` table and filter where this rate is greater than 0.3.\n        * **Pseudo SQL:** `T1`.`NumGE1500` / `T1`.`NumTstTakr` > 0.3\n\n    * **Sub-question 2:** eligible free rate for students aged 5-17\n        * **Analysis:** We need to calculate the eligible free rate using `Free Meal Count (Ages 5-17)` and `Enrollment (Ages 5-17)` columns from the `frpm` table.\n        * **Pseudo SQL:** `T2`.`Free Meal Count (Ages 5-17)` / `T2`.`Enrollment (Ages 5-17)`\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (excellence rate > 0.3):**\n    * **SQL:** `T1`.`NumGE1500` / `T1`.`NumTstTakr` > 0.3\n\n* **Sub-question 2 (eligible free rate for students aged 5-17):**\n    * **SQL:** `T2`.`Free Meal Count (Ages 5-17)` / `T2`.`Enrollment (Ages 5-17)`\n\n* **Main Question (highest eligible free rate):**\n    * **SQL:** SELECT MAX(`T2`.`Free Meal Count (Ages 5-17)` / `T2`.`Enrollment (Ages 5-17)`) FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`NumGE1500` / `T1`.`NumTstTakr` > 0.3\n\n**3. Simplification and Optimization:**\n\n* The SQL query in step 2 is already quite efficient. We're using a single `INNER JOIN` to combine the necessary tables and calculating the required rates directly.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT MAX(`T1`.`Percent (%) Eligible Free (Ages 5-17)`)  FROM `frpm` AS `T1`  INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds`  WHERE CAST(T2.NumGE1500 AS REAL) / CAST(T2.NumTstTakr AS REAL) > 0.3 ",
+                "plan": "**Question:** Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?\n**Evidence:** Excellence rate = NumGE1500 / NumTstTakr; Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?\n    * **Analysis:** The question requires finding the maximum eligible free rate for students aged 5-17 among schools with an SAT excellence rate greater than 0.3. This involves joining the `frpm` and `satscores` tables on `CDSCode` and filtering by the SAT excellence rate and eligible free rate.\n    * **Pseudo SQL:** SELECT MAX(`T1`.`Percent (%) Eligible Free (Ages 5-17)`) FROM `frpm` AS `T1` INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds` WHERE <SAT excellence rate > 0.3>\n\n    * **Sub-question 1:** SAT excellence rate > 0.3\n        * **Analysis:** We need to calculate the SAT excellence rate using the formula `NumGE1500 / NumTstTakr` and filter for rates greater than 0.3.\n        * **Pseudo SQL:** `CAST(T2.NumGE1500 AS REAL) / CAST(T2.NumTstTakr AS REAL) > 0.3`\n\n    * **Sub-question 2:** eligible free rate for students aged 5-17\n        * **Analysis:** This involves calculating the eligible free rate using the formula `Free Meal Count (Ages 5-17) / Enrollment (Ages 5-17)` from the `frpm` table.\n        * **Pseudo SQL:** `T1.`Percent (%) Eligible Free (Ages 5-17)`\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (SAT excellence rate > 0.3):**\n    * **SQL:** `CAST(T2.NumGE1500 AS REAL) / CAST(T2.NumTstTakr AS REAL) > 0.3`\n\n* **Sub-question 2 (eligible free rate for students aged 5-17):**\n    * **SQL:** `T1.`Percent (%) Eligible Free (Ages 5-17)\n\n* **Main Question (highest eligible free rate):**\n    * **SQL:** SELECT MAX(`T1`.`Percent (%) Eligible Free (Ages 5-17)`) FROM `frpm` AS `T1` INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds` WHERE CAST(T2.NumGE1500 AS REAL) / CAST(T2.NumTstTakr AS REAL) > 0.3\n\n**3. Simplification and Optimization:**\n\n* The SQL query is already quite optimized. No further simplification is needed.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT MAX(T3.`Free Meal Count (Ages 5-17)` / T3.`Enrollment (Ages 5-17)`)  FROM `satscores` AS T1  INNER JOIN `frpm` AS T3 ON T1.cds = T3.CDSCode  WHERE T1.NumGE1500 / T1.NumTstTakr > 0.3 ",
+                "plan": "**Question:** Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?\n**Evidence:** Excellence rate = NumGE1500 / NumTstTakr; Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?\n    * **Analysis:** The question is asking for the maximum eligible free rate for students aged 5-17 among schools with an SAT excellence rate greater than 0.3. We need to calculate the SAT excellence rate and filter based on this rate, then compute the eligible free rate and find its maximum value.\n    * **Pseudo SQL:** SELECT MAX(`T3`.`Free Meal Count (Ages 5-17)` / `T3`.`Enrollment (Ages 5-17)`) FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE <SAT excellence rate > 0.3>\n\n    * **Sub-question 1:** SAT excellence rate > 0.3\n        * **Analysis:** We need to calculate the SAT excellence rate using `NumGE1500` and `NumTstTakr` columns from the `satscores` table and filter based on this rate being greater than 0.3.\n        * **Pseudo SQL:** `T1`.`NumGE1500` / `T1`.`NumTstTakr` > 0.3\n\n    * **Sub-question 2:** Free Meal Count (Ages 5-17) / Enrollment (Ages 5-17)\n        * **Analysis:** We need to calculate the eligible free rate for students aged 5-17 using the `Free Meal Count (Ages 5-17)` and `Enrollment (Ages 5-17)` columns from the `frpm` table.\n        * **Pseudo SQL:** `T3`.`Free Meal Count (Ages 5-17)` / `T3`.`Enrollment (Ages 5-17)`\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (SAT excellence rate > 0.3):**\n    * **SQL:** `T1`.`NumGE1500` / `T1`.`NumTstTakr` > 0.3\n\n* **Sub-question 2 (Free Meal Count (Ages 5-17) / Enrollment (Ages 5-17)):**\n    * **SQL:** `T3`.`Free Meal Count (Ages 5-17)` / `T3`.`Enrollment (Ages 5-17)`\n\n* **Main Question (highest eligible free rate):**\n    * **SQL:** SELECT MAX(`T3`.`Free Meal Count (Ages 5-17)` / `T3`.`Enrollment (Ages 5-17)`) FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`NumGE1500` / `T1`.`NumTstTakr` > 0.3\n\n**3. Simplification and Optimization:**\n\n* The final SQL query from step 2 is already quite optimized. We are using `INNER JOIN` to combine `satscores` and `frpm` tables based on the `cds` and `CDSCode` columns, respectively. We are also calculating the SAT excellence rate and filtering based on this rate being greater than 0.3. Finally, we are computing the eligible free rate and finding its maximum value.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT MAX(`T3`.`Free Meal Count (Ages 5-17)` / `T3`.`Enrollment (Ages 5-17)`) AS `eligible_free_rate` FROM `satscores` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` INNER JOIN `frpm` AS `T3` ON `T2`.`CDSCode` = `T3`.`CDSCode` WHERE `T1`.`NumGE1500` / `T1`.`NumTstTakr` > 0.3 ",
+                "plan": "**Question:** Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?\n**Evidence:** Excellence rate = NumGE1500 / NumTstTakr; Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?\n    * **Analysis:** We need to calculate the highest eligible free rate for students aged 5-17 among the schools with an SAT excellence rate greater than 0.3. The eligible free rate can be derived from the `frpm` table using the formula `Free Meal Count (Ages 5-17) / Enrollment (Ages 5-17)`. The SAT excellence rate is calculated from the `satscores` table using the formula `NumGE1500 / NumTstTakr`.\n    * **Pseudo SQL:** SELECT MAX(`T3`.`eligible_free_rate`) FROM `satscores` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` INNER JOIN `frpm` AS `T3` ON `T2`.`CDSCode` = `T3`.`CDSCode` WHERE <SAT excellence rate > 0.3>\n\n    * **Sub-question 1:** SAT excellence rate > 0.3\n        * **Analysis:** We need to filter the `satscores` table based on the condition `NumGE1500 / NumTstTakr > 0.3`.\n        * **Pseudo SQL:** `T1`.`NumGE1500` / `T1`.`NumTstTakr` > 0.3\n\n    * **Sub-question 2:** Calculate the eligible free rate for students aged 5-17\n        * **Analysis:** We need to calculate the eligible free rate using the formula `Free Meal Count (Ages 5-17) / Enrollment (Ages 5-17)` from the `frpm` table.\n        * **Pseudo SQL:** `T3`.`Free Meal Count (Ages 5-17)` / `T3`.`Enrollment (Ages 5-17)` AS `eligible_free_rate`\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (SAT excellence rate > 0.3):**\n    * **SQL:** `T1`.`NumGE1500` / `T1`.`NumTstTakr` > 0.3\n\n* **Sub-question 2 (calculate eligible free rate):**\n    * **SQL:** `T3`.`Free Meal Count (Ages 5-17)` / `T3`.`Enrollment (Ages 5-17)` AS `eligible_free_rate`\n\n* **Main Question (highest eligible free rate):**\n    * **SQL:** SELECT MAX(`T3`.`eligible_free_rate`) FROM `satscores` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` INNER JOIN `frpm` AS `T3` ON `T2`.`CDSCode` = `T3`.`CDSCode` WHERE `T1`.`NumGE1500` / `T1`.`NumTstTakr` > 0.3\n\n**3. Simplification and Optimization:**\n\n* The query is already quite efficient and does not require further simplification.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT MAX(T2.`Free Meal Count (Ages 5-17)` / T2.`Enrollment (Ages 5-17)`) AS eligible_free_rate FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.NumGE1500 / T1.NumTstTakr > 0.3 ",
+                "plan": "**Question:** Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?\n**Evidence:** Excellence rate = NumGE1500 / NumTstTakr; Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?\n    * **Analysis:** The question requires finding the maximum eligible free rate for students aged 5-17 among schools with an SAT excellence rate greater than 0.3. We need to calculate the excellence rate from the `satscores` table and the eligible free rate from the `frpm` table. Then, we need to filter by the excellence rate and find the maximum eligible free rate.\n    * **Pseudo SQL:** SELECT MAX(`T3`.`eligible_free_rate`) FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE <excellence rate > 0.3>\n\n    * **Sub-question 1:** excellence rate > 0.3\n        * **Analysis:** Calculate the excellence rate from the `NumGE1500` and `NumTstTakr` columns in the `satscores` table.\n        * **Pseudo SQL:** `T1`.`NumGE1500` / `T1`.`NumTstTakr` > 0.3\n\n    * **Sub-question 2:** eligible free rate for students aged 5-17\n        * **Analysis:** Calculate the eligible free rate from the `Free Meal Count (Ages 5-17)` and `Enrollment (Ages 5-17)` columns in the `frpm` table.\n        * **Pseudo SQL:** `T2`.`Free Meal Count (Ages 5-17)` / `T2`.`Enrollment (Ages 5-17)` AS `eligible_free_rate`\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (excellence rate > 0.3):**\n    * **SQL:** `T1`.`NumGE1500` / `T1`.`NumTstTakr` > 0.3\n\n* **Sub-question 2 (eligible free rate for students aged 5-17):**\n    * **SQL:** `T2`.`Free Meal Count (Ages 5-17)` / `T2`.`Enrollment (Ages 5-17)` AS `eligible_free_rate`\n\n* **Main Question (highest eligible free rate):**\n    * **SQL:** SELECT MAX(`T3`.`eligible_free_rate`) FROM `satscores` AS `T1` INNER JOIN `frpm` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` WHERE `T1`.`NumGE1500` / `T1`.`NumTstTakr` > 0.3\n\n**3. Simplification and Optimization:**\n\n* The final SQL query is already well-optimized. It joins the necessary tables, calculates the required rates, and filters based on the excellence rate before finding the maximum eligible free rate.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT MAX(`T1`.`Free Meal Count (Ages 5-17)` / `T1`.`Enrollment (Ages 5-17)`)  FROM `frpm` AS `T1`  INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds`  WHERE CAST(`T2`.`NumGE1500` AS REAL) / CAST(`T2`.`NumTstTakr` AS REAL) > 0.3 ",
+                "plan": "**Question:** Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?\n**Evidence:** Excellence rate = NumGE1500 / NumTstTakr; Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?\n    * **Analysis:** We need to calculate the eligibility free rate for students aged 5-17 and find the maximum value among schools with an SAT excellence rate greater than 0.3. We will need to join the `frpm` and `satscores` tables to get the required data.\n    * **Pseudo SQL:** SELECT MAX(`eligible_free_rate_ages_5_17`) FROM `frpm` AS `T1` INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds` WHERE <excellence rate > 0.3>\n\n    * **Sub-question 1:** excellence rate > 0.3\n        * **Analysis:** We need to calculate the excellence rate from the `NumGE1500` and `NumTstTakr` columns in the `satscores` table and filter where this rate is greater than 0.3.\n        * **Pseudo SQL:** `CAST(T2.NumGE1500 AS REAL) / CAST(T2.NumTstTakr AS REAL)` > 0.3\n\n    * **Sub-question 2:** eligible free rate for students aged 5-17\n        * **Analysis:** We need to calculate the eligible free rate for students aged 5-17 from the `Free Meal Count (Ages 5-17)` and `Enrollment (Ages 5-17)` columns in the `frpm` table.\n        * **Pseudo SQL:** `T1.`Free Meal Count (Ages 5-17)` / `T1.`Enrollment (Ages 5-17``\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (excellence rate > 0.3):**\n    * **SQL:** `CAST(T2.NumGE1500 AS REAL) / CAST(T2.NumTstTakr AS REAL)` > 0.3\n\n* **Sub-question 2 (eligible free rate for students aged 5-17):**\n    * **SQL:** `T1.`Free Meal Count (Ages 5-17` / `T1.`Enrollment (Ages 5-17``\n\n* **Main Question (highest eligible free rate):**\n    * **SQL:** SELECT MAX(`T1.`Free Meal Count (Ages 5-17` / `T1.`Enrollment (Ages 5-17``) FROM `frpm` AS `T1` INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds` WHERE `CAST(T2.NumGE1500 AS REAL) / CAST(T2.NumTstTakr AS REAL)` > 0.3\n\n**3. Simplification and Optimization:**\n\n* The final SQL query from step 2 is already quite optimized. We're using `INNER JOIN` to combine the relevant tables and applying the necessary conditions to filter and calculate the required rates.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT MAX(T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)`)  FROM `frpm` AS T1  INNER JOIN `satscores` AS T2  ON T1.CDSCode = T2.cds  WHERE T2.NumGE1500 / T2.NumTstTakr > 0.3 ",
+                "plan": "**Question:** Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?\n**Evidence:** Excellence rate = NumGE1500 / NumTstTakr; Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?\n    * **Analysis:** We need to find the maximum eligible free rate for students aged 5-17 among schools that have an SAT excellence rate greater than 0.3. This requires joining the `frpm` and `satscores` tables on `CDSCode` and calculating the eligibility rates.\n    * **Pseudo SQL:** SELECT MAX(`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm` AS `T1` INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds` WHERE <SAT excellence rate > 0.3>\n\n    * **Sub-question 1:** SAT excellence rate > 0.3\n        * **Analysis:** We need to calculate the SAT excellence rate using `NumGE1500` and `NumTstTakr` columns from the `satscores` table and filter for those greater than 0.3.\n        * **Pseudo SQL:** `T2`.`NumGE1500` / `T2`.`NumTstTakr` > 0.3\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (SAT excellence rate > 0.3):**\n    * **SQL:** `T2`.`NumGE1500` / `T2`.`NumTstTakr` > 0.3\n\n* **Main Question (highest eligible free rate):**\n    * **SQL:** SELECT MAX(`T1`.`Free Meal Count (Ages 5-17)` / `T1`.`Enrollment (Ages 5-17)`) FROM `frpm` AS `T1` INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds` WHERE `T2`.`NumGE1500` / `T2`.`NumTstTakr` > 0.3\n\n**3. Simplification and Optimization:**\n\n* The final SQL query is already optimized and correctly identifies the required columns and conditions.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT MAX((`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS `Eligible Free Rate`) FROM `frpm` WHERE CDSCode IN (SELECT cds FROM `satscores` WHERE (`NumGE1500` / `NumTstTakr`) > 0.3) ",
+                "plan": "**Question:** Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?\n**Evidence:** Excellence rate = NumGE1500 / NumTstTakr; Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**1. Divide and Conquer:**\n\n* **Main Question:** Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?\n    * **Analysis:** We need to calculate the eligible free rate for students aged 5-17 and find the maximum value among schools with an SAT excellence rate greater than 0.3. We will use the `frpm` and `satscores` tables to gather the necessary data.\n    * **Pseudo SQL:** SELECT MAX(`Eligible Free Rate`) FROM (SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS `Eligible Free Rate` FROM `frpm` WHERE CDSCode IN (SELECT cds FROM `satscores` WHERE (`NumGE1500` / `NumTstTakr`) > 0.3))\n\n    * **Sub-question 1:** Calculate the eligible free rate for students aged 5-17\n        * **Analysis:** This involves dividing `Free Meal Count (Ages 5-17)` by `Enrollment (Ages 5-17)` in the `frpm` table.\n        * **Pseudo SQL:** (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS `Eligible Free Rate`\n\n    * **Sub-question 2:** Find schools with an SAT excellence rate greater than 0.3\n        * **Analysis:** We need to filter the `satscores` table to find schools where the `excellence rate` (`NumGE1500` / `NumTstTakr`) is greater than 0.3.\n        * **Pseudo SQL:** SELECT cds FROM `satscores` WHERE (`NumGE1500` / `NumTstTakr`) > 0.3\n\n**2. Assembling SQL:**\n\n* **Sub-question 1 (eligible free rate for students aged 5-17):**\n    * **SQL:** (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS `Eligible Free Rate`\n\n* **Sub-question 2 (schools with an SAT excellence rate greater than 0.3):**\n    * **SQL:** SELECT cds FROM `satscores` WHERE (`NumGE1500` / `NumTstTakr`) > 0.3\n\n* **Main Question (highest eligible free rate):**\n    * **SQL:** SELECT MAX(`Eligible Free Rate`) FROM (SELECT (`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS `Eligible Free Rate` FROM `frpm` WHERE CDSCode IN (SELECT cds FROM `satscores` WHERE (`NumGE1500` / `NumTstTakr`) > 0.3))\n\n**3. Simplification and Optimization:**\n\n* The nested query is already quite efficient and does not require further simplification.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " WITH filtered_schools AS (     SELECT T1.CDSCode, (T1.NumGE1500 * 1.0 / T1.NumTstTakr) AS excellence_rate     FROM satscores AS T1     WHERE (T1.NumGE1500 * 1.0 / T1.NumTstTakr) > 0.3 ), eligible_free_rates AS (     SELECT T1.CDSCode, (T2.`Free Meal Count (Ages 5-17)` * 1.0 / T2.`Enrollment (Ages 5-17)`) AS eligible_free_rate     FROM filtered_schools AS T1     INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode ) SELECT MAX(eligible_free_rate) FROM eligible_free_rates ",
+                "plan": "**Question:** Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?\n**Evidence:** Excellence rate = NumGE1500 / NumTstTakr; Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**Query Plan:**\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the satscores and frpm tables to access relevant data.\n\n** Filter and Identify Relevant Schools: **\n1. Scan the satscores table: Start reading rows from the satscores table.\n2. Calculate the excellence rate: For each row, calculate the excellence rate using the formula `NumGE1500 / NumTstTakr`.\n3. Filter by excellence rate: Select only those rows where the calculated excellence rate is greater than 0.3.\n4. Join with frpm table: Match each school from the satscores table to the corresponding entry in the frpm table based on the CDSCode.\n\n** Calculate and Identify the Highest Eligible Free Rate: **\n1. Calculate the eligible free rate: For each matched row, calculate the eligible free rate using the formula `Free Meal Count (Ages 5-17) / Enrollment (Ages 5-17)`.\n2. Identify the maximum eligible free rate: Determine the highest eligible free rate among the calculated rates.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the highest eligible free rate for presentation.\n2. Output the final result: Deliver the highest eligible free rate as the query result.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT MAX(T1.`Percent (%) Eligible Free (Ages 5-17)`) FROM frpm AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds WHERE (T2.NumGE1500 * 1.0 / T2.NumTstTakr) > 0.3 ",
+                "plan": "**Question**: Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?\n**Evidence**: Excellence rate = NumGE1500 / NumTstTakr; Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the frpm and satscores tables to access relevant data.\n\n** Identify Schools with High Excellence Rate: **\n1. Scan the satscores table: Start reading rows from the satscores table.\n2. Calculate the excellence rate: For each row, calculate the excellence rate using the formula `NumGE1500 / NumTstTakr`.\n3. Filter by excellence rate: Select only those rows where the calculated excellence rate is greater than 0.3.\n4. Join with frpm table: Match each school in the filtered satscores table with its corresponding record in the frpm table using the cds code.\n\n** Calculate Eligible Free Rates: **\n1. Extract relevant columns: For each matched record, extract the `Free Meal Count (Ages 5-17)` and `Enrollment (Ages 5-17)` columns from the frpm table.\n2. Calculate the eligible free rate: For each record, compute the eligible free rate using the formula `Free Meal Count (Ages 5-17) / Enrollment (Ages 5-17)`.\n\n** Find the Highest Eligible Free Rate: **\n1. Identify the maximum value: Among the calculated eligible free rates, identify the highest value.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the highest eligible free rate for presentation.\n2. Output the final result: Deliver the highest eligible free rate as the query result.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " WITH ranked_schools AS (     SELECT          T1.CDSCode,         T1.NumGE1500,         T1.NumTstTakr,         T2.`Free Meal Count (Ages 5-17)`,         T2.`Enrollment (Ages 5-17)`     FROM          satscores AS T1     INNER JOIN          frpm AS T2 ON T1.cds = T2.CDSCode     WHERE          CAST(T1.NumGE1500 AS REAL) / T1.NumTstTakr > 0.3 ) SELECT      MAX(`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS max_eligible_free_rate FROM      ranked_schools ",
+                "plan": "**Question**: Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?\n**Evidence**: Excellence rate = NumGE1500 / NumTstTakr; Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the satscores, schools, and frpm tables to access relevant data.\n\n** Filter and Identify Relevant Schools: **\n1. Calculate the excellence rate: For each school, calculate the excellence rate using the formula `NumGE1500 / NumTstTakr` from the satscores table.\n2. Filter by excellence rate: Select only those schools where the calculated excellence rate is greater than 0.3.\n3. Join with frpm table: For each school, join the satscores table with the frpm table on the CDSCode to get the free meal count and enrollment data for students aged 5-17.\n\n** Calculate Eligible Free Rates: **\n1. Calculate the eligible free rate: For each school, compute the eligible free rate using the formula `Free Meal Count (Ages 5-17) / Enrollment (Ages 5-17)` from the frpm table.\n2. Identify the highest eligible free rate: Among the schools that meet the excellence rate criteria, find the maximum eligible free rate.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the highest eligible free rate for presentation.\n2. Output the final result: Deliver the highest eligible free rate as the query result.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " WITH eligible_schools AS (     SELECT T1.cds, T1.NumGE1500, T1.NumTstTakr     FROM satscores AS T1     WHERE CAST(T1.NumGE1500 AS REAL) / T1.NumTstTakr > 0.3 ), free_rates AS (     SELECT T1.CDSCode, T1.`Free Meal Count (Ages 5-17)`, T1.`Enrollment (Ages 5-17)`     FROM frpm AS T1     INNER JOIN eligible_schools AS T2 ON T1.CDSCode = T2.cds ) SELECT MAX(`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS max_eligible_free_rate FROM free_rates ",
+                "plan": "**Question:** Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?\n**Evidence:** Excellence rate = NumGE1500 / NumTstTakr; Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**Query Plan:**\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the `frpm`, `satscores`, and `schools` tables to access relevant data.\n\n** Filter and Identify Relevant Schools: **\n1. Scan the `satscores` table: Start reading rows from the `satscores` table.\n2. Calculate the excellence rate: For each row, calculate the excellence rate using the formula `NumGE1500 / NumTstTakr`.\n3. Filter by excellence rate > 0.3: Select only those rows where the calculated excellence rate is greater than 0.3.\n4. Join with `schools` table: Match each school with its corresponding details by joining on `cds` and `CDSCode`.\n\n** Calculate Eligible Free Rates for Students Aged 5-17: **\n1. Extract `Free Meal Count (Ages 5-17)` and `Enrollment (Ages 5-17)` from the `frpm` table: For each matching school, retrieve the `Free Meal Count (Ages 5-17)` and `Enrollment (Ages 5-17)` values.\n2. Calculate the eligible free rate: For each school, compute the eligible free rate using the formula `Free Meal Count (Ages 5-17) / Enrollment (Ages 5-17)`.\n\n** Identify the Highest Eligible Free Rate: **\n1. Identify the maximum eligible free rate: Among the calculated eligible free rates, identify the highest value.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the highest eligible free rate for presentation.\n2. Output the final result: Deliver the highest eligible free rate as the query result.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " WITH eligible_schools AS (     SELECT T1.cds, T1.NumGE1500, T1.NumTstTakr, T2.CDSCode     FROM satscores AS T1     INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode     WHERE (T1.NumGE1500 * 1.0 / T1.NumTstTakr) > 0.3 ), free_rates AS (     SELECT T1.cds, T2.`Free Meal Count (Ages 5-17)`, T2.`Enrollment (Ages 5-17)`     FROM eligible_schools AS T1     INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode     WHERE T2.`Free Meal Count (Ages 5-17)` IS NOT NULL AND T2.`Enrollment (Ages 5-17)` IS NOT NULL ) SELECT MAX(`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS max_free_rate FROM free_rates ",
+                "plan": "**Question:** Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?\n**Evidence:** Excellence rate = NumGE1500 / NumTstTakr; Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**Query Plan:**\n\n** Preparation Steps:**\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the satscores, schools, and frpm tables to access relevant data.\n\n** Identify Schools with Excellence Rate Over 0.3:**\n1. Calculate the excellence rate: Compute the excellence rate as NumGE1500 / NumTstTakr for each school in the satscores table.\n2. Filter by excellence rate: Select only those schools where the calculated excellence rate is greater than 0.3.\n3. Join with schools table: Match each school in the satscores table to its corresponding entry in the schools table using the cds column.\n\n** Calculate Eligible Free Rates for Students Aged 5-17:**\n1. Join with frpm table: Link the filtered schools with the frpm table using the CDSCode column.\n2. Calculate the eligible free rate: Compute the eligible free rate as `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` for each school.\n3. Filter out NULL values: Exclude any rows where either `Free Meal Count (Ages 5-17)` or `Enrollment (Ages 5-17)` is NULL.\n\n** Find the Highest Eligible Free Rate:**\n1. Order by eligible free rate: Sort the computed eligible free rates in descending order.\n2. Select the highest rate: Retrieve the top eligible free rate from the sorted list.\n\n** Finalize and Deliver the Result:**\n1. Prepare the result for output: Format the highest eligible free rate for presentation.\n2. Output the final result: Deliver the highest eligible free rate as the query result.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT MAX(T4.`Percent (%) Eligible Free (Ages 5-17)`) AS max_eligible_free_rate FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode INNER JOIN frpm AS T4 ON T2.CDSCode = T4.CDSCode WHERE (T1.NumGE1500 * 1.0 / T1.NumTstTakr) > 0.3 ",
+                "plan": "**Question**: Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?\n**Evidence**: Excellence rate = NumGE1500 / NumTstTakr; Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the satscores, schools, and frpm tables to access relevant data.\n\n** Calculate Excellence Rate and Filter Schools: **\n1. Scan the satscores table: Start reading rows from the satscores table.\n2. Calculate excellence rate: Compute the excellence rate using the formula `NumGE1500 / NumTstTakr`.\n3. Filter by excellence rate: Select only those rows where the calculated excellence rate is greater than 0.3.\n4. Join with schools table: Match each school in the satscores table to its corresponding record in the schools table using the cds code.\n\n** Calculate Eligible Free Rate: **\n1. Join with frpm table: For each school, join with the frpm table to retrieve the relevant data for calculating the eligible free rate.\n2. Calculate eligible free rate: Compute the eligible free rate using the formula `Free Meal Count (Ages 5-17) / Enrollment (Ages 5-17)`.\n\n** Identify the Highest Eligible Free Rate: **\n1. Find the maximum eligible free rate: From the calculated eligible free rates, identify the highest value.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the highest eligible free rate for presentation.\n2. Output the final result: Deliver the highest eligible free rate as the query result.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " WITH eligible_schools AS (     SELECT T1.CDSCode, (T1.NumGE1500::REAL / T1.NumTstTakr) AS excellence_rate     FROM satscores AS T1     WHERE (T1.NumGE1500::REAL / T1.NumTstTakr) > 0.3 ) SELECT MAX(T2.`Percent (%) Eligible Free (Ages 5-17)`) FROM eligible_schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode ",
+                "plan": "**Question**: Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?\n**Evidence**: Excellence rate = NumGE1500 / NumTstTakr; Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the `frpm`, `satscores`, and `schools` tables to access relevant data.\n\n** Filter and Identify Relevant Schools: **\n1. Scan the `satscores` table: Start reading rows from the `satscores` table.\n2. Calculate the excellence rate: For each row, compute the excellence rate using the formula `NumGE1500 / NumTstTakr`.\n3. Filter by excellence rate: Select only those rows where the calculated excellence rate is greater than 0.3.\n4. Join with `frpm` table: Match each school with its corresponding `Free Meal Count (Ages 5-17)` and `Enrollment (Ages 5-17)` data by joining on `CDSCode`.\n\n** Calculate Eligible Free Rates: **\n1. Compute the eligible free rate: For each matched row, calculate the eligible free rate using the formula `Free Meal Count (Ages 5-17) / Enrollment (Ages 5-17)`.\n2. Identify the maximum eligible free rate: Determine the highest eligible free rate among the filtered and joined rows.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the highest eligible free rate for presentation.\n2. Output the final result: Deliver the highest eligible free rate as the query result.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " WITH ExcellenceRateFiltered AS (     SELECT T1.cds, T1.NumGE1500, T1.NumTstTakr     FROM satscores AS T1     WHERE CAST(T1.NumGE1500 AS REAL) / T1.NumTstTakr > 0.3 ), EligibleFreeRate AS (     SELECT T3.cds, (T3.`Free Meal Count (Ages 5-17)` / T3.`Enrollment (Ages 5-17)`) AS eligible_free_rate     FROM ExcellenceRateFiltered AS T1     INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode     INNER JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode ) SELECT MAX(eligible_free_rate) FROM EligibleFreeRate ",
+                "plan": "**Question**: Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?\n**Evidence**: Excellence rate = NumGE1500 / NumTstTakr; Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the frpm, satscores, and schools tables to access relevant data.\n\n** Identify Schools with Excellence Rate Over 0.3: **\n1. Scan the satscores table: Start reading rows from the satscores table.\n2. Calculate the excellence rate: For each row, compute the excellence rate using the formula `NumGE1500 / NumTstTakr`.\n3. Filter by excellence rate: Select only those rows where the calculated excellence rate is greater than 0.3.\n4. Join with schools table: Match each school in the satscores table to its corresponding entry in the schools table using the cds field.\n\n** Calculate Eligible Free Rate for Students Aged 5-17: **\n1. Join with frpm table: For each school that meets the excellence rate criterion, join with the frpm table to retrieve the necessary fields for calculating the eligible free rate.\n2. Calculate the eligible free rate: Compute the eligible free rate using the formula `Free Meal Count (Ages 5-17) / Enrollment (Ages 5-17)`.\n\n** Identify the Highest Eligible Free Rate: **\n1. Aggregate by school: Group the data by school to calculate the eligible free rate for each school.\n2. Order by eligible free rate: Sort the results in descending order based on the calculated eligible free rate.\n3. Select the highest rate: Retrieve the highest eligible free rate from the sorted results.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the highest eligible free rate for presentation.\n2. Output the final result: Deliver the highest eligible free rate as the query result.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT MAX(T3.`Percent (%) Eligible FRPM (Ages 5-17)`) FROM satscores AS T1 INNER JOIN frpm AS T3 ON T1.cds = T3.CDSCode WHERE (T1.NumGE1500 * 1.0 / T1.NumTstTakr) > 0.3 ",
+                "plan": "**Question**: Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?\n**Evidence**: Excellence rate = NumGE1500 / NumTstTakr; Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment and prepare for query execution by initializing variables and temporary storage.\n2. Open required tables: Open the satscores and frpm tables to access relevant data.\n\n** Filter and Identify Relevant Schools: **\n1. Scan the satscores table: Start reading rows from the satscores table.\n2. Calculate the excellence rate: Compute the excellence rate using the formula `NumGE1500 / NumTstTakr`.\n3. Filter by excellence rate: Select only those schools where the calculated excellence rate is greater than 0.3.\n4. Join with frpm table: Match each school to its corresponding entry in the frpm table using the CDSCode foreign key.\n\n** Calculate Eligible Free Rates: **\n1. Extract the `Free Meal Count (Ages 5-17)` and `Enrollment (Ages 5-17)` columns from the frpm table.\n2. Compute the eligible free rate: Calculate the eligible free rate using the formula `Free Meal Count (Ages 5-17) / Enrollment (Ages 5-17)`.\n\n** Identify the Highest Eligible Free Rate: **\n1. Order the results by the computed eligible free rate in descending order.\n2. Select the top result: Choose the highest eligible free rate from the ordered list.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the highest eligible free rate for presentation.\n2. Output the final result: Deliver the highest eligible free rate as the query result.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            },
+            {
+                "chain_of_thought_reasoning": "",
+                "SQL": " SELECT MAX(T3.`Free Meal Count (Ages 5-17)` / T3.`Enrollment (Ages 5-17)`) AS max_eligible_free_rate FROM schools AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds INNER JOIN frpm AS T3 ON T1.CDSCode = T3.CDSCode WHERE (T2.NumGE1500 / T2.NumTstTakr) > 0.3 ",
+                "plan": "**Question**: Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?\n**Evidence**: Excellence rate = NumGE1500 / NumTstTakr; Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`\n\n**Query Plan**:\n\n** Preparation Steps: **\n1. Initialize the process: Set up the environment for query execution, including initializing variables and temporary storage.\n2. Open required tables: Open the `schools`, `satscores`, and `frpm` tables to access relevant data.\n\n** Filter and Identify Relevant Schools: **\n1. Scan the `satscores` table: Start reading rows from the `satscores` table.\n2. Calculate the excellence rate: For each row, compute the excellence rate using the formula `NumGE1500 / NumTstTakr`.\n3. Filter by excellence rate > 0.3: Select only those rows where the calculated excellence rate is greater than 0.3.\n\n** Join with `schools` Table: **\n1. Join `satscores` with `schools`: Match each school with its corresponding record in the `schools` table using the `CDSCode` foreign key.\n2. Ensure only relevant schools are included: Make sure the join only includes schools that meet the excellence rate criteria.\n\n** Join with `frpm` Table: **\n1. Join `schools` with `frpm`: Match each school with its corresponding record in the `frpm` table using the `CDSCode` foreign key.\n2. Ensure only relevant schools are included: Make sure the join only includes schools that meet the excellence rate criteria.\n\n** Calculate Eligible Free Rates: **\n1. Compute the eligible free rate: For each row, calculate the eligible free rate for students aged 5-17 using the formula `Free Meal Count (Ages 5-17) / Enrollment (Ages 5-17)`.\n\n** Identify the Highest Eligible Free Rate: **\n1. Filter and sort by eligible free rate: Order the results by the computed eligible free rate in descending order.\n2. Select the highest eligible free rate: Limit the result to the top row to get the highest eligible free rate.\n\n** Finalize and Deliver the Result: **\n1. Prepare the result for output: Format the highest eligible free rate for presentation.\n2. Output the final result: Deliver the highest eligible free rate as the query result.\n3. Clean up resources: Close any open table connections and release temporary storage used during query execution.\n\n**Final Optimized SQL Query:**\n\n"
+            }
+        ],
+        "status": "success",
+        "execution_time": 1705.0
+    },
+    {
+        "tool_name": "revise",
+        "original_SQL_id": "generate_candidate",
+        "refined_SQL_id": "revise_1",
+        "candidates": [
+            {
+                "refined_query": " SELECT MAX(`T1`.`Percent (%) Eligible Free (Ages 5-17)`)  FROM `frpm` AS `T1`  INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds`  WHERE CAST(T2.NumGE1500 AS REAL) / CAST(T2.NumTstTakr AS REAL) > 0.3 "
+            },
+            {
+                "refined_query": " SELECT MAX(`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm` AS `T1` INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds` WHERE (`T2`.`NumGE1500` / `T2`.`NumTstTakr`) > 0.3 "
+            },
+            {
+                "refined_query": " SELECT MAX(T2.`Free Meal Count (Ages 5-17)` / T2.`Enrollment (Ages 5-17)`)  FROM satscores AS T1  INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode  WHERE T1.NumGE1500 / T1.NumTstTakr > 0.3 "
+            },
+            {
+                "refined_query": " SELECT MAX(`T1`.`Percent (%) Eligible Free (Ages 5-17)`)  FROM `frpm` AS `T1`  INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds`  WHERE CAST(T2.NumGE1500 AS REAL) / CAST(T2.NumTstTakr AS REAL) > 0.3 "
+            },
+            {
+                "refined_query": " SELECT MAX(T3.`Free Meal Count (Ages 5-17)` / T3.`Enrollment (Ages 5-17)`)  FROM `satscores` AS T1  INNER JOIN `frpm` AS T3 ON T1.cds = T3.CDSCode  WHERE T1.NumGE1500 / T1.NumTstTakr > 0.3 "
+            },
+            {
+                "refined_query": " SELECT MAX(`T3`.`Free Meal Count (Ages 5-17)` / `T3`.`Enrollment (Ages 5-17)`) AS `eligible_free_rate` FROM `satscores` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` INNER JOIN `frpm` AS `T3` ON `T2`.`CDSCode` = `T3`.`CDSCode` WHERE `T1`.`NumGE1500` / `T1`.`NumTstTakr` > 0.3 "
+            },
+            {
+                "refined_query": " SELECT MAX(T2.`Free Meal Count (Ages 5-17)` / T2.`Enrollment (Ages 5-17)`) AS eligible_free_rate FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.NumGE1500 / T1.NumTstTakr > 0.3 "
+            },
+            {
+                "refined_query": " SELECT MAX(`T1`.`Free Meal Count (Ages 5-17)` / `T1`.`Enrollment (Ages 5-17)`)  FROM `frpm` AS `T1`  INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds`  WHERE CAST(`T2`.`NumGE1500` AS REAL) / CAST(`T2`.`NumTstTakr` AS REAL) > 0.3 "
+            },
+            {
+                "refined_query": " SELECT MAX(T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)`)  FROM `frpm` AS T1  INNER JOIN `satscores` AS T2  ON T1.CDSCode = T2.cds  WHERE T2.NumGE1500 / T2.NumTstTakr > 0.3 "
+            },
+            {
+                "refined_query": " SELECT MAX(`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)) AS `Eligible Free Rate` FROM `frpm` WHERE `CDSCode` IN (SELECT `cds` FROM `satscores` WHERE (`NumGE1500` / `NumTstTakr`) > 0.3) "
+            },
+            {
+                "refined_query": " WITH filtered_schools AS (SELECT T1.cds AS CDSCode, (T1.NumGE1500 * 1.0 / T1.NumTstTakr) AS excellence_rate FROM satscores AS T1 WHERE (T1.NumGE1500 * 1.0 / T1.NumTstTakr) > 0.3), eligible_free_rates AS (SELECT T1.CDSCode, (T2.`Free Meal Count (Ages 5-17)` * 1.0 / T2.`Enrollment (Ages 5-17)`) AS eligible_free_rate FROM filtered_schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode) SELECT MAX(eligible_free_rate) FROM eligible_free_rates "
+            },
+            {
+                "refined_query": " SELECT MAX(T1.`Percent (%) Eligible Free (Ages 5-17)`) FROM frpm AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds WHERE (T2.NumGE1500 * 1.0 / T2.NumTstTakr) > 0.3 "
+            },
+            {
+                "refined_query": " WITH ranked_schools AS (SELECT T1.cds, T1.NumGE1500, T1.NumTstTakr, T2.`Free Meal Count (Ages 5-17)`, T2.`Enrollment (Ages 5-17)` FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE CAST(T1.NumGE1500 AS REAL) / T1.NumTstTakr > 0.3) SELECT MAX(`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS max_eligible_free_rate FROM ranked_schools "
+            },
+            {
+                "refined_query": " WITH eligible_schools AS (     SELECT T1.cds, T1.NumGE1500, T1.NumTstTakr     FROM satscores AS T1     WHERE CAST(T1.NumGE1500 AS REAL) / T1.NumTstTakr > 0.3 ), free_rates AS (     SELECT T1.CDSCode, T1.`Free Meal Count (Ages 5-17)`, T1.`Enrollment (Ages 5-17)`     FROM frpm AS T1     INNER JOIN eligible_schools AS T2 ON T1.CDSCode = T2.cds ) SELECT MAX(`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS max_eligible_free_rate FROM free_rates "
+            },
+            {
+                "refined_query": " WITH eligible_schools AS (     SELECT T1.cds, T1.NumGE1500, T1.NumTstTakr, T2.CDSCode     FROM satscores AS T1     INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode     WHERE (T1.NumGE1500 * 1.0 / T1.NumTstTakr) > 0.3 ), free_rates AS (     SELECT T1.cds, T2.`Free Meal Count (Ages 5-17)`, T2.`Enrollment (Ages 5-17)`     FROM eligible_schools AS T1     INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode     WHERE T2.`Free Meal Count (Ages 5-17)` IS NOT NULL AND T2.`Enrollment (Ages 5-17)` IS NOT NULL ) SELECT MAX(`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS max_free_rate FROM free_rates "
+            },
+            {
+                "refined_query": " SELECT MAX(T4.`Percent (%) Eligible Free (Ages 5-17)`) AS max_eligible_free_rate FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode INNER JOIN frpm AS T4 ON T2.CDSCode = T4.CDSCode WHERE (T1.NumGE1500 * 1.0 / T1.NumTstTakr) > 0.3 "
+            },
+            {
+                "refined_query": " WITH eligible_schools AS (SELECT T1.CDSCode, CAST(T1.NumGE1500 AS REAL) / T1.NumTstTakr AS excellence_rate FROM satscores AS T1 WHERE CAST(T1.NumGE1500 AS REAL) / T1.NumTstTakr > 0.3) SELECT MAX(CAST(T2.`Free Meal Count (Ages 5-17)` AS REAL) / T2.`Enrollment (Ages 5-17)`) FROM eligible_schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode "
+            },
+            {
+                "refined_query": " WITH ExcellenceRateFiltered AS (SELECT T1.cds, T1.NumGE1500, T1.NumTstTakr FROM satscores AS T1 WHERE CAST(T1.NumGE1500 AS REAL) / T1.NumTstTakr > 0.3), EligibleFreeRate AS (SELECT T3.CDSCode, (T3.`Free Meal Count (Ages 5-17)` / T3.`Enrollment (Ages 5-17)`) AS eligible_free_rate FROM ExcellenceRateFiltered AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode INNER JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode) SELECT MAX(eligible_free_rate) FROM EligibleFreeRate "
+            },
+            {
+                "refined_query": " SELECT MAX(T3.`Percent (%) Eligible FRPM (Ages 5-17)`) FROM satscores AS T1 INNER JOIN frpm AS T3 ON T1.cds = T3.CDSCode WHERE (T1.NumGE1500 * 1.0 / T1.NumTstTakr) > 0.3 "
+            },
+            {
+                "refined_query": " SELECT MAX(T3.`Free Meal Count (Ages 5-17)` / T3.`Enrollment (Ages 5-17)`) AS max_eligible_free_rate FROM schools AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds INNER JOIN frpm AS T3 ON T1.CDSCode = T3.CDSCode WHERE (T2.NumGE1500 / T2.NumTstTakr) > 0.3 "
+            }
+        ],
+        "status": "success",
+        "execution_time": 559.3
+    },
+    {
+        "tool_name": "generate_unit_test",
+        "unit_tests": {
+            "unit_test_generation": [
+                "The answer SQL query should mention \"Percent (%) Eligible Free (Ages 5-17)\" when calculating the eligible free rate.",
+                "The answer SQL query should use the MAX function to find the highest eligible free rate among schools with an SAT excellence rate of over 0.3.",
+                "The answer SQL query should perform a join operation between the tables \"satscores\" and \"frpm\" using the \"CDSCode\" field.",
+                "The answer SQL query should correctly calculate the SAT excellence rate as CAST(NumGE1500 AS REAL) / CAST(NumTstTakr AS REAL) > 0.3.",
+                "The answer SQL query should NOT use the \"Percent (%) Eligible FRPM (Ages 5-17)\" column in its calculations.",
+                "The answer SQL query should return a non-null value for the highest eligible free rate.",
+                "The answer SQL query should correctly handle NULL values in the \"Free Meal Count (Ages 5-17)\" and \"Enrollment (Ages 5-17)\" columns.",
+                "The answer SQL query should NOT return None as the result.",
+                "The answer SQL query should use a Common Table Expression (CTE) if it is used to filter and compute the eligible free rate.",
+                "The answer SQL query should NOT use unnecessary joins with the \"schools\" table unless required.",
+                "The answer SQL query should return the correct maximum eligible free rate of 0.904907975460123.",
+                "Only the best answer from the set of candidates that most accurately answers the question, given the database schema and hint should pass this test."
+            ]
+        },
+        "candidates": [
+            " SELECT MAX(`T1`.`Percent (%) Eligible Free (Ages 5-17)`)  FROM `frpm` AS `T1`  INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds`  WHERE CAST(T2.NumGE1500 AS REAL) / CAST(T2.NumTstTakr AS REAL) > 0.3 ",
+            " SELECT MAX(`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm` AS `T1` INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds` WHERE (`T2`.`NumGE1500` / `T2`.`NumTstTakr`) > 0.3 ",
+            " SELECT MAX(T2.`Free Meal Count (Ages 5-17)` / T2.`Enrollment (Ages 5-17)`)  FROM satscores AS T1  INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode  WHERE T1.NumGE1500 / T1.NumTstTakr > 0.3 ",
+            " SELECT MAX(`T1`.`Percent (%) Eligible Free (Ages 5-17)`)  FROM `frpm` AS `T1`  INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds`  WHERE CAST(T2.NumGE1500 AS REAL) / CAST(T2.NumTstTakr AS REAL) > 0.3 ",
+            " SELECT MAX(T3.`Free Meal Count (Ages 5-17)` / T3.`Enrollment (Ages 5-17)`)  FROM `satscores` AS T1  INNER JOIN `frpm` AS T3 ON T1.cds = T3.CDSCode  WHERE T1.NumGE1500 / T1.NumTstTakr > 0.3 ",
+            " SELECT MAX(`T3`.`Free Meal Count (Ages 5-17)` / `T3`.`Enrollment (Ages 5-17)`) AS `eligible_free_rate` FROM `satscores` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` INNER JOIN `frpm` AS `T3` ON `T2`.`CDSCode` = `T3`.`CDSCode` WHERE `T1`.`NumGE1500` / `T1`.`NumTstTakr` > 0.3 ",
+            " SELECT MAX(T2.`Free Meal Count (Ages 5-17)` / T2.`Enrollment (Ages 5-17)`) AS eligible_free_rate FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.NumGE1500 / T1.NumTstTakr > 0.3 ",
+            " SELECT MAX(`T1`.`Free Meal Count (Ages 5-17)` / `T1`.`Enrollment (Ages 5-17)`)  FROM `frpm` AS `T1`  INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds`  WHERE CAST(`T2`.`NumGE1500` AS REAL) / CAST(`T2`.`NumTstTakr` AS REAL) > 0.3 ",
+            " SELECT MAX(T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)`)  FROM `frpm` AS T1  INNER JOIN `satscores` AS T2  ON T1.CDSCode = T2.cds  WHERE T2.NumGE1500 / T2.NumTstTakr > 0.3 ",
+            " SELECT MAX(`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)) AS `Eligible Free Rate` FROM `frpm` WHERE `CDSCode` IN (SELECT `cds` FROM `satscores` WHERE (`NumGE1500` / `NumTstTakr`) > 0.3) ",
+            " WITH filtered_schools AS (SELECT T1.cds AS CDSCode, (T1.NumGE1500 * 1.0 / T1.NumTstTakr) AS excellence_rate FROM satscores AS T1 WHERE (T1.NumGE1500 * 1.0 / T1.NumTstTakr) > 0.3), eligible_free_rates AS (SELECT T1.CDSCode, (T2.`Free Meal Count (Ages 5-17)` * 1.0 / T2.`Enrollment (Ages 5-17)`) AS eligible_free_rate FROM filtered_schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode) SELECT MAX(eligible_free_rate) FROM eligible_free_rates ",
+            " SELECT MAX(T1.`Percent (%) Eligible Free (Ages 5-17)`) FROM frpm AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds WHERE (T2.NumGE1500 * 1.0 / T2.NumTstTakr) > 0.3 ",
+            " WITH ranked_schools AS (SELECT T1.cds, T1.NumGE1500, T1.NumTstTakr, T2.`Free Meal Count (Ages 5-17)`, T2.`Enrollment (Ages 5-17)` FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE CAST(T1.NumGE1500 AS REAL) / T1.NumTstTakr > 0.3) SELECT MAX(`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS max_eligible_free_rate FROM ranked_schools ",
+            " WITH eligible_schools AS (     SELECT T1.cds, T1.NumGE1500, T1.NumTstTakr     FROM satscores AS T1     WHERE CAST(T1.NumGE1500 AS REAL) / T1.NumTstTakr > 0.3 ), free_rates AS (     SELECT T1.CDSCode, T1.`Free Meal Count (Ages 5-17)`, T1.`Enrollment (Ages 5-17)`     FROM frpm AS T1     INNER JOIN eligible_schools AS T2 ON T1.CDSCode = T2.cds ) SELECT MAX(`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS max_eligible_free_rate FROM free_rates ",
+            " WITH eligible_schools AS (     SELECT T1.cds, T1.NumGE1500, T1.NumTstTakr, T2.CDSCode     FROM satscores AS T1     INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode     WHERE (T1.NumGE1500 * 1.0 / T1.NumTstTakr) > 0.3 ), free_rates AS (     SELECT T1.cds, T2.`Free Meal Count (Ages 5-17)`, T2.`Enrollment (Ages 5-17)`     FROM eligible_schools AS T1     INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode     WHERE T2.`Free Meal Count (Ages 5-17)` IS NOT NULL AND T2.`Enrollment (Ages 5-17)` IS NOT NULL ) SELECT MAX(`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS max_free_rate FROM free_rates ",
+            " SELECT MAX(T4.`Percent (%) Eligible Free (Ages 5-17)`) AS max_eligible_free_rate FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode INNER JOIN frpm AS T4 ON T2.CDSCode = T4.CDSCode WHERE (T1.NumGE1500 * 1.0 / T1.NumTstTakr) > 0.3 ",
+            " WITH eligible_schools AS (SELECT T1.CDSCode, CAST(T1.NumGE1500 AS REAL) / T1.NumTstTakr AS excellence_rate FROM satscores AS T1 WHERE CAST(T1.NumGE1500 AS REAL) / T1.NumTstTakr > 0.3) SELECT MAX(CAST(T2.`Free Meal Count (Ages 5-17)` AS REAL) / T2.`Enrollment (Ages 5-17)`) FROM eligible_schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode ",
+            " WITH ExcellenceRateFiltered AS (SELECT T1.cds, T1.NumGE1500, T1.NumTstTakr FROM satscores AS T1 WHERE CAST(T1.NumGE1500 AS REAL) / T1.NumTstTakr > 0.3), EligibleFreeRate AS (SELECT T3.CDSCode, (T3.`Free Meal Count (Ages 5-17)` / T3.`Enrollment (Ages 5-17)`) AS eligible_free_rate FROM ExcellenceRateFiltered AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode INNER JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode) SELECT MAX(eligible_free_rate) FROM EligibleFreeRate ",
+            " SELECT MAX(T3.`Percent (%) Eligible FRPM (Ages 5-17)`) FROM satscores AS T1 INNER JOIN frpm AS T3 ON T1.cds = T3.CDSCode WHERE (T1.NumGE1500 * 1.0 / T1.NumTstTakr) > 0.3 ",
+            " SELECT MAX(T3.`Free Meal Count (Ages 5-17)` / T3.`Enrollment (Ages 5-17)`) AS max_eligible_free_rate FROM schools AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds INNER JOIN frpm AS T3 ON T1.CDSCode = T3.CDSCode WHERE (T2.NumGE1500 / T2.NumTstTakr) > 0.3 "
+        ],
+        "status": "success",
+        "execution_time": 312.2
+    },
+    {
+        "tool_name": "evaluate",
+        "scores": [
+            12,
+            1,
+            12,
+            12,
+            1,
+            1,
+            2,
+            10,
+            2,
+            0,
+            12,
+            12,
+            11,
+            12,
+            11,
+            12,
+            1,
+            11,
+            4,
+            1
+        ],
+        "comparison_matrix": [
+            [
+                1,
+                0,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0
+            ],
+            [
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0
+            ],
+            [
+                1,
+                0,
+                1,
+                1,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0
+            ]
+        ],
+        "candidates": [
+            " SELECT MAX(`T1`.`Percent (%) Eligible Free (Ages 5-17)`)  FROM `frpm` AS `T1`  INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds`  WHERE CAST(T2.NumGE1500 AS REAL) / CAST(T2.NumTstTakr AS REAL) > 0.3 ",
+            " SELECT MAX(`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) FROM `frpm` AS `T1` INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds` WHERE (`T2`.`NumGE1500` / `T2`.`NumTstTakr`) > 0.3 ",
+            " SELECT MAX(T2.`Free Meal Count (Ages 5-17)` / T2.`Enrollment (Ages 5-17)`)  FROM satscores AS T1  INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode  WHERE T1.NumGE1500 / T1.NumTstTakr > 0.3 ",
+            " SELECT MAX(`T1`.`Percent (%) Eligible Free (Ages 5-17)`)  FROM `frpm` AS `T1`  INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds`  WHERE CAST(T2.NumGE1500 AS REAL) / CAST(T2.NumTstTakr AS REAL) > 0.3 ",
+            " SELECT MAX(T3.`Free Meal Count (Ages 5-17)` / T3.`Enrollment (Ages 5-17)`)  FROM `satscores` AS T1  INNER JOIN `frpm` AS T3 ON T1.cds = T3.CDSCode  WHERE T1.NumGE1500 / T1.NumTstTakr > 0.3 ",
+            " SELECT MAX(`T3`.`Free Meal Count (Ages 5-17)` / `T3`.`Enrollment (Ages 5-17)`) AS `eligible_free_rate` FROM `satscores` AS `T1` INNER JOIN `schools` AS `T2` ON `T1`.`cds` = `T2`.`CDSCode` INNER JOIN `frpm` AS `T3` ON `T2`.`CDSCode` = `T3`.`CDSCode` WHERE `T1`.`NumGE1500` / `T1`.`NumTstTakr` > 0.3 ",
+            " SELECT MAX(T2.`Free Meal Count (Ages 5-17)` / T2.`Enrollment (Ages 5-17)`) AS eligible_free_rate FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.NumGE1500 / T1.NumTstTakr > 0.3 ",
+            " SELECT MAX(`T1`.`Free Meal Count (Ages 5-17)` / `T1`.`Enrollment (Ages 5-17)`)  FROM `frpm` AS `T1`  INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds`  WHERE CAST(`T2`.`NumGE1500` AS REAL) / CAST(`T2`.`NumTstTakr` AS REAL) > 0.3 ",
+            " SELECT MAX(T1.`Free Meal Count (Ages 5-17)` / T1.`Enrollment (Ages 5-17)`)  FROM `frpm` AS T1  INNER JOIN `satscores` AS T2  ON T1.CDSCode = T2.cds  WHERE T2.NumGE1500 / T2.NumTstTakr > 0.3 ",
+            " SELECT MAX(`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)) AS `Eligible Free Rate` FROM `frpm` WHERE `CDSCode` IN (SELECT `cds` FROM `satscores` WHERE (`NumGE1500` / `NumTstTakr`) > 0.3) ",
+            " WITH filtered_schools AS (SELECT T1.cds AS CDSCode, (T1.NumGE1500 * 1.0 / T1.NumTstTakr) AS excellence_rate FROM satscores AS T1 WHERE (T1.NumGE1500 * 1.0 / T1.NumTstTakr) > 0.3), eligible_free_rates AS (SELECT T1.CDSCode, (T2.`Free Meal Count (Ages 5-17)` * 1.0 / T2.`Enrollment (Ages 5-17)`) AS eligible_free_rate FROM filtered_schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode) SELECT MAX(eligible_free_rate) FROM eligible_free_rates ",
+            " SELECT MAX(T1.`Percent (%) Eligible Free (Ages 5-17)`) FROM frpm AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds WHERE (T2.NumGE1500 * 1.0 / T2.NumTstTakr) > 0.3 ",
+            " WITH ranked_schools AS (SELECT T1.cds, T1.NumGE1500, T1.NumTstTakr, T2.`Free Meal Count (Ages 5-17)`, T2.`Enrollment (Ages 5-17)` FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE CAST(T1.NumGE1500 AS REAL) / T1.NumTstTakr > 0.3) SELECT MAX(`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS max_eligible_free_rate FROM ranked_schools ",
+            " WITH eligible_schools AS (     SELECT T1.cds, T1.NumGE1500, T1.NumTstTakr     FROM satscores AS T1     WHERE CAST(T1.NumGE1500 AS REAL) / T1.NumTstTakr > 0.3 ), free_rates AS (     SELECT T1.CDSCode, T1.`Free Meal Count (Ages 5-17)`, T1.`Enrollment (Ages 5-17)`     FROM frpm AS T1     INNER JOIN eligible_schools AS T2 ON T1.CDSCode = T2.cds ) SELECT MAX(`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS max_eligible_free_rate FROM free_rates ",
+            " WITH eligible_schools AS (     SELECT T1.cds, T1.NumGE1500, T1.NumTstTakr, T2.CDSCode     FROM satscores AS T1     INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode     WHERE (T1.NumGE1500 * 1.0 / T1.NumTstTakr) > 0.3 ), free_rates AS (     SELECT T1.cds, T2.`Free Meal Count (Ages 5-17)`, T2.`Enrollment (Ages 5-17)`     FROM eligible_schools AS T1     INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode     WHERE T2.`Free Meal Count (Ages 5-17)` IS NOT NULL AND T2.`Enrollment (Ages 5-17)` IS NOT NULL ) SELECT MAX(`Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`) AS max_free_rate FROM free_rates ",
+            " SELECT MAX(T4.`Percent (%) Eligible Free (Ages 5-17)`) AS max_eligible_free_rate FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode INNER JOIN frpm AS T4 ON T2.CDSCode = T4.CDSCode WHERE (T1.NumGE1500 * 1.0 / T1.NumTstTakr) > 0.3 ",
+            " WITH eligible_schools AS (SELECT T1.CDSCode, CAST(T1.NumGE1500 AS REAL) / T1.NumTstTakr AS excellence_rate FROM satscores AS T1 WHERE CAST(T1.NumGE1500 AS REAL) / T1.NumTstTakr > 0.3) SELECT MAX(CAST(T2.`Free Meal Count (Ages 5-17)` AS REAL) / T2.`Enrollment (Ages 5-17)`) FROM eligible_schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode ",
+            " WITH ExcellenceRateFiltered AS (SELECT T1.cds, T1.NumGE1500, T1.NumTstTakr FROM satscores AS T1 WHERE CAST(T1.NumGE1500 AS REAL) / T1.NumTstTakr > 0.3), EligibleFreeRate AS (SELECT T3.CDSCode, (T3.`Free Meal Count (Ages 5-17)` / T3.`Enrollment (Ages 5-17)`) AS eligible_free_rate FROM ExcellenceRateFiltered AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode INNER JOIN frpm AS T3 ON T2.CDSCode = T3.CDSCode) SELECT MAX(eligible_free_rate) FROM EligibleFreeRate ",
+            " SELECT MAX(T3.`Percent (%) Eligible FRPM (Ages 5-17)`) FROM satscores AS T1 INNER JOIN frpm AS T3 ON T1.cds = T3.CDSCode WHERE (T1.NumGE1500 * 1.0 / T1.NumTstTakr) > 0.3 ",
+            " SELECT MAX(T3.`Free Meal Count (Ages 5-17)` / T3.`Enrollment (Ages 5-17)`) AS max_eligible_free_rate FROM schools AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds INNER JOIN frpm AS T3 ON T1.CDSCode = T3.CDSCode WHERE (T2.NumGE1500 / T2.NumTstTakr) > 0.3 "
+        ],
+        "selected_candidate": " SELECT MAX(T2.`Free Meal Count (Ages 5-17)` / T2.`Enrollment (Ages 5-17)`)  FROM satscores AS T1  INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode  WHERE T1.NumGE1500 / T1.NumTstTakr > 0.3 ",
+        "status": "success",
+        "execution_time": 1372.5
+    },
+    {
+        "tool_name": "execution_accuracy",
+        "generate_candidate": {
+            "exec_res": 0,
+            "exec_err": "incorrect answer",
+            "Question": "Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?",
+            "Evidence": "Excellence rate = NumGE1500 / NumTstTakr; Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`",
+            "GOLD_SQL": "SELECT MAX(CAST(T1.`Free Meal Count (Ages 5-17)` AS REAL) / T1.`Enrollment (Ages 5-17)`) FROM frpm AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds WHERE CAST(T2.NumGE1500 AS REAL) / T2.NumTstTakr > 0.3",
+            "PREDICTED_SQL": " SELECT MAX(`T1`.`Percent (%) Eligible Free (Ages 5-17)`)  FROM `frpm` AS `T1`  INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds`  WHERE CAST(T2.NumGE1500 AS REAL) / CAST(T2.NumTstTakr AS REAL) > 0.3 "
+        },
+        "revise_1": {
+            "exec_res": 0,
+            "exec_err": "incorrect answer",
+            "Question": "Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?",
+            "Evidence": "Excellence rate = NumGE1500 / NumTstTakr; Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`",
+            "GOLD_SQL": "SELECT MAX(CAST(T1.`Free Meal Count (Ages 5-17)` AS REAL) / T1.`Enrollment (Ages 5-17)`) FROM frpm AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds WHERE CAST(T2.NumGE1500 AS REAL) / T2.NumTstTakr > 0.3",
+            "PREDICTED_SQL": " SELECT MAX(`T1`.`Percent (%) Eligible Free (Ages 5-17)`)  FROM `frpm` AS `T1`  INNER JOIN `satscores` AS `T2` ON `T1`.`CDSCode` = `T2`.`cds`  WHERE CAST(T2.NumGE1500 AS REAL) / CAST(T2.NumTstTakr AS REAL) > 0.3 "
+        },
+        "evaluate_1": {
+            "exec_res": 0,
+            "exec_err": "incorrect answer",
+            "Question": "Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?",
+            "Evidence": "Excellence rate = NumGE1500 / NumTstTakr; Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`",
+            "GOLD_SQL": "SELECT MAX(CAST(T1.`Free Meal Count (Ages 5-17)` AS REAL) / T1.`Enrollment (Ages 5-17)`) FROM frpm AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds WHERE CAST(T2.NumGE1500 AS REAL) / T2.NumTstTakr > 0.3",
+            "PREDICTED_SQL": " SELECT MAX(T2.`Free Meal Count (Ages 5-17)` / T2.`Enrollment (Ages 5-17)`)  FROM satscores AS T1  INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode  WHERE T1.NumGE1500 / T1.NumTstTakr > 0.3 "
+        },
+        "final_SQL": {
+            "exec_res": 0,
+            "exec_err": "incorrect answer",
+            "Question": "Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?",
+            "Evidence": "Excellence rate = NumGE1500 / NumTstTakr; Eligible free rates for students aged 5-17 = `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)`",
+            "GOLD_SQL": "SELECT MAX(CAST(T1.`Free Meal Count (Ages 5-17)` AS REAL) / T1.`Enrollment (Ages 5-17)`) FROM frpm AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds WHERE CAST(T2.NumGE1500 AS REAL) / T2.NumTstTakr > 0.3",
+            "PREDICTED_SQL": " SELECT MAX(T2.`Free Meal Count (Ages 5-17)` / T2.`Enrollment (Ages 5-17)`)  FROM satscores AS T1  INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode  WHERE T1.NumGE1500 / T1.NumTstTakr > 0.3 "
+        },
+        "status": "success",
+        "execution_time": 0.0
+    }
+]
